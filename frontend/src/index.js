@@ -4,6 +4,8 @@ import { Header } from "./components/Header";
 import { PlaylistPage } from './components/PlaylistPage';
 import { PlaylistView } from './components/PlaylistView';
 import { Profile } from './components/Profile';
+import { Home } from "./components/HomePage";
+import { Comment } from "./components/Comment";
 
 // Dummy Data for Playlists
 const dummyPlaylists = [
@@ -219,5 +221,13 @@ class App extends React.Component {
     }
 }
 
+const data = {
+    profileImage: 'pfp8.jpg',
+    userName: 'Kyle',
+    followers: 100,
+    commentText: 'your playlist is actually good!',
+    timestamp: `${(new Date() - new Date('2023-08-03'))}`,
+};
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(<Comment profileImage={data.profileImage} userName={data.userName} followers={data.followers} commentText={data.commentText} timestamp={data.timestamp} />);

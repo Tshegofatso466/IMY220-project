@@ -2,6 +2,7 @@
 .header-container {
     display: flex;
     justify-content: space-between;
+    font-family: 'outfit';
     align-items: center;
     padding: 10px 20px;
     background-color: #adadad;  /* Change this to match the final background */

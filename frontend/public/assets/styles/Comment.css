@@ -1,0 +1,40 @@
+/* Container for the comment */
+.comment-container {
+    display: flex;
+    align-items: flex-start;
+    color: white;
+    padding: 15px;
+    background-color: #1c0f31;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-family: 'outfit';
+}
+
+/* Profile Preview will be placed on the left */
+.comment-container .profile-preview {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+/* Comment content to the right of the profile preview */
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Comment text styling */
+.comment-text {
+    font-size: 24px;
+    margin: 0;
+    padding: 0;
+    color: #a9adc0;
+}
+
+/* Timestamp styling */
+.comment-timestamp {
+    font-size: 17px;
+    color: #999;
+    margin-top: 10px;
+}
