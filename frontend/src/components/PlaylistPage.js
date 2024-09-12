@@ -51,13 +51,13 @@ export class PlaylistPage extends React.Component {
                     {/* Song or Playlist Feed */}
                     {songForm && (
                         <div className="song-view">
-                            <Feed onPlaylistClick={this.props.onPlaylistClick} songForm={this.state.songForm} playLists={this.props.playLists} searchQuery={this.props.searchQuery} />
+                            <Feed onPlaylistClick={this.props.onPlaylistClick.bind(this)} songForm={this.state.songForm} playLists={this.props.playLists} searchQuery={this.props.searchQuery} />
                         </div>
                     )}
 
                     {playListForm && (
                         <div className="playlist-view">
-                            <Feed onPlaylistClick={this.props.onPlaylistClick} songForm={this.state.songForm} playLists={this.props.playLists} searchQuery={this.props.searchQuery} />
+                            <Feed onPlaylistClick={this.props.onPlaylistClick.bind(this)} songForm={this.state.songForm} playLists={this.props.playLists} searchQuery={this.props.searchQuery} />
                         </div>
                     )}
                 </div>

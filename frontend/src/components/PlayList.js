@@ -11,9 +11,9 @@ export class PlayList extends React.Component {
     }
 
     render() {
-        const { PlayListName, PlayListImage, Ownerimage, OwnerName, songs } = this.props;
+        const { PlayListName, PlayListImage, Ownerimage, OwnerName, songs, onClick } = this.props;
         return (
-            <div onClick={this} className="container">
+            <div onClick={onClick} className="container">
                 <div className="image_preview_container">
                     <img src={`/assets/images/PLAYLISTS-IMAGES/${PlayListImage}`} alt="Playlist Image" className="playlist_image"/>
                 </div>
@@ -48,5 +48,6 @@ PlayList.propTypes = {
         })
     ).isRequired,
     Ownerimage: PropTypes.string.isRequired,
-    OwnerName: PropTypes.string.isRequired
+    OwnerName: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
 };

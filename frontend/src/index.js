@@ -104,7 +104,7 @@ class App extends React.Component {
         };
     }
 
-    handleSearchChange(query){
+    handleSearchChange = (query) => {
         this.setState({ searchQuery: query });
     };
 
@@ -118,14 +118,17 @@ class App extends React.Component {
         // If a playlist is clicked, show the PlaylistView; otherwise show the PlaylistPage
         if (currentPlaylist) {
             return (
-                <PlaylistView
-                    playlistName={currentPlaylist.PlayListName}
-                    ownerImage={currentPlaylist.Ownerimage}
-                    ownerName={currentPlaylist.OwnerName}
-                    followers={1000}  // Example followers count
-                    songs={currentPlaylist.songs}
-                    playlistImage={currentPlaylist.PlayListImage}  // Background image
-                />
+                <div>
+                    <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
+                    <PlaylistView
+                        playlistName={currentPlaylist.PlayListName}
+                        ownerImage={currentPlaylist.Ownerimage}
+                        ownerName={currentPlaylist.OwnerName}
+                        followers={1000}  // Example followers count
+                        songs={currentPlaylist.songs}
+                        playlistImage={currentPlaylist.PlayListImage}  // Background image
+                    />
+                </div>
             );
         }
 
@@ -135,7 +138,7 @@ class App extends React.Component {
                 <PlaylistPage
                     playLists={dummyPlaylists}
                     searchQuery={this.state.searchQuery}
-                    onPlaylistClick={this.handlePlaylistClick}  // Pass click handler to PlaylistPage
+                    onPlaylistClick={this.handlePlaylistClick.bind(this)}  // Pass click handler to PlaylistPage
                 />
             </div>
         );

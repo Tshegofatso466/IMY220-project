@@ -9,6 +9,7 @@
     display: grid;
     grid-template-columns: 1fr 6fr 1fr;
     border-radius: 3px;
+    margin-bottom: 5px;
 }
 
 .details h3{

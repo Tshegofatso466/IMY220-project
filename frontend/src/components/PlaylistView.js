@@ -26,13 +26,15 @@ export class PlaylistView extends React.Component {
         return (
             <div className="playlist-view-container">
                 {/* Absolute Background Image */}
-                <img src={`/assets/images/PLAYLISTS-BACKGROUND/${playlistImage}`} alt="Playlist background" className="playlist-background" />
+                <img src={`/assets/images/RANDOM/latest2.jpg`} alt="Playlist background" className="playlist-background" />
 
                 {/* Playlist Header */}
                 <div className="playlist-header">
                     <h1 className="playlist-name">{playlistName}</h1>
                     <div className="vertical-line"></div>
-                    <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
+                    <div className='thePreview'>
+                        <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
+                    </div>
                 </div>
 
                 {/* Playlist Body */}

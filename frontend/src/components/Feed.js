@@ -54,11 +54,15 @@ export class Feed extends React.Component {
                         Ownerimage={playlist.Ownerimage}
                         OwnerName={playlist.OwnerName}
                         songs={playlist.songs}
-                        onClick={() => this.props.onPlaylistClick(playlist)}
+                        onClick={() => this.displayPlaylist(playlist)}
                     />
                 ))}
             </div>
         );
+    }
+
+    displayPlaylist(playlist) {
+        this.props.onPlaylistClick(playlist);
     }
 }
 
