@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Header } from "./components/Header";
 import { PlaylistPage } from './components/PlaylistPage';
 import { PlaylistView } from './components/PlaylistView';
+import { Profile } from './components/Profile';
 
 // Dummy Data for Playlists
 const dummyPlaylists = [
@@ -91,9 +92,49 @@ const dummyPlaylists = [
 
 const profileData = {
     profileImage: 'pfp8.jpg',
-    userName: 'kylie rec',
-    followers: 1200
+    userName: 'Kylie Rec',
+    bio: 'Just living my little life, got no beef with anyone',
+    followers: 1200,
+    following: 60,
+    playlists: dummyPlaylists,
+    friends: [
+        { id: 1, name: 'Alice Johnson' },
+        { id: 2, name: 'Bob Smith' },
+        { id: 3, name: 'Charlie Brown' },
+    ],
+    pictures: [
+        { id: 1, url: 'pfp7.jpg' },
+        { id: 2, url: 'pfp6.jpg' },
+    ]
 };
+
+const friends = [
+    { id: 1, name: 'Alice Johnson' },
+    { id: 2, name: 'Bob Smith' },
+    { id: 3, name: 'Charlie Brown' },
+    { id: 4, name: 'David Wilson' },
+    { id: 5, name: 'Eve Davis' }
+];
+
+// const pictures = [
+//     { id: 1, url: 'https://via.placeholder.com/150/0000FF/FFFFFF?text=Pic+1' },
+//     { id: 2, url: 'https://via.placeholder.com/150/FF0000/FFFFFF?text=Pic+2' },
+//     { id: 3, url: 'https://via.placeholder.com/150/00FF00/FFFFFF?text=Pic+3' },
+//     { id: 4, url: 'https://via.placeholder.com/150/FFFF00/FFFFFF?text=Pic+4' },
+//     { id: 5, url: 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=Pic+5' }
+// ];
+
+
+// const profile = {
+//     profileImage: 'pfp8.jpg',
+//     userName: 'kylie rec',
+//     bio: 'just living my little life, got no beef with anyone',
+//     followers: 300000,
+//     following: 60,
+//     playlists: dummyPlaylists,
+//     friends: PropTypes.array.isRequired,
+//     pictures: PropTypes.array.isRequired
+// }
 
 class App extends React.Component {
     constructor() {
@@ -135,13 +176,30 @@ class App extends React.Component {
         return (
             <div>
                 <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
-                <PlaylistPage
-                    playLists={dummyPlaylists}
-                    searchQuery={this.state.searchQuery}
-                    onPlaylistClick={this.handlePlaylistClick.bind(this)}  // Pass click handler to PlaylistPage
+                <Profile
+                    profileImage={profileData.profileImage}
+                    userName={profileData.userName}
+                    bio={profileData.bio}
+                    followers={profileData.followers}
+                    following={profileData.following}
+                    playlists={profileData.playlists}
+                    friends={profileData.friends}
+                    pictures={profileData.pictures}
+                    onPlaylistClick={this.handlePlaylistClick}
                 />
             </div>
         );
+
+        // return (
+        //     <div>
+        //         <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
+        //         <PlaylistPage
+        //             playLists={dummyPlaylists}
+        //             searchQuery={this.state.searchQuery}
+        //             onPlaylistClick={this.handlePlaylistClick.bind(this)}  // Pass click handler to PlaylistPage
+        //         />
+        //     </div>
+        // );
 
         // return (
         //     <div>
