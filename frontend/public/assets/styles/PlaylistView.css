@@ -1,0 +1,85 @@
+/* PlaylistView.css */
+
+/* Absolute background image */
+.playlist-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    filter: blur(5px); /* Optional blur for aesthetic */
+}
+
+/* PlaylistView container */
+.playlist-view-container {
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Playlist header layout */
+.playlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.playlist-name {
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.vertical-line {
+    width: 2px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 20px;
+}
+
+.playlist-body {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+/* Scrollable song list */
+.song-list {
+    flex: 1;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 20px;
+}
+
+/* Vertical icon group */
+.icon-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.icon-group i {
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+}
+
+.icon-group i:hover {
+    transform: scale(1.1);
+}

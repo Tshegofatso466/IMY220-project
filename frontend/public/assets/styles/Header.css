@@ -1,0 +1,67 @@
+/* Overall header container */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #adadad;  /* Change this to match the final background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Left section: logo + sidebar opener */
+.left-section {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.logo-icon {
+    width: 100px; /* Adjust as per your logo size */
+    cursor: pointer;
+}
+
+/* Middle section: search bar */
+.middle-section {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.middle-section .search-input {
+    width: 100%;
+    max-width: 400px; /* Limit the max width of the search bar */
+}
+
+/* Right section: login, signup, and chat icons */
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.login-btn, .signup-btn {
+    margin-left: 15px;
+    padding: 10px 15px;
+    background-color: #5C5C5C;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.signup-btn {
+    background-color: #5C5C5C;
+}
+
+.chat-icon {
+    width: 30px;
+    height: 30px;
+    margin-left: 15px;
+    cursor: pointer;
+}

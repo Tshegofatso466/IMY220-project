@@ -1,0 +1,71 @@
+.container {
+    width: 300px; /* Adjust as per your layout */
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    font-family: 'outfit';
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #333; /* Dark background for the details */
+    color: white; /* White text color */
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+}
+
+/* Playlist image section */
+.image_preview_container {
+    text-align: center;
+}
+
+/* Style for playlist image */
+.playlist_image {
+    width: 100%;
+    height: 280px;
+    border-radius: 0; /* Remove rounded corners for a clean look */
+    object-fit: cover;
+}
+
+/* Playlist title - bigger font */
+.playlist_title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    margin-top: 3px;
+}
+
+/* Details section */
+.details {
+    padding: 10px 15px 20px;
+}
+
+/* Owner information container */
+.owner_info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Owner image style - round and small */
+.owner_image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+/* Owner name styling */
+.owner_name {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Song count styling */
+.song_count {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 3px;
+}

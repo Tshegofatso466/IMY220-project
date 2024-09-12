@@ -1,0 +1,48 @@
+/* Feed Grid Layout */
+.playlist-feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Flexible grid */
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    width: 100%;
+    backdrop-filter: blur(6px); /* Blur background */
+    color: rgb(246, 238, 222);
+    z-index: 2;
+    overflow-y: auto; /* Allow the child feed to be scrollable */
+    max-height: calc(100vh - 160px); /* Adjust height based on header and other margins */
+    margin: 0 auto;
+}
+
+.playlist-feed .playlist-card {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.playlist-feed .playlist-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.playlist-feed .playlist-card h3 {
+    color: white;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.playlist-feed .playlist-card p {
+    color: lightgray;
+    font-size: 12px;
+}
+
+/* Hover Effect */
+.playlist-feed .playlist-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.3);
+}
