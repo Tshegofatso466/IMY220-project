@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ProfilePreview } from './ProfilePreview';
-import { Song } from './Song'; // Assuming you already have a Song component
-import { CommentList } from './CommentList'; // Import the CommentList component
-import { EditPlaylist } from './EditPlaylist'; // Import the EditPlaylist component
-import { CreatePlaylist } from './CreatePlaylist'; // Import the CreatePlaylist component
+import { Song } from './Song';
+import { CommentList } from './CommentList';
+import { EditPlaylist } from './EditPlaylist';
+import { CreatePlaylist } from './CreatePlaylist';
+import { AddSong } from './AddSong'; // Import the AddSong component
 import '../../public/assets/styles/PlaylistView.css';
 
 export class PlaylistView extends React.Component {
@@ -12,9 +13,10 @@ export class PlaylistView extends React.Component {
         super(props);
         this.state = {
             showComments: false,
-            showEditPlaylist: false, // New state to control the EditPlaylist modal
-            showCreatePlaylist: false, // New state to control the CreatePlaylist modal
-            comments: [], // Initialize comments state
+            showEditPlaylist: false,
+            showCreatePlaylist: false,
+            showAddSong: false, // New state to control AddSong modal visibility
+            comments: [],
         };
     }
 
@@ -34,7 +36,6 @@ export class PlaylistView extends React.Component {
     };
 
     handleCreatePlaylist = () => {
-        // Toggle the CreatePlaylist modal
         this.setState((prevState) => ({
             showCreatePlaylist: !prevState.showCreatePlaylist
         }));
@@ -46,9 +47,15 @@ export class PlaylistView extends React.Component {
         }));
     };
 
+    handleAddSong = () => {
+        this.setState((prevState) => ({
+            showAddSong: !prevState.showAddSong
+        }));
+    };
+
     render() {
         const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = this.props;
-        const { showComments, showEditPlaylist, showCreatePlaylist, comments } = this.state;
+        const { showComments, showEditPlaylist, showCreatePlaylist, showAddSong, comments } = this.state;
 
         return (
             <div className="playlist-view-container">
@@ -56,19 +63,25 @@ export class PlaylistView extends React.Component {
                 <div className="header-btn-container">
                     <button className="header-btn" onClick={this.handleCreatePlaylist}>Create Playlist</button>
                     <button className="header-btn" onClick={this.handleEditPlaylist}>Edit Playlist</button>
+                    <button className="header-btn" onClick={this.handleAddSong}>Add Song</button> {/* Button to trigger AddSong */}
                 </div>
 
-                {/* Playlist Header */}
                 <div className="playlist-header">
                     <h1 className="playlist-name">{playlistName}</h1>
                     <div className="vertical-line"></div>
-                    <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
+                    <div className='thePreview'>
+                        <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
+                    </div>
                 </div>
 
                 <div className="playlist-body">
                     <div className="song-list">
                         {songs.map((song, index) => (
-                            <Song key={index} title={song.title} artists={song.artists} />
+                            <Song
+                                key={index}
+                                title={song.title}
+                                artists={song.artists}
+                            />
                         ))}
                     </div>
 
@@ -79,20 +92,16 @@ export class PlaylistView extends React.Component {
                     </div>
                 </div>
 
-                {/* Conditionally render CommentList */}
-                {showComments && <CommentList comments={comments} onClose={this.handleComment} />}
-
-                {/* Conditionally render EditPlaylist modal */}
-                {showEditPlaylist && (
-                    <EditPlaylist
-                        playlistName={playlistName}
-                        songs={songs}
-                        onClose={this.handleEditPlaylist}
+                {showComments && (
+                    <CommentList
+                        comments={comments}
+                        onClose={this.handleComment}
                     />
                 )}
 
-                {/* Conditionally render CreatePlaylist modal */}
+                {showEditPlaylist && <EditPlaylist playlistName={playlistName} songs={songs} onClose={this.handleEditPlaylist} />}
                 {showCreatePlaylist && <CreatePlaylist onClose={this.handleCreatePlaylist} />}
+                {showAddSong && <AddSong onClose={this.handleAddSong} />} {/* Render AddSong component */}
             </div>
         );
     }
