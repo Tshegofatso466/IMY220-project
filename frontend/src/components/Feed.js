@@ -54,6 +54,7 @@ export class Feed extends React.Component {
                         Ownerimage={playlist.Ownerimage}
                         OwnerName={playlist.OwnerName}
                         songs={playlist.songs}
+                        comments={playlist.comments}
                         onClick={() => this.displayPlaylist(playlist)}
                     />
                 ))}
@@ -78,10 +79,28 @@ Feed.propTypes = {
                     title: PropTypes.string.isRequired,
                     artists: PropTypes.arrayOf(PropTypes.string).isRequired
                 })
-            ).isRequired
+            ).isRequired,
+            comments: PropTypes.arrayOf(
+                PropTypes.shape({
+                    profileImage: PropTypes.string.isRequired,
+                    userName: PropTypes.string.isRequired,
+                    followers: PropTypes.number.isRequired,
+                    commentText: PropTypes.string.isRequired,
+                    timestamp: PropTypes.string.isRequired
+                })
+            )
         })
     ).isRequired,
     searchQuery: PropTypes.string.isRequired, // Prop for searchQuery
     songForm: PropTypes.bool.isRequired, // Prop to toggle between playlist and song form
-    onPlaylistClick: PropTypes.func.isRequired
+    onPlaylistClick: PropTypes.func.isRequired,
+    comments: PropTypes.arrayOf(
+        PropTypes.shape({
+            profileImage: PropTypes.string.isRequired,
+            userName: PropTypes.string.isRequired,
+            followers: PropTypes.number.isRequired,
+            commentText: PropTypes.string.isRequired,
+            timestamp: PropTypes.string.isRequired
+        })
+    ) 
 };

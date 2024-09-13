@@ -1,6 +1,7 @@
 .search-container {
     text-align: center;
-    width: 500px;
+    font-family: 'outfit';
+    width: 300px;
 }
 
 .search-input {

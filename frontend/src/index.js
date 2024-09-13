@@ -6,6 +6,7 @@ import { PlaylistView } from './components/PlaylistView';
 import { Profile } from './components/Profile';
 import { Home } from "./components/HomePage";
 import { Comment } from "./components/Comment";
+import { CommentList } from "./components/CommentList";
 
 // Dummy Data for Playlists
 const dummyPlaylists = [
@@ -18,6 +19,22 @@ const dummyPlaylists = [
             { title: "Song One", artists: ["Artist A", "Artist B"] },
             { title: "Song Two", artists: ["Artist C"] },
         ],
+        comments: [  // Comments for this playlist
+            {
+                profileImage: 'pfp1.jpg',
+                userName: 'Alice',
+                followers: 250,
+                commentText: 'Love this playlist!',
+                timestamp: new Date().toISOString(),
+            },
+            {
+                profileImage: 'pfp2.jpg',
+                userName: 'Bob',
+                followers: 150,
+                commentText: 'Chill vibes indeed!',
+                timestamp: new Date().toISOString(),
+            }
+        ]
     },
     {
         PlayListName: "Workout Hits",
@@ -28,68 +45,16 @@ const dummyPlaylists = [
             { title: "Song Three", artists: ["Artist D"] },
             { title: "Song Four", artists: ["Artist E", "Artist F"] },
         ],
-    },
-    {
-        PlayListName: "Top 50",
-        PlayListImage: "drake.jpg",
-        Ownerimage: "pfp3.jpg",
-        OwnerName: "Jake Peralta",
-        songs: [
-            { title: "Song Five", artists: ["Artist G"] },
-            { title: "Song Six", artists: ["Artist H"] },
-        ],
-    },
-    {
-        PlayListName: "Summer Tunes",
-        PlayListImage: "kanye west.jpg",
-        Ownerimage: "pfp4.jpg",
-        OwnerName: "Amy Santiago",
-        songs: [
-            { title: "Song Seven", artists: ["Artist I", "Artist J"] },
-            { title: "Song Eight", artists: ["Artist K"] },
-        ],
-    },
-    {
-        PlayListName: "Top 50",
-        PlayListImage: "drake.jpg",
-        Ownerimage: "pfp3.jpg",
-        OwnerName: "Jake Peralta",
-        songs: [
-            { title: "Song Five", artists: ["Artist G"] },
-            { title: "Song Six", artists: ["Artist H"] },
-        ],
-    },
-    {
-        PlayListName: "Summer Tunes",
-        PlayListImage: "kanye west.jpg",
-        Ownerimage: "pfp4.jpg",
-        OwnerName: "Amy Santiago",
-        songs: [
-            { title: "Song Seven", artists: ["Artist I", "Artist J"] },
-            { title: "Song Eight", artists: ["Artist K"] },
-        ],
-    },
-    {
-        PlayListName: "Top 50",
-        PlayListImage: "drake.jpg",
-        Ownerimage: "pfp3.jpg",
-        OwnerName: "Jake Peralta",
-        songs: [
-            { title: "Song Five", artists: ["Artist G"] },
-            { title: "Song Six", artists: ["Artist H"] },
-        ],
-    },
-    {
-        PlayListName: "Summer Tunes",
-        PlayListImage: "kanye west.jpg",
-        Ownerimage: "pfp4.jpg",
-        OwnerName: "Amy Santiago",
-        songs: [
-            { title: "Song Seven", artists: ["Artist I", "Artist J"] },
-            { title: "Song Eight", artists: ["Artist K"] },
-        ],
-    },
-    // Add more dummy playlists if needed
+        comments: [  // Comments for this playlist
+            {
+                profileImage: 'pfp3.jpg',
+                userName: 'Charlie',
+                followers: 300,
+                commentText: 'Perfect for workouts!',
+                timestamp: new Date().toISOString(),
+            }
+        ]
+    }
 ];
 
 const profileData = {
@@ -170,38 +135,39 @@ class App extends React.Component {
                         followers={1000}  // Example followers count
                         songs={currentPlaylist.songs}
                         playlistImage={currentPlaylist.PlayListImage}  // Background image
+                        comments={currentPlaylist.comments}
                     />
                 </div>
             );
         }
 
-        return (
-            <div>
-                <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
-                <Profile
-                    profileImage={profileData.profileImage}
-                    userName={profileData.userName}
-                    bio={profileData.bio}
-                    followers={profileData.followers}
-                    following={profileData.following}
-                    playlists={profileData.playlists}
-                    friends={profileData.friends}
-                    pictures={profileData.pictures}
-                    onPlaylistClick={this.handlePlaylistClick}
-                />
-            </div>
-        );
-
         // return (
         //     <div>
         //         <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
-        //         <PlaylistPage
-        //             playLists={dummyPlaylists}
-        //             searchQuery={this.state.searchQuery}
-        //             onPlaylistClick={this.handlePlaylistClick.bind(this)}  // Pass click handler to PlaylistPage
+        //         <Profile
+        //             profileImage={profileData.profileImage}
+        //             userName={profileData.userName}
+        //             bio={profileData.bio}
+        //             followers={profileData.followers}
+        //             following={profileData.following}
+        //             playlists={profileData.playlists}
+        //             friends={profileData.friends}
+        //             pictures={profileData.pictures}
+        //             onPlaylistClick={this.handlePlaylistClick}
         //         />
         //     </div>
         // );
+
+        return (
+            <div>
+                <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
+                <PlaylistPage
+                    playLists={dummyPlaylists}
+                    searchQuery={this.state.searchQuery}
+                    onPlaylistClick={this.handlePlaylistClick.bind(this)}  // Pass click handler to PlaylistPage
+                />
+            </div>
+        );
 
         // return (
         //     <div>
@@ -221,13 +187,64 @@ class App extends React.Component {
     }
 }
 
-const data = {
-    profileImage: 'pfp8.jpg',
-    userName: 'Kyle',
-    followers: 100,
-    commentText: 'your playlist is actually good!',
-    timestamp: `${(new Date() - new Date('2023-08-03'))}`,
-};
+const data = [
+    {
+        profileImage: 'pfp1.jpg',
+        userName: 'Alice',
+        followers: 250,
+        commentText: 'Great post! Really enjoyed it.',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp2.jpg',
+        userName: 'Bob',
+        followers: 150,
+        commentText: 'Thanks for the update!',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp3.jpg',
+        userName: 'Charlie',
+        followers: 300,
+        commentText: 'This is fantastic, keep it up!',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp4.jpg',
+        userName: 'Diana',
+        followers: 400,
+        commentText: 'Can you share more details?',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp5.jpg',
+        userName: 'Eve',
+        followers: 500,
+        commentText: 'Amazing content, really helpful!',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp6.jpg',
+        userName: 'Frank',
+        followers: 600,
+        commentText: 'Interesting read, thank you.',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp7.jpg',
+        userName: 'Grace',
+        followers: 700,
+        commentText: 'Loved the insights shared here.',
+        timestamp: new Date().toISOString(),
+    },
+    {
+        profileImage: 'pfp8.jpg',
+        userName: 'Hank',
+        followers: 800,
+        commentText: 'Your playlist is actually good!',
+        timestamp: new Date().toISOString(),
+    }
+];
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Comment profileImage={data.profileImage} userName={data.userName} followers={data.followers} commentText={data.commentText} timestamp={data.timestamp} />);
+root.render(<App/>);

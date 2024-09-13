@@ -89,3 +89,36 @@
 .icon-group i:hover {
     transform: scale(1.1);
 }
+/* Styling for the 'Create Playlist' and 'Edit Playlist' buttons */
+.header-btn {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background to blend with the theme */
+    color: white; /* White text for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Light border for subtle separation */
+    padding: 10px 20px;
+    border-radius: 5px; /* Slight rounding for modern look */
+    font-size: 16px;
+    font-family: 'outfit';
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth hover and click effects */
+    margin: 5px 10px; /* Space between buttons */
+}
+
+/* Hover and active states for buttons */
+.header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4); /* Slightly brighter on hover */
+    transform: scale(1.05); /* Slight scale-up effect on hover */
+}
+
+.header-btn:active {
+    background-color: rgba(255, 255, 255, 0.6); /* Even brighter on click */
+    transform: scale(1); /* Reset scale when clicked */
+}
+
+/* Add button alignment at the top */
+.header-btn-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px; /* Space between buttons and playlist header */
+}

@@ -1,18 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ProfilePreview } from './ProfilePreview';
-import { Song } from './Song';  // Assuming you already have a Song component
+import { Song } from './Song'; // Assuming you already have a Song component
+import { CommentList } from './CommentList'; // Import the CommentList component
 import '../../public/assets/styles/PlaylistView.css';
 
 export class PlaylistView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showComments: false,
+            comments: [], // Initialize comments state
+        };
+    }
+
     handleLike = () => {
         // Future functionality for liking the playlist
         console.log('Liked playlist');
     };
 
     handleComment = () => {
-        // Future functionality for commenting on the playlist
-        console.log('Commented on playlist');
+        // Toggle the visibility of CommentList
+        this.setState((prevState) => ({
+            showComments: !prevState.showComments,
+            comments: this.props.comments // Set comments from props or dummy data
+        }));
     };
 
     handleAdd = () => {
@@ -20,13 +32,28 @@ export class PlaylistView extends React.Component {
         console.log('Added to collection');
     };
 
+    handleCreatePlaylist = () => {
+        // Future functionality for creating a playlist
+        console.log('Create Playlist');
+    };
+
+    handleEditPlaylist = () => {
+        // Future functionality for editing a playlist
+        console.log('Edit Playlist');
+    };
+
     render() {
         const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = this.props;
+        const { showComments, comments } = this.state;
 
         return (
             <div className="playlist-view-container">
                 {/* Absolute Background Image */}
                 <img src={`/assets/images/RANDOM/latest2.jpg`} alt="Playlist background" className="playlist-background" />
+                <div className="header-btn-container">
+                    <button className="header-btn" onClick={this.handleCreatePlaylist}>Create Playlist</button>
+                    <button className="header-btn" onClick={this.handleEditPlaylist}>Edit Playlist</button>
+                </div>
 
                 {/* Playlist Header */}
                 <div className="playlist-header">
@@ -57,6 +84,14 @@ export class PlaylistView extends React.Component {
                         <i className="icon-add" onClick={this.handleAdd}>➕</i>
                     </div>
                 </div>
+
+                {/* Conditionally render CommentList */}
+                {showComments && (
+                    <CommentList
+                        comments={comments}
+                        onClose={this.handleComment} // Reuse handleComment to toggle visibility
+                    />
+                )}
             </div>
         );
     }
@@ -74,4 +109,13 @@ PlaylistView.propTypes = {
         })
     ).isRequired,
     playlistImage: PropTypes.string.isRequired,  // Playlist background image
+    comments: PropTypes.arrayOf(
+        PropTypes.shape({
+            profileImage: PropTypes.string.isRequired,
+            userName: PropTypes.string.isRequired,
+            followers: PropTypes.number.isRequired,
+            commentText: PropTypes.string.isRequired,
+            timestamp: PropTypes.string.isRequired
+        })
+    ) // Add comments prop for CommentList
 };

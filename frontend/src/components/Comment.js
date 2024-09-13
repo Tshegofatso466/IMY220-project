@@ -15,7 +15,7 @@ export class Comment extends React.Component {
         return (
             <div className="comment-container">
                 {/* Profile Preview */}
-                <ProfilePreview 
+                <ProfilePreview
                     profileImage={profileImage}
                     userName={userName}
                     followers={followers}

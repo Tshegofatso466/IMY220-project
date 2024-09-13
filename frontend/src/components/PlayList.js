@@ -50,4 +50,13 @@ PlayList.propTypes = {
     Ownerimage: PropTypes.string.isRequired,
     OwnerName: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
+    comments: PropTypes.arrayOf(
+        PropTypes.shape({
+            profileImage: PropTypes.string.isRequired,
+            userName: PropTypes.string.isRequired,
+            followers: PropTypes.number.isRequired,
+            commentText: PropTypes.string.isRequired,
+            timestamp: PropTypes.string.isRequired
+        })
+    )
 };
