@@ -127,7 +127,7 @@ class App extends React.Component {
         if (currentPlaylist) {
             return (
                 <div>
-                    <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} />
+                    <Header searchQuery={this.state.searchQuery} onSearchChange={this.handleSearchChange} data={profileData}/>
                     <PlaylistView
                         playlistName={currentPlaylist.PlayListName}
                         ownerImage={currentPlaylist.Ownerimage}

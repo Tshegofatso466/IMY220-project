@@ -60,7 +60,7 @@
     background-color: #5C5C5C;
 }
 
-.chat-icon {
+.chat-icon, .user-icon{
     width: 30px;
     height: 30px;
     margin-left: 15px;

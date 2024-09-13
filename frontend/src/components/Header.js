@@ -47,6 +47,7 @@ export class Header extends React.Component {
                     <button className="login-btn" onClick={this.toggleLoginForm}>Login</button>
                     <button className="signup-btn" onClick={this.toggleSignUpForm}>Sign up</button>
                     <img src="/assets/icons/comment-alt.png" alt="Chat Icon" className="chat-icon" />
+                    <img src="/assets/icons/user.png" alt="user Icon" className="user-icon" />
                 </div>
 
                 {/* Conditionally render the LoginForm */}

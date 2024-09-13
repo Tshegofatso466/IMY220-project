@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ProfilePreview } from './ProfilePreview';
-import { Song } from './Song';
-import { CommentList } from './CommentList';
-import { EditPlaylist } from './EditPlaylist';
-import { CreatePlaylist } from './CreatePlaylist';
-import { AddSong } from './AddSong';
-import { CreateComment } from './CreateComment'; // Import the CreateComment component
+import { ProfilePreview } from '../components/ProfilePreview';
+import { Song } from '../components/Song';
+import { CommentList } from '../components/CommentList';
+import { EditPlaylist } from '../components/EditPlaylist';
+import { CreatePlaylist } from '../components/CreatePlaylist';
+import { AddSong } from '../components/AddSong';
+import { CreateComment } from '../components/CreateComment'; // Import the CreateComment component
 import '../../public/assets/styles/PlaylistView.css';
 
 export class PlaylistView extends React.Component {
