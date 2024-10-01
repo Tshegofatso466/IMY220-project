@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from'react-router-dom';
 import { ProfilePreview } from '../components/ProfilePreview';
 import { Song } from '../components/Song';
 import { CommentList } from '../components/CommentList';
@@ -12,6 +13,9 @@ import '../../public/assets/styles/PlaylistView.css';
 export class PlaylistView extends React.Component {
     constructor(props) {
         super(props);
+        const location = useLocation();
+        const { playlist } = location.state;
+        this.playlist = playlist;
         this.state = {
             showComments: false,
             showEditPlaylist: false,
@@ -74,7 +78,7 @@ export class PlaylistView extends React.Component {
     };
 
     render() {
-        const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = this.props;
+        const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = this.playlist;
         const { showComments, showEditPlaylist, showCreatePlaylist, showAddSong, showCreateComment, comments } = this.state;
 
         return (
@@ -128,27 +132,27 @@ export class PlaylistView extends React.Component {
     }
 }
 
-PlaylistView.propTypes = {
-    playlistName: PropTypes.string.isRequired,
-    ownerImage: PropTypes.string.isRequired,
-    ownerName: PropTypes.string.isRequired,
-    followers: PropTypes.number.isRequired,
-    songs: PropTypes.arrayOf(
-        PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            artists: PropTypes.arrayOf(PropTypes.string).isRequired
-        })
-    ).isRequired,
-    playlistImage: PropTypes.string.isRequired,
-    comments: PropTypes.arrayOf(
-        PropTypes.shape({
-            profileImage: PropTypes.string.isRequired,
-            userName: PropTypes.string.isRequired,
-            followers: PropTypes.number.isRequired,
-            commentText: PropTypes.string.isRequired,
-            timestamp: PropTypes.string.isRequired
-        })
-    )
-};
+// PlaylistView.propTypes = {
+//     playlistName: PropTypes.string.isRequired,
+//     ownerImage: PropTypes.string.isRequired,
+//     ownerName: PropTypes.string.isRequired,
+//     followers: PropTypes.number.isRequired,
+//     songs: PropTypes.arrayOf(
+//         PropTypes.shape({
+//             title: PropTypes.string.isRequired,
+//             artists: PropTypes.arrayOf(PropTypes.string).isRequired
+//         })
+//     ).isRequired,
+//     playlistImage: PropTypes.string.isRequired,
+//     comments: PropTypes.arrayOf(
+//         PropTypes.shape({
+//             profileImage: PropTypes.string.isRequired,
+//             userName: PropTypes.string.isRequired,
+//             followers: PropTypes.number.isRequired,
+//             commentText: PropTypes.string.isRequired,
+//             timestamp: PropTypes.string.isRequired
+//         })
+//     )
+// };
 
 // {showEditPlaylist && <EditPlaylist playlistName={playlistName} songs={songs} onClose={this.handleEditPlaylist} />}

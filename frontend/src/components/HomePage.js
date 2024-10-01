@@ -35,7 +35,7 @@ export class Home extends Component {
         return (
             <div className="home-container">
                 {/* Left Side: Logo and description */}
-                <div className="left-section">
+                <div className="left-sections">
                     <img src="/assets/images/LOGO/compaany logo.png" alt="Thunder Logo" className="home-logo" />
                     <div className="description">
                         <hr />

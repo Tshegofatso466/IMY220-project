@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { PlayList } from './PlayList';
 import { Song } from './Song';
 import '../fontDefinition/fonts.css';
@@ -47,16 +48,22 @@ export class Feed extends React.Component {
         return (
             <div className="playlist-feed">
                 {filteredPlaylists.map((playlist, index) => (
-                    <PlayList
+                    <Link
                         key={index}
-                        PlayListName={playlist.PlayListName}
-                        PlayListImage={playlist.PlayListImage}
-                        Ownerimage={playlist.Ownerimage}
-                        OwnerName={playlist.OwnerName}
-                        songs={playlist.songs}
-                        comments={playlist.comments}
-                        onClick={() => this.displayPlaylist(playlist)}
-                    />
+                        to={{
+                            pathname: `/playlistReview`,  // Define route path
+                            state: { playlist },  // Pass playlist as state
+                        }}
+                    >
+                        <PlayList
+                            PlayListName={playlist.PlayListName}
+                            PlayListImage={playlist.PlayListImage}
+                            Ownerimage={playlist.Ownerimage}
+                            OwnerName={playlist.OwnerName}
+                            songs={playlist.songs}
+                            comments={playlist.comments}
+                        />
+                    </Link>
                 ))}
             </div>
         );
@@ -102,5 +109,5 @@ Feed.propTypes = {
             commentText: PropTypes.string.isRequired,
             timestamp: PropTypes.string.isRequired
         })
-    ) 
+    )
 };

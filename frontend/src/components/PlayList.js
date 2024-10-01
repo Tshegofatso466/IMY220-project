@@ -49,7 +49,7 @@ PlayList.propTypes = {
     ).isRequired,
     Ownerimage: PropTypes.string.isRequired,
     OwnerName: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     comments: PropTypes.arrayOf(
         PropTypes.shape({
             profileImage: PropTypes.string.isRequired,

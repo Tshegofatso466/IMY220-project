@@ -19,8 +19,8 @@ export class SearchBar extends React.Component {
                 <input 
                     type="text" 
                     placeholder='Search'  // Magnifying glass emoji
-                    value={this.props.searchQuery} 
-                    onChange={this.handleInputChange} 
+                    value={this.props.searchQuery}
+                    onChange={this.handleInputChange}
                     className="search-input"
                 />
             </div>

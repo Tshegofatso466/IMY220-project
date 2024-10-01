@@ -41,7 +41,7 @@ export class Header extends React.Component {
                     <img src="/assets/images/LOGO/Thunder_logo.png" alt="Logo" className="logo-icon" />
                 </div>
                 <div className="middle-section">
-                    <SearchBar searchQuery={this.props.searchQuery} onChange={this.props.onSearchChange} />
+                    <SearchBar searchQuery={this.props.searchQuery} onChange={this.props.onChange} />
                 </div>
                 <div className="right-section">
                     <button className="login-btn" onClick={this.toggleLoginForm}>Login</button>

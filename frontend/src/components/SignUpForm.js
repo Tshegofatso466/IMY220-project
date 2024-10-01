@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/SignUpForm.css';
 
@@ -12,7 +13,8 @@ export class SignUpForm extends Component {
             name: '',
             username: '',
             password: '',
-            errorMessage: ''
+            errorMessage: '',
+            SignedIn: false
         };
     }
 
@@ -46,11 +48,19 @@ export class SignUpForm extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validateForm()) {
-            // Logic to handle signup goes here
-            this.setState({ errorMessage: '' });
             alert('Sign-up successful!');
+            const { email, password, surname, name, userName } = this.state;
+            this.setState({ errorMessage: '', SignedIn: true });
+            this.props.goThrough(email, password, surname, name, userName);
         }
     };
+
+    goThrough = () => {
+        if (this.validateForm()) {
+            alert('Sign-up successful!');
+            this.setState({ errorMessage: '', SignedIn: true });
+        }
+    }
 
     // Handle input changes
     handleChange = (e) => {
@@ -108,7 +118,9 @@ export class SignUpForm extends Component {
                             onChange={this.handleChange}
                             required
                         />
-                        <button type="submit" className="signup-submit-btn">Sign Up</button>
+                        <Link to={this.state.SignedIn ? "/playlist" : ""}>
+                            <button onClick={this.goThrough} type="submit" className="signup-submit-btn">Sign Up</button>
+                        </Link>
                     </form>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from'react-router-dom';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/LoginForm.css'; // Custom CSS for LoginForm
 
@@ -10,7 +11,8 @@ export class LoginForm extends Component {
             email: '',
             username: '',
             password: '',
-            errors: {}
+            errors: {},
+            LoggedIn: false
         };
     }
 
@@ -55,6 +57,16 @@ export class LoginForm extends Component {
             this.setState({ errors });
         }
     };
+
+    goThrough = () => {
+        const errors = this.validateForm();
+
+        if(Object.keys(errors).length === 0) {
+            // No errors, proceed with login logic (e.g., API call)
+            alert('Form submitted successfully:', this.state);
+            this.setState({ LoggedIn: true });
+        }
+    }
 
     render() {
         const { email, username, password, errors } = this.state;
@@ -112,7 +124,10 @@ export class LoginForm extends Component {
                         </div>
 
                         {/* Submit button */}
-                        <button type="submit" className="submit-btn">Login</button>
+                        <Link to={this.state.LoggedIn ? "/playlist" : ""}>
+                            <button onClick={this.goThrough} type="submit" className="submit-btn">Login</button>
+                        </Link>
+                        {/* <button type="submit" className="submit-btn">Login</button> */}
                     </form>
                 </div>
             </div>

@@ -23,7 +23,8 @@
 }
 
 .logo-icon {
-    width: 100px; /* Adjust as per your logo size */
+    height: 100%;
+    width: 100px; /*Adjust as per your logo size */
     cursor: pointer;
 }
 
@@ -51,7 +52,7 @@
     background-color: #5C5C5C;
     border: none;
     border-radius: 5px;
-    color: white;
+    /* color: white; */
     cursor: pointer;
     font-size: 14px;
 }

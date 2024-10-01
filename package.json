@@ -11,8 +11,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "expres": "^0.0.5",
     "express": "^4.20.0",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.7.0",
     "path": "^0.12.7",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
