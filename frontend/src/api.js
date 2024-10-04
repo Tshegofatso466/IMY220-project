@@ -1,0 +1,46 @@
+
+export async function signUp(data) {
+    return fetch('https://localhost:1337/imy/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('Error signing up');
+        }
+        return response.json();
+    });
+}
+
+export const login = async (data) => {
+    const response = await fetch("/imy/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error("Login failed");
+    }
+    return response.json();
+};
+
+export const getPlaylists = async () => {
+    const response = await fetch("/imy/playlists");
+    if (!response.ok) {
+        throw new Error("Failed to fetch playlists");
+    }
+    return response.json();
+};
+
+export async function getPlaylistById(id) {
+    return fetch(`/imy/playlist/${id}`)
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`Failed to fetch playlist with ID ${id}`);
+        }
+        return response.json();
+    });
+}

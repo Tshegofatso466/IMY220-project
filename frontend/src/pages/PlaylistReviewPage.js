@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useLocation } from'react-router-dom';
 import { ProfilePreview } from '../components/ProfilePreview';
 import { Song } from '../components/Song';
 import { CommentList } from '../components/CommentList';
@@ -8,22 +7,39 @@ import { EditPlaylist } from '../components/EditPlaylist';
 import { CreatePlaylist } from '../components/CreatePlaylist';
 import { AddSong } from '../components/AddSong';
 import { CreateComment } from '../components/CreateComment'; // Import the CreateComment component
+import { getPlaylistById } from '../api'; // Import your API call
 import '../../public/assets/styles/PlaylistView.css';
 
 export class PlaylistView extends React.Component {
     constructor(props) {
         super(props);
-        const location = useLocation();
-        const { playlist } = location.state;
-        this.playlist = playlist;
         this.state = {
+            playlist: null, // Store fetched playlist data
             showComments: false,
             showEditPlaylist: false,
             showCreatePlaylist: false,
             showAddSong: false,
-            showCreateComment: false, // New state to control CreateComment modal visibility
+            showCreateComment: false,
             comments: [],
+            loading: true, // Show loading indicator
         };
+    }
+
+    async componentDidMount() {
+        const { playlistId } = this.props.match.params; // Get the playlist ID from URL params
+
+        try {
+            const playlist = await getPlaylistById(playlistId); // Fetch the playlist data
+            console.log(playlist);
+            this.setState({
+                playlist,
+                comments: playlist.comments || [],
+                loading: false,
+            });
+        } catch (error) {
+            console.error('Error fetching playlist:', error);
+            this.setState({ loading: false });
+        }
     }
 
     handleLike = () => {
@@ -33,7 +49,6 @@ export class PlaylistView extends React.Component {
     handleComment = () => {
         this.setState((prevState) => ({
             showComments: !prevState.showComments,
-            comments: this.props.comments
         }));
     };
 
@@ -43,57 +58,84 @@ export class PlaylistView extends React.Component {
 
     handleCreatePlaylist = () => {
         this.setState((prevState) => ({
-            showCreatePlaylist: !prevState.showCreatePlaylist
+            showCreatePlaylist: !prevState.showCreatePlaylist,
         }));
     };
 
     handleEditPlaylist = () => {
         this.setState((prevState) => ({
-            showEditPlaylist: !prevState.showEditPlaylist
+            showEditPlaylist: !prevState.showEditPlaylist,
         }));
     };
 
     handleAddSong = () => {
         this.setState((prevState) => ({
-            showAddSong: !prevState.showAddSong
+            showAddSong: !prevState.showAddSong,
         }));
     };
 
     handleCreateComment = () => {
         this.setState((prevState) => ({
-            showCreateComment: !prevState.showCreateComment
+            showCreateComment: !prevState.showCreateComment,
         }));
     };
 
     handleAddComment = (newComment) => {
         this.setState((prevState) => ({
-            comments: [...prevState.comments, {
-                profileImage: '/path/to/default/image.jpg',
-                userName: 'Anonymous',
-                followers: 0,
-                commentText: newComment,
-                timestamp: new Date().toISOString()
-            }]
+            comments: [
+                ...prevState.comments,
+                {
+                    profileImage: '/path/to/default/image.jpg',
+                    userName: 'Anonymous',
+                    followers: 0,
+                    commentText: newComment,
+                    timestamp: new Date().toISOString(),
+                },
+            ],
         }));
     };
 
     render() {
-        const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = this.playlist;
-        const { showComments, showEditPlaylist, showCreatePlaylist, showAddSong, showCreateComment, comments } = this.state;
+        const {
+            playlist,
+            showComments,
+            showEditPlaylist,
+            showCreatePlaylist,
+            showAddSong,
+            showCreateComment,
+            comments,
+            loading,
+        } = this.state;
+
+        if (loading) {
+            return <div>Loading...</div>;
+        }
+
+        if (!playlist) {
+            return <div>Playlist not found</div>;
+        }
+
+        const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = playlist;
 
         return (
             <div className="playlist-view-container">
                 <img src={`/assets/images/RANDOM/latest2.jpg`} alt="Playlist background" className="playlist-background" />
                 <div className="header-btn-container">
-                    <button className="header-btn" onClick={this.handleCreatePlaylist}>Create Playlist</button>
-                    <button className="header-btn" onClick={this.handleEditPlaylist}>Edit Playlist</button>
-                    <button className="header-btn" onClick={this.handleAddSong}>Add Song</button>
+                    <button className="header-btn" onClick={this.handleCreatePlaylist}>
+                        Create Playlist
+                    </button>
+                    <button className="header-btn" onClick={this.handleEditPlaylist}>
+                        Edit Playlist
+                    </button>
+                    <button className="header-btn" onClick={this.handleAddSong}>
+                        Add Song
+                    </button>
                 </div>
 
                 <div className="playlist-header">
                     <h1 className="playlist-name">{playlistName}</h1>
                     <div className="vertical-line"></div>
-                    <div className='thePreview'>
+                    <div className="thePreview">
                         <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
                     </div>
                 </div>
@@ -101,58 +143,39 @@ export class PlaylistView extends React.Component {
                 <div className="playlist-body">
                     <div className="song-list">
                         {songs.map((song, index) => (
-                            <Song
-                                key={index}
-                                title={song.title}
-                                artists={song.artists}
-                            />
+                            <Song key={index} title={song.title} artists={song.artists} />
                         ))}
                     </div>
 
                     <div className="icon-group">
-                        <i className="icon-heart" onClick={this.handleLike}>❤️</i>
-                        <i className="icon-comment" onClick={this.handleComment}>💬</i>
-                        <i className="icon-add" onClick={this.handleCreateComment}>➕</i>
+                        <i className="icon-heart" onClick={this.handleLike}>
+                            ❤️
+                        </i>
+                        <i className="icon-comment" onClick={this.handleComment}>
+                            💬
+                        </i>
+                        <i className="icon-add" onClick={this.handleCreateComment}>
+                            ➕
+                        </i>
                     </div>
                 </div>
 
-                {showComments && (
-                    <CommentList
-                        comments={comments}
-                        onClose={this.handleComment}
-                    />
-                )}
-
+                {showComments && <CommentList comments={comments} onClose={this.handleComment} />}
                 {showEditPlaylist && <EditPlaylist playlistName={playlistName} songs={songs} onClose={this.handleEditPlaylist} />}
                 {showCreatePlaylist && <CreatePlaylist onClose={this.handleCreatePlaylist} />}
                 {showAddSong && <AddSong onClose={this.handleAddSong} />}
-                {showCreateComment && <CreateComment onAddComment={this.handleAddComment} onClose={this.handleCreateComment} />} {/* Render CreateComment component */}
+                {showCreateComment && (
+                    <CreateComment onAddComment={this.handleAddComment} onClose={this.handleCreateComment} />
+                )}
             </div>
         );
     }
 }
 
-// PlaylistView.propTypes = {
-//     playlistName: PropTypes.string.isRequired,
-//     ownerImage: PropTypes.string.isRequired,
-//     ownerName: PropTypes.string.isRequired,
-//     followers: PropTypes.number.isRequired,
-//     songs: PropTypes.arrayOf(
-//         PropTypes.shape({
-//             title: PropTypes.string.isRequired,
-//             artists: PropTypes.arrayOf(PropTypes.string).isRequired
-//         })
-//     ).isRequired,
-//     playlistImage: PropTypes.string.isRequired,
-//     comments: PropTypes.arrayOf(
-//         PropTypes.shape({
-//             profileImage: PropTypes.string.isRequired,
-//             userName: PropTypes.string.isRequired,
-//             followers: PropTypes.number.isRequired,
-//             commentText: PropTypes.string.isRequired,
-//             timestamp: PropTypes.string.isRequired
-//         })
-//     )
-// };
-
-// {showEditPlaylist && <EditPlaylist playlistName={playlistName} songs={songs} onClose={this.handleEditPlaylist} />}
+PlaylistView.propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            playlistId: PropTypes.string.isRequired, // Playlist ID from URL
+        }),
+    }).isRequired,
+};

@@ -1,6 +1,5 @@
 import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { LoginForm } from '../components/LoginForm';
+import LoginForm from '../components/LoginForm';
 import { SignUpForm } from '../components/SignUpForm';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/Home.css';
@@ -28,11 +27,6 @@ export class Home extends React.Component {
         }));
     };
 
-    handleSignUp = () => {
-        // const navigate = useNavigate();
-        // navigate('/playlist');
-    };
-
     render() {
         const { showLoginForm, showSignUpForm } = this.state;
 
@@ -54,8 +48,8 @@ export class Home extends React.Component {
                     </div>
                 </div>
 
-                {showLoginForm && <LoginForm onClose={this.toggleLoginForm} />}
-                {showSignUpForm && <SignUpForm onClose={this.toggleSignUpForm} goThrough={this.handleSignUp} />}
+                {showLoginForm && <LoginForm onClose={this.toggleLoginForm} Login={this.props.Login} />}
+                {showSignUpForm && <SignUpForm onClose={this.toggleSignUpForm} />}
             </div>
         );
     }

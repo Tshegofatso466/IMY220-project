@@ -32,8 +32,9 @@ export class Playlists extends React.Component {
     }
 }
 
-PlaylistPage.propTypes = {
+Playlists.propTypes = {
     playLists: PropTypes.array.isRequired,
     searchQuery: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
     onPlaylistClick: PropTypes.func.isRequired,
 };

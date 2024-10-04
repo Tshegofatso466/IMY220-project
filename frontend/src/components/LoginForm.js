@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from'react-router-dom';
 import '../fontDefinition/fonts.css';
-import '../../public/assets/styles/LoginForm.css'; // Custom CSS for LoginForm
+import { login } from '../api';
+import '../../public/assets/styles/LoginForm.css';
+import withNavigation from '../hoc.js';  // Import the HOC
 
-export class LoginForm extends Component {
+class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,7 +13,6 @@ export class LoginForm extends Component {
             username: '',
             password: '',
             errors: {},
-            LoggedIn: false
         };
     }
 
@@ -45,28 +45,29 @@ export class LoginForm extends Component {
     };
 
     // Function to handle form submission
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const errors = this.validateForm();
 
         if (Object.keys(errors).length === 0) {
-            // No errors, proceed with login logic (e.g., API call)
+            // Proceed with login logic (e.g., API call)
             console.log('Form submitted successfully:', this.state);
+
+            const data = { email: this.state.email, username: this.state.username, password: this.state.password };
+            const isLoggedIn = await this.props.Login(data);
+
+            if (isLoggedIn) {
+                // Redirect to playlist page after successful login
+                this.props.navigate('/playlist');
+            } else {
+                // Handle login failure
+                this.setState({ errors: { login: 'Login failed. Please try again.' } });
+            }
         } else {
             // Set errors to state
             this.setState({ errors });
         }
     };
-
-    goThrough = () => {
-        const errors = this.validateForm();
-
-        if(Object.keys(errors).length === 0) {
-            // No errors, proceed with login logic (e.g., API call)
-            alert('Form submitted successfully:', this.state);
-            this.setState({ LoggedIn: true });
-        }
-    }
 
     render() {
         const { email, username, password, errors } = this.state;
@@ -124,10 +125,7 @@ export class LoginForm extends Component {
                         </div>
 
                         {/* Submit button */}
-                        <Link to={this.state.LoggedIn ? "/playlist" : ""}>
-                            <button onClick={this.goThrough} type="submit" className="submit-btn">Login</button>
-                        </Link>
-                        {/* <button type="submit" className="submit-btn">Login</button> */}
+                        <button type="submit" className="submit-btn">Login</button>
                     </form>
                 </div>
             </div>
@@ -137,5 +135,10 @@ export class LoginForm extends Component {
 
 // Prop validation
 LoginForm.propTypes = {
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    Login: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired, // Expect navigate function as prop
 };
+
+// Wrap LoginForm with the `withNavigation` HOC
+export default withNavigation(LoginForm);

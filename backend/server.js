@@ -25,7 +25,7 @@ const db = client.db("IMY_project");
 const collection = db.collection("IMY-playlists");
 
 
-app.post("/api/login", async (req, res) => {
+app.post("/imy/login", async (req, res) => {
     const { email, username, password } = req.body;
 
     try {
@@ -47,7 +47,7 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-app.post("/api/signup", async (req, res) => {
+app.post("/imy/signup", async (req, res) => {
     const { username, email, password, profileImage, bio } = req.body;
 
     // Create the user object
@@ -73,7 +73,7 @@ app.post("/api/signup", async (req, res) => {
     }
 });
 
-app.get("/api/user/:id", async (req, res) => {
+app.get("/imy/user/:id", async (req, res) => {
     const userId = req.params.id;
 
     try {
@@ -89,7 +89,7 @@ app.get("/api/user/:id", async (req, res) => {
     }
 });
 
-app.get("/api/playlists", async (req, res) => {
+app.get("/imy/playlists", async (req, res) => {
     try {
         const users = await collection.find().toArray();
 
@@ -103,9 +103,11 @@ app.get("/api/playlists", async (req, res) => {
                         PlayListImage: playlist.PlayListImage,
                         OwnerImage: playlist.OwnerImage,
                         OwnerName: playlist.OwnerName,
+                        songs: playlist.songs,
+                        comments: playlist.comments,
                         numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
                         userId: user._id, // Optionally include userId for reference
-                        _id: playlist._id
+                        _id: playlist.id.toString() // Use the correct ID
                     });
                 });
             }
@@ -117,7 +119,29 @@ app.get("/api/playlists", async (req, res) => {
     }
 });
 
-app.post("/api/createPlaylist", async (req, res) => {
+app.get("/imy/playlist/:id", async (req, res) => {
+    const playlistId = req.params.id;
+    console.log(`Received request for playlist ID: ${playlistId}`);
+    try {
+        // Use the 'id' field from the playlists array
+        const playlist = await collection.findOne(
+            { "playlists.id": new ObjectId(playlistId) }, // Change to 'playlists.id'
+            { projection: { "playlists.$": 1 } }
+        );
+
+        if (!playlist || !playlist.playlists.length) {
+            console.log("Playlist not found");
+            return res.status(404).json({ message: "Playlist not found" });
+        }
+
+        res.status(200).json(playlist.playlists[0]); // Return the found playlist
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post("/imy/createPlaylist", async (req, res) => {
     const { playlistName, OwnerImage, PlaylistImage, OwnerName, userId } = req.body;
 
     // Validate the incoming data
@@ -154,7 +178,7 @@ app.post("/api/createPlaylist", async (req, res) => {
     }
 });
 
-app.post("/api/createSong", async (req, res) => {
+app.post("/imy/createSong", async (req, res) => {
     const { songTitle, artists, profileId, playlistId } = req.body;
 
     // Validate the incoming data
@@ -186,7 +210,7 @@ app.post("/api/createSong", async (req, res) => {
     }
 });
 
-app.post("/api/createComment", async (req, res) => {
+app.post("/imy/createComment", async (req, res) => {
     const { playlistId, profileId, userId, comment } = req.body;
 
     // Validate the incoming data
@@ -230,7 +254,7 @@ app.post("/api/createComment", async (req, res) => {
     }
 });
 
-app.delete("/api/deleteProfile/:profileId", async (req, res) => {
+app.delete("/imy/deleteProfile/:profileId", async (req, res) => {
     const { profileId } = req.params;
 
     // Validate the incoming data
@@ -253,7 +277,7 @@ app.delete("/api/deleteProfile/:profileId", async (req, res) => {
     }
 });
 
-app.patch("/api/editProfile", async (req, res) => {
+app.patch("/imy/editProfile", async (req, res) => {
     const { userId, profileImage, bio, username } = req.body;
 
     // Validate the incoming data
@@ -285,7 +309,7 @@ app.patch("/api/editProfile", async (req, res) => {
     }
 });
 
-app.delete("/api/deletePlaylist", async (req, res) => {
+app.delete("/imy/deletePlaylist", async (req, res) => {
     const { userId, playlistId } = req.body;
 
     // Validate incoming data
@@ -312,7 +336,7 @@ app.delete("/api/deletePlaylist", async (req, res) => {
     }
 });
 
-app.put("/api/editPlaylist", async (req, res) => {
+app.put("/imy/editPlaylist", async (req, res) => {
     const { playlistId, userId, newPlaylistName, newPlaylistImage } = req.body;
 
     // Validate incoming data
@@ -344,7 +368,7 @@ app.put("/api/editPlaylist", async (req, res) => {
     }
 });
 
-app.delete("/api/deleteSong", async (req, res) => {
+app.delete("/imy/deleteSong", async (req, res) => {
     const { userId, playlistId, songName, artists } = req.body;
 
     // Validate incoming data
@@ -378,7 +402,7 @@ app.delete("/api/deleteSong", async (req, res) => {
     }
 });
 
-app.post("/api/friend", async (req, res) => {
+app.post("/imy/friend", async (req, res) => {
     const { userId, profileId } = req.body;
 
     if (!userId || !profileId) {
@@ -417,7 +441,7 @@ app.post("/api/friend", async (req, res) => {
     }
 });
 
-app.post("/api/unfriend", async (req, res) => {
+app.post("/imy/unfriend", async (req, res) => {
     const { userId, profileId } = req.body;
 
     if (!userId || !profileId) {

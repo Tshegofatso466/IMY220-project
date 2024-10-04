@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from './SearchBar'; // Importing SearchBar
-import { LoginForm } from './LoginForm'; // Importing LoginForm
+import LoginForm from './LoginForm'; // Importing LoginForm
 import { SignUpForm } from './SignUpForm'; // Importing SignUpForm
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/Header.css';
@@ -37,7 +37,7 @@ export class Header extends React.Component {
         return (
             <header className="header-container">
                 <div className="left-section">
-                    <img src="/assets/icons/menu-burger.png" alt="Sidebar Opener" className="sidebar-icon"/>
+                    <img src="/assets/icons/menu-burger.png" alt="Sidebar Opener" className="sidebar-icon" />
                     <img src="/assets/images/LOGO/Thunder_logo.png" alt="Logo" className="logo-icon" />
                 </div>
                 <div className="middle-section">
