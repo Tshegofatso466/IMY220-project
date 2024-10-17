@@ -46,7 +46,7 @@ export async function getPlaylistById(id) {
 }
 
 export async function getUserById(id) {
-    const response = await fetch(`/api/user/${id}`)
+    const response = await fetch(`/imy/user/${id}`)
     if (!response.ok) {
         // console.log(response);
         throw new Error(`Failed to fetch user with ID ${id}`);

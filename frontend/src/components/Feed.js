@@ -70,7 +70,7 @@ class Feed extends React.Component {
                         <PlayList
                             PlayListName={playlist.PlayListName || 'Untitled Playlist'}
                             PlayListImage={playlist.PlayListImage || 'default_image.jpg'}
-                            OwnerImage={playlist.OwnerImage || 'default_owner.jpg'}
+                            Ownerimage={playlist.OwnerImage || 'default_owner.jpg'}
                             OwnerName={playlist.OwnerName || 'Unknown Owner'}
                             songs={playlist.songs || []}
                             comments={playlist.comments || []}

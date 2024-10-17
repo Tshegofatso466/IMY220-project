@@ -14,7 +14,10 @@ export class Profile extends React.Component {
         this.state = {
             activeTab: 'Playlists',
             openForm: false,
-            user: null
+            playlists: [], 
+            friends: [], 
+            pictures: [], 
+            onPlaylistClick: null
         };
     }
 
@@ -31,7 +34,6 @@ export class Profile extends React.Component {
     async componentDidMount() {
         const userId  = sessionStorage.getItem('userId') || 0; // Get userId from props
         console.log(userId);
-        console.log('helloooooooo! ');
         try {
             const user = await getUserById(userId); // Fetch user data using getUserById
             this.setState({ user: user, loading: false }); // Set user data in state
@@ -42,10 +44,17 @@ export class Profile extends React.Component {
         }
     }
 
+    onPlaylistClick = (playlist) => {
+        sessionStorage.setItem('playlistId', playlist.id);
+        this.props.navigate('playlistReview/1');
+    }
+
     // Function to render content based on the active tab
     renderContent() {
         const { playlists, friends, pictures, onPlaylistClick } = this.state;
         const { activeTab } = this.state;
+
+        console.log("renderContent");
 
         switch (activeTab) {
             case 'Playlists':
