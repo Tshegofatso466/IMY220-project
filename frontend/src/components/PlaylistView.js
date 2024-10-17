@@ -21,24 +21,28 @@ export class PlaylistView extends React.Component {
             showAddSong: false,
             showCreateComment: false,
             comments: [],
-            loading: true, // Show loading indicator
+            ownerImage: "",
+            ownerName: "",
+            followers: null,
         };
     }
 
     async componentDidMount() {
         //const { id } = this.props.match.params; // Get the playlist ID from URL params
         const id = sessionStorage.getItem('playlistId');
-
+        console.log(id);
         try {
-            const playlist = await getPlaylistById(id);; // Fetch the playlist data
+            const playlist = await getPlaylistById(id); // Fetch the playlist data
             this.setState({
-                playlist,
-                comments: playlist?.comments || [],
-                loading: false,
+                playlist: playlist.playlist,
+                comments: playlist.playlist?.comments || [],
+                followers: playlist.followers || 0,
+                ownerImage: playlist.playlist.OwnerImage,
+                ownerName: playlist.playlist.OwnerName,
             });
         } catch (error) {
             console.error('Error fetching playlist:', error);
-            this.setState({ loading: false });
+            // this.setState({ loading: false });
         }
     }
 
@@ -75,17 +79,19 @@ export class PlaylistView extends React.Component {
     };
 
     handleCreateComment = async () => {
-        const returnedData = await createComment({playlistId: sessionStorage.getItem('playlistId'),
+        const returnedData = await createComment({
+            playlistId: sessionStorage.getItem('playlistId'),
             profileId: data.profileId,
             userId: sessionStorage.getItem('userId'),
-            comment: data.comment})
+            comment: data.comment
+        })
         this.setState((prevState) => ({
             showCreateComment: !prevState.showCreateComment,
         }));
     };
 
     handleAddComment = (newComment) => {
-        
+
         this.setState((prevState) => ({
             comments: [
                 ...prevState.comments,
@@ -109,18 +115,17 @@ export class PlaylistView extends React.Component {
             showAddSong,
             showCreateComment,
             comments,
-            loading,
+            ownerImage,
+            ownerName,
+            followers
         } = this.state;
-
-        if (loading) {
-            return <div>Loading...</div>;
-        }
 
         if (!playlist) {
             return <div>Playlist not found</div>;
         }
 
-        const { playlistName, ownerImage, ownerName, followers, songs, playlistImage } = playlist;
+        const { PlayListName, songs } = playlist;
+        //const { ownerImage, ownerName, followers } = this.state;
 
         return (
             <div className="playlist-view-container">
@@ -138,7 +143,7 @@ export class PlaylistView extends React.Component {
                 </div>
 
                 <div className="playlist-header">
-                    <h1 className="playlist-name">{playlistName}</h1>
+                    <h1 className="playlist-name">{PlayListName}</h1>
                     <div className="vertical-line"></div>
                     <div className="thePreview">
                         <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
@@ -153,15 +158,9 @@ export class PlaylistView extends React.Component {
                     </div>
 
                     <div className="icon-group">
-                        <i className="icon-heart" onClick={this.handleLike}>
-                            ❤️
-                        </i>
-                        <i className="icon-comment" onClick={this.handleComment}>
-                            💬
-                        </i>
-                        <i className="icon-add" onClick={this.handleCreateComment}>
-                            ➕
-                        </i>
+                            <img className="icon-heart" onClick={this.handleLike} src="/assets/icons/heart.png" />
+                            <img className="icon-comment" onClick={this.handleComment} src="/assets/icons/comment-alt.png" />
+                            <img className="icon-add" onClick={this.handleCreateComment} src="/assets/icons/comment-medical.png" />
                     </div>
                 </div>
 

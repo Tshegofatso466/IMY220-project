@@ -260,7 +260,9 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
           // Change to 'playlists.id'
           {
             projection: {
-              "playlists.$": 1
+              "playlists.$": 1,
+              "_id": 1,
+              "followers": 1
             }
           });
         case 4:
@@ -273,7 +275,11 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
             message: "Playlist not found"
           }));
         case 7:
-          res.status(200).json(playlist.playlists[0]); // Return the found playlist
+          res.status(200).json({
+            playlist: playlist.playlists[0],
+            profileId: playlist._id,
+            followers: playlist.followers
+          }); // Return the found playlist and owner
           _context5.next = 14;
           break;
         case 10:
@@ -438,7 +444,9 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee8$(_context8) {
       while (1) switch (_context8.prev = _context8.next) {
         case 0:
-          _req$body5 = req.body, playlistId = _req$body5.playlistId, profileId = _req$body5.profileId, userId = _req$body5.userId, comment = _req$body5.comment; // Validate the incoming data
+          _req$body5 = req.body, playlistId = _req$body5.playlistId, profileId = _req$body5.profileId, userId = _req$body5.userId, comment = _req$body5.comment; //userId =  the person who commented.
+          //profileId = the profile that is being commented on
+          // Validate the incoming data
           if (!(!playlistId || !profileId || !userId || !comment)) {
             _context8.next = 3;
             break;

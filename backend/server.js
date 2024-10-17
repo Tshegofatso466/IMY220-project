@@ -126,7 +126,7 @@ app.get("/imy/playlist/:id", async (req, res) => {
         // Use the 'id' field from the playlists array
         const playlist = await collection.findOne(
             { "playlists.id": new ObjectId(playlistId) }, // Change to 'playlists.id'
-            { projection: { "playlists.$": 1 } }
+            { projection: { "playlists.$": 1, "_id": 1, "followers": 1} }
         );
 
         if (!playlist || !playlist.playlists.length) {
@@ -134,7 +134,7 @@ app.get("/imy/playlist/:id", async (req, res) => {
             return res.status(404).json({ message: "Playlist not found" });
         }
 
-        res.status(200).json(playlist.playlists[0]); // Return the found playlist
+        res.status(200).json({playlist: playlist.playlists[0], profileId: playlist._id, followers: playlist.followers}); // Return the found playlist and owner
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });

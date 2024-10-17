@@ -78,15 +78,16 @@
     margin-left: 20px;
 }
 
-.icon-group i {
+.icon-group img {
     font-size: 30px;
     color: white;
     cursor: pointer;
     margin-bottom: 20px;
+    width: 36px;
     transition: transform 0.3s;
 }
 
-.icon-group i:hover {
+.icon-group img:hover {
     transform: scale(1.1);
 }
 /* Styling for the 'Create Playlist' and 'Edit Playlist' buttons */

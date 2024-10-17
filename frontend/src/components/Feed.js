@@ -28,6 +28,7 @@ class Feed extends React.Component {
             const playlist = await getPlaylistById(playlistId);
             console.log(playlist);
             sessionStorage.setItem('playlistId', playlistId);
+            sessionStorage.setItem('profileId', playlist.profileId);
             this.props.navigate(`/playlistReview/${playlistId}`); // Navigate to PlaylistReview with state
         } catch (error) {
             console.error("Failed to fetch playlist:", error);
