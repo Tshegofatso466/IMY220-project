@@ -25,7 +25,7 @@ export class CreateComment extends React.Component {
         }
 
         // Add the comment (integrate with your backend or state management here)
-        console.log('New Comment:', commentText);
+        console.log('New Comment: ', commentText);
         this.props.onAddComment(commentText); // Function to add comment
         this.props.onClose(); // Close the modal after submitting
     };

@@ -1,2 +1,4 @@
 node_modules
 tempor.js
+.gitignore
+*Dockerfile*

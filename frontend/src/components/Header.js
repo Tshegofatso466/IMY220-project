@@ -3,7 +3,9 @@ import { SearchBar } from './SearchBar'; // Importing SearchBar
 import LoginForm from './LoginForm'; // Importing LoginForm
 import { SignUpForm } from './SignUpForm'; // Importing SignUpForm
 import '../fontDefinition/fonts.css';
+import { Link } from'react-router-dom'; // Importing Link for navigation
 import '../../public/assets/styles/Header.css';
+import '../index.css';
 
 export class Header extends React.Component {
     constructor(props) {
@@ -47,7 +49,9 @@ export class Header extends React.Component {
                     <button className="login-btn" onClick={this.toggleLoginForm}>Login</button>
                     <button className="signup-btn" onClick={this.toggleSignUpForm}>Sign up</button>
                     <img src="/assets/icons/comment-alt.png" alt="Chat Icon" className="chat-icon" />
-                    <img src="/assets/icons/user.png" alt="user Icon" className="user-icon" />
+                    <Link to="/profile">
+                        <img src="/assets/icons/user.png" alt="user Icon" className="user-icon" />
+                    </Link>
                 </div>
 
                 {/* Conditionally render the LoginForm */}

@@ -1,9 +1,11 @@
 import React from 'react';
 import { PlayList } from '../components/PlayList';
 import PropTypes from 'prop-types';
+import { getUserById } from '../api';
 import '../fontDefinition/fonts.css'; // Assuming fonts are already set up
 import '../../public/assets/styles/Profile.css'; // Custom CSS for Profile component
 import { EditProfile } from '../components/EditProfile'; // Importing the EditProfile component
+// import { prototype } from 'file-loader';
 
 export class Profile extends React.Component {
     constructor(props) {
@@ -11,7 +13,8 @@ export class Profile extends React.Component {
         // State for the current tab (Playlists, Friends, Pictures) and toggling the edit profile form
         this.state = {
             activeTab: 'Playlists',
-            openForm: false
+            openForm: false,
+            user: null
         };
     }
 
@@ -24,6 +27,19 @@ export class Profile extends React.Component {
     toggleEditProfileForm = () => {
         this.setState((prevState) => ({ openForm: !prevState.openForm }));
     };
+
+    async componentDidMount() {
+        const { userId } = this.props || null; // Get userId from props
+        console.log(userId);
+        console.log('helloooooooo! ');
+        try {
+            const user = await getUserById(userId); // Fetch user data using getUserById
+            this.setState({ user: user, loading: false }); // Set user data in state
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            this.setState({ loading: false }); // Handle loading state
+        }
+    }
 
     // Function to render content based on the active tab
     renderContent() {
@@ -151,16 +167,18 @@ export class Profile extends React.Component {
         );
     }
 }
-
+Profile.protoTypes ={
+    userId: PropTypes.string.isRequired,
+}
 // Prop validation
-Profile.propTypes = {
-    profileImage: PropTypes.string.isRequired,
-    userName: PropTypes.string.isRequired,
-    bio: PropTypes.string.isRequired,
-    followers: PropTypes.number.isRequired,
-    following: PropTypes.number.isRequired,
-    playlists: PropTypes.array.isRequired,
-    friends: PropTypes.array.isRequired,
-    pictures: PropTypes.array.isRequired,
-    onPlaylistClick: PropTypes.func.isRequired
-};
+// Profile.propTypes = {
+//     profileImage: PropTypes.string.isRequired,
+//     userName: PropTypes.string.isRequired,
+//     bio: PropTypes.string.isRequired,
+//     followers: PropTypes.number.isRequired,
+//     following: PropTypes.number.isRequired,
+//     playlists: PropTypes.array.isRequired,
+//     friends: PropTypes.array.isRequired,
+//     pictures: PropTypes.array.isRequired,
+//     // onPlaylistClick: PropTypes.func.isRequired
+// };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header } from '../components/Header';
-import { PlaylistPage } from '../components/PlaylistPage'; // Imported PlaylistPage component
+import PlaylistPage from '../components/PlaylistPage'; // Imported PlaylistPage component
 import PropTypes from 'prop-types';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/PlaylistPage.css'; // Adjusted for new styles

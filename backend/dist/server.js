@@ -79,7 +79,7 @@ app.post("/imy/login", /*#__PURE__*/function () {
           }));
         case 9:
           res.status(200).json({
-            id: user._id,
+            id: user._id.toString(),
             message: "Login successful"
           });
           _context.next = 15;
@@ -251,10 +251,9 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
         case 0:
-          playlistId = req.params.id;
-          console.log("Received request for playlist ID: ".concat(playlistId));
-          _context5.prev = 2;
-          _context5.next = 5;
+          playlistId = req.params.id; // console.log(`Received request for playlist ID: ${playlistId}`);
+          _context5.prev = 1;
+          _context5.next = 4;
           return collection.findOne({
             "playlists.id": new _mongodb.ObjectId(playlistId)
           },
@@ -264,32 +263,31 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
               "playlists.$": 1
             }
           });
-        case 5:
+        case 4:
           playlist = _context5.sent;
           if (!(!playlist || !playlist.playlists.length)) {
-            _context5.next = 9;
+            _context5.next = 7;
             break;
           }
-          console.log("Playlist not found");
           return _context5.abrupt("return", res.status(404).json({
             message: "Playlist not found"
           }));
-        case 9:
+        case 7:
           res.status(200).json(playlist.playlists[0]); // Return the found playlist
-          _context5.next = 16;
+          _context5.next = 14;
           break;
-        case 12:
-          _context5.prev = 12;
-          _context5.t0 = _context5["catch"](2);
+        case 10:
+          _context5.prev = 10;
+          _context5.t0 = _context5["catch"](1);
           console.error(_context5.t0);
           res.status(500).json({
             error: _context5.t0.message
           });
-        case 16:
+        case 14:
         case "end":
           return _context5.stop();
       }
-    }, _callee5, null, [[2, 12]]);
+    }, _callee5, null, [[1, 10]]);
   }));
   return function (_x9, _x10) {
     return _ref5.apply(this, arguments);

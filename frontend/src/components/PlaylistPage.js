@@ -2,9 +2,10 @@ import React from 'react';
 import Feed from './Feed';
 import PropTypes from 'prop-types';
 import '../fontDefinition/fonts.css';
+import withNavigation from '../hoc.js';
 import '../../public/assets/styles/PlaylistPage.css'; // Adjusted for new styles
 
-export class PlaylistPage extends React.Component {
+class PlaylistPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,3 +72,5 @@ PlaylistPage.propTypes = {
     searchQuery: PropTypes.string.isRequired,
     onPlaylistClick: PropTypes.func.isRequired,
 };
+
+export default withNavigation(PlaylistPage);

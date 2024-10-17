@@ -41,7 +41,7 @@ app.post("/imy/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid password" });
         }
 
-        res.status(200).json({ id: user._id, message: "Login successful" });
+        res.status(200).json({ id: user._id.toString(), message: "Login successful" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -121,7 +121,7 @@ app.get("/imy/playlists", async (req, res) => {
 
 app.get("/imy/playlist/:id", async (req, res) => {
     const playlistId = req.params.id;
-    console.log(`Received request for playlist ID: ${playlistId}`);
+    // console.log(`Received request for playlist ID: ${playlistId}`);
     try {
         // Use the 'id' field from the playlists array
         const playlist = await collection.findOne(
@@ -130,7 +130,7 @@ app.get("/imy/playlist/:id", async (req, res) => {
         );
 
         if (!playlist || !playlist.playlists.length) {
-            console.log("Playlist not found");
+            // console.log("Playlist not found");
             return res.status(404).json({ message: "Playlist not found" });
         }
 
@@ -212,6 +212,9 @@ app.post("/imy/createSong", async (req, res) => {
 
 app.post("/imy/createComment", async (req, res) => {
     const { playlistId, profileId, userId, comment } = req.body;
+
+    //userId =  the person who commented.
+    //profileId = the profile that is being commented on
 
     // Validate the incoming data
     if (!playlistId || !profileId || !userId || !comment) {

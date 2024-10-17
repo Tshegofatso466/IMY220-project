@@ -7,12 +7,12 @@ export async function signUp(data) {
         },
         body: JSON.stringify(data),
     })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Error signing up');
-        }
-        return response.json();
-    });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Error signing up');
+            }
+            return response.json();
+        });
 }
 
 export const login = async (data) => {
@@ -37,10 +37,35 @@ export const getPlaylists = async () => {
 
 export async function getPlaylistById(id) {
     return fetch(`/imy/playlist/${id}`)
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error(`Failed to fetch playlist with ID ${id}`);
-        }
-        return response.json();
-    });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch playlist with ID ${id}`);
+            }
+            return response.json();
+        });
 }
+
+export async function getUserById(id) {
+    const response = await fetch(`/api/user/${id}`)
+    if (!response.ok) {
+        // console.log(response);
+        throw new Error(`Failed to fetch user with ID ${id}`);
+    }
+    // console.log(response);
+    return response.json();
+}
+
+export const createComment = async (data) => {
+    const response = await fetch("/imy/createComment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({playlistId: data.playlistId,
+            profileId: data.profileId,
+            userId: data.userId,
+            comment: data.comment}),
+    });
+    if (!response.ok) {
+        throw new Error("comment creation failed");
+    }
+    return response.json();
+};
