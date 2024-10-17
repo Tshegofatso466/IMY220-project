@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { ProfilePreview } from './ProfilePreview';
 import { Song } from './Song';
 import { CommentList } from './CommentList';
@@ -37,8 +37,8 @@ export class PlaylistView extends React.Component {
                 playlist: playlist.playlist,
                 comments: playlist.playlist?.comments || [],
                 followers: playlist.followers || 0,
-                ownerImage: playlist.playlist.OwnerImage,
-                ownerName: playlist.playlist.OwnerName,
+                ownerImage: playlist.playlist.OwnerImage || 'default.png',
+                ownerName: playlist.playlist.OwnerName || 'anonymous',
             });
         } catch (error) {
             console.error('Error fetching playlist:', error);
@@ -78,19 +78,19 @@ export class PlaylistView extends React.Component {
         }));
     };
 
-    handleCreateComment = async () => {
-        const returnedData = await createComment({
-            playlistId: sessionStorage.getItem('playlistId'),
-            profileId: data.profileId,
-            userId: sessionStorage.getItem('userId'),
-            comment: data.comment
-        })
+    handleCreateComment = () => {
         this.setState((prevState) => ({
             showCreateComment: !prevState.showCreateComment,
         }));
     };
 
-    handleAddComment = (newComment) => {
+    handleAddComment = async (newComment) => {
+        const returnedData = await createComment({
+            playlistId: sessionStorage.getItem('playlistId'),
+            profileId: sessionStorage.getItem('profileId'),
+            userId: sessionStorage.getItem('userId'),
+            comment: newComment
+        });
 
         this.setState((prevState) => ({
             comments: [

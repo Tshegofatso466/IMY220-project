@@ -13,6 +13,8 @@ export class Profile extends React.Component {
             activeTab: 'Playlists',
             openForm: false
         };
+
+        this.user = sessionStorage.getItem('userId');
     }
 
     // Function to set active tab

@@ -29,12 +29,13 @@ export class Profile extends React.Component {
     };
 
     async componentDidMount() {
-        const { userId } = this.props || null; // Get userId from props
+        const userId  = sessionStorage.getItem('userId') || 0; // Get userId from props
         console.log(userId);
         console.log('helloooooooo! ');
         try {
             const user = await getUserById(userId); // Fetch user data using getUserById
             this.setState({ user: user, loading: false }); // Set user data in state
+            console.log('User data fetched successfully:', user);
         } catch (error) {
             console.error("Error fetching user data:", error);
             this.setState({ loading: false }); // Handle loading state
@@ -43,7 +44,7 @@ export class Profile extends React.Component {
 
     // Function to render content based on the active tab
     renderContent() {
-        const { playlists, friends, pictures, onPlaylistClick } = this.props;
+        const { playlists, friends, pictures, onPlaylistClick } = this.state;
         const { activeTab } = this.state;
 
         switch (activeTab) {

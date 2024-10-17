@@ -6,8 +6,9 @@ import '../fontDefinition/fonts.css';
 import { Link } from'react-router-dom'; // Importing Link for navigation
 import '../../public/assets/styles/Header.css';
 import '../index.css';
+import withNavigation from '../hoc.js';  // Import the HOC
 
-export class Header extends React.Component {
+class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,6 +34,14 @@ export class Header extends React.Component {
         }));
     };
 
+    redirectToHome = () => {
+        this.props.navigate('/playlist'); // Navigate to the home page
+    }
+
+    redirectToProfile = () => { 
+        this.props.navigate('/profile'); // Navigate to the profile page
+    }
+
     render() {
         const { showLoginForm, showSignUpForm } = this.state;
 
@@ -40,7 +49,7 @@ export class Header extends React.Component {
             <header className="header-container">
                 <div className="left-section">
                     <img src="/assets/icons/menu-burger.png" alt="Sidebar Opener" className="sidebar-icon" />
-                    <img src="/assets/images/LOGO/Thunder_logo.png" alt="Logo" className="logo-icon" />
+                    <img src="/assets/images/LOGO/Thunder_logo.png" alt="Logo" className="logo-icon" onClick={this.redirectToHome}/>
                 </div>
                 <div className="middle-section">
                     <SearchBar searchQuery={this.props.searchQuery} onChange={this.props.onChange} />
@@ -63,3 +72,5 @@ export class Header extends React.Component {
         );
     }
 }
+
+export default withNavigation(Header);

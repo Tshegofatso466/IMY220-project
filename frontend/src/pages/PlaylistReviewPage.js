@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {PlaylistView} from '../components/PlaylistView';
-import {Header} from '../components/Header';
+import Header from '../components/Header';
 // import '../../public/assets/styles/PlaylistView.css';
 
 export class PlaylistReviewPage extends React.Component {
