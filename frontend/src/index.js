@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Playlists } from './pages/Playlists';
 import { Home } from './pages/SplashPage';
-import { Profile } from './pages/ProfilePage'; // Import the Profile component
+import { ProfilePage } from './pages/ProfilePage'; // Import the Profile component
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import { PlaylistReviewPage } from './pages/PlaylistReviewPage'; // Import the PlaylistView component
 import { login, getPlaylists, getUserById, getPlaylistById } from './api';
@@ -83,7 +83,10 @@ class App extends React.Component {
                         fetchPlaylistById={this.fetchPlaylistById}
                         searchQuery={this.state.searchQuery}
                         onChange={this.handleSearchChange} />} /> {/* Define the route for PlaylistView */}
-                    <Route path="/profile" element={<Profile userName={this.state.id} />} />
+                    <Route path="/profile" element={<ProfilePage
+                        userName={this.state.id}
+                        searchQuery={this.state.searchQuery}
+                        onChange={this.handleSearchChange} />} />
                 </Routes>
             </Router>
         );

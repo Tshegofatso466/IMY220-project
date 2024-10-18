@@ -1,6 +1,7 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm';
 import { SignUpForm } from '../components/SignUpForm';
+import { AboutPage } from '../components/About';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/Home.css';
 
@@ -9,26 +10,37 @@ export class Home extends React.Component {
         super(props);
         this.state = {
             showLoginForm: false,
-            showSignUpForm: false
+            showSignUpForm: false,
+            showAboutPage: false
         };
     }
 
     toggleLoginForm = () => {
         this.setState((prevState) => ({
             showLoginForm: !prevState.showLoginForm,
-            showSignUpForm: false
+            showSignUpForm: false,
+            showAboutPage: false
         }));
     };
 
     toggleSignUpForm = () => {
         this.setState((prevState) => ({
             showSignUpForm: !prevState.showSignUpForm,
-            showLoginForm: false
+            showLoginForm: false,
+            showAboutPage: false
+        }));
+    };
+
+    toggleAboutPage = () => {
+        this.setState((prevState) => ({
+            showAboutPage: !prevState.showAboutPage,
+            showLoginForm: false,
+            showSignUpForm: false
         }));
     };
 
     render() {
-        const { showLoginForm, showSignUpForm } = this.state;
+        const { showLoginForm, showAboutPage, showSignUpForm } = this.state;
 
         return (
             <div className="home-container">
@@ -45,11 +57,13 @@ export class Home extends React.Component {
                     <div className="overlay-content">
                         <button className="login-btn" onClick={this.toggleLoginForm}>Log in</button>
                         <button className="signup-btn" onClick={this.toggleSignUpForm}>Sign up</button>
+                        <span onClick={this.toggleAboutPage}>About</span>
                     </div>
                 </div>
 
                 {showLoginForm && <LoginForm onClose={this.toggleLoginForm} Login={this.props.Login} />}
                 {showSignUpForm && <SignUpForm onClose={this.toggleSignUpForm} />}
+                {showAboutPage && <AboutPage onClose={this.toggleAboutPage} />}
             </div>
         );
     }

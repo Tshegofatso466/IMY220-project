@@ -8,9 +8,30 @@ export class EditProfile extends React.Component {
         this.state = {
             userName: this.props.userName,
             bio: this.props.bio,
-            error: ''
+            error: '',
+            profilePicture: '',
         };
     }
+
+    convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    }
+
+    handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await this.convertToBase64(file);
+        console.log(base64);
+        this.setState({ profilePicture: base64 });
+    };
 
     handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -19,7 +40,7 @@ export class EditProfile extends React.Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-        const { userName, bio } = this.state;
+        const { userName, bio, profilePicture } = this.state;
 
         if (userName.trim() === '' || bio.trim() === '') {
             this.setState({ error: 'Both username and bio must be filled out.' });
@@ -28,6 +49,7 @@ export class EditProfile extends React.Component {
             this.setState({ error: '' });
             this.props.onClose();  // Close the modal after successful validation
         }
+        
     };
 
     render() {
@@ -67,6 +89,17 @@ export class EditProfile extends React.Component {
                                 defaultValue={bio}
                                 onChange={this.handleInputChange}
                             ></textarea>
+                        </div>
+
+                        <div className='form-group'>
+                            <label>Profile-Picture:</label>
+                            <input
+                                type="file"
+                                accept=".jpeg, .png, .jpg"
+                                id='profilePicture'
+                                name='profilePicture'
+                                onChange={this.handleFileUpload}
+                            />
                         </div>
 
                         {/* Save Button */}

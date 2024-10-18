@@ -1,9 +1,11 @@
 import React from 'react';
-import { PlayList } from './PlayList';
+import { PlayList } from '../components/PlayList';
 import PropTypes from 'prop-types';
+import { getUserById } from '../api';
 import '../fontDefinition/fonts.css'; // Assuming fonts are already set up
 import '../../public/assets/styles/Profile.css'; // Custom CSS for Profile component
-import { EditProfile } from './EditProfile'; // Importing the EditProfile component
+import { EditProfile } from '../components/EditProfile'; // Importing the EditProfile component
+// import { prototype } from 'file-loader';
 
 export class Profile extends React.Component {
     constructor(props) {
@@ -11,10 +13,13 @@ export class Profile extends React.Component {
         // State for the current tab (Playlists, Friends, Pictures) and toggling the edit profile form
         this.state = {
             activeTab: 'Playlists',
-            openForm: false
+            openForm: false,
+            playlists: [],
+            friends: [],
+            pictures: [],
+            onPlaylistClick: null,
+            user: {}
         };
-
-        this.user = sessionStorage.getItem('userId');
     }
 
     // Function to set active tab
@@ -27,10 +32,30 @@ export class Profile extends React.Component {
         this.setState((prevState) => ({ openForm: !prevState.openForm }));
     };
 
+    async componentDidMount() {
+        const userId  = sessionStorage.getItem('userId') || 0; // Get userId from props
+        console.log(userId);
+        try {
+            const user = await getUserById(userId); // Fetch user data using getUserById
+            this.setState({ playlists: user.playlists, friends: user.friends, pictures:user.pictures, user: user }); // Set user data in state
+            console.log('User data fetched successfully:', user);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            this.setState({ loading: false }); // Handle loading state
+        }
+    }
+
+    onPlaylistClick = (playlist) => {
+        sessionStorage.setItem('playlistId', playlist.id);
+        this.props.navigate('playlistReview/1');
+    }
+
     // Function to render content based on the active tab
     renderContent() {
-        const { playlists, friends, pictures, onPlaylistClick } = this.props;
+        const { playlists, friends, pictures, onPlaylistClick } = this.state;
         const { activeTab } = this.state;
+
+        console.log("renderContent");
 
         switch (activeTab) {
             case 'Playlists':
@@ -41,7 +66,7 @@ export class Profile extends React.Component {
                                 key={playlist.id}
                                 PlayListName={playlist.PlayListName}
                                 PlayListImage={playlist.PlayListImage}
-                                Ownerimage={playlist.Ownerimage}
+                                Ownerimage={playlist.OwnerImage}
                                 OwnerName={playlist.OwnerName}
                                 songs={playlist.songs}
                                 onClick={() => onPlaylistClick(playlist)}
@@ -69,7 +94,7 @@ export class Profile extends React.Component {
     }
 
     render() {
-        const { profileImage, userName, bio, followers, following } = this.props;
+        const { profileImage, username, bio, followers, following } = this.state.user;
         const { activeTab, openForm } = this.state;
 
         return (
@@ -84,7 +109,7 @@ export class Profile extends React.Component {
                     {/* Conditionally render the EditProfile form */}
                     {openForm && (
                         <EditProfile
-                            userName={userName}
+                            userName={username}
                             bio={bio}
                             onClose={this.toggleEditProfileForm}
                         />
@@ -99,7 +124,7 @@ export class Profile extends React.Component {
 
                         {/* Right side: User Details */}
                         <div className="profile-details">
-                            <h2>{userName}</h2>
+                            <h2>{username}</h2>
                             <p>{bio}</p>
                             <div className="followers-following">
                                 <a href="#followers" className="link">
@@ -153,16 +178,6 @@ export class Profile extends React.Component {
         );
     }
 }
-
-// Prop validation
-Profile.propTypes = {
-    profileImage: PropTypes.string.isRequired,
-    userName: PropTypes.string.isRequired,
-    bio: PropTypes.string.isRequired,
-    followers: PropTypes.number.isRequired,
-    following: PropTypes.number.isRequired,
-    playlists: PropTypes.array.isRequired,
-    friends: PropTypes.array.isRequired,
-    pictures: PropTypes.array.isRequired,
-    onPlaylistClick: PropTypes.func.isRequired
-};
+Profile.protoTypes ={
+    userId: PropTypes.string.isRequired,
+}
