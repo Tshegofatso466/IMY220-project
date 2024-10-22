@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {PlaylistView} from '../components/PlaylistView';
+import PlaylistView from '../components/PlaylistView';
 import Header from '../components/Header';
 // import '../../public/assets/styles/PlaylistView.css';
 

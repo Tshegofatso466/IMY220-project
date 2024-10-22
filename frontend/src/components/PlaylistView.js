@@ -8,9 +8,10 @@ import { CreatePlaylist } from './CreatePlaylist';
 import { AddSong } from './AddSong';
 import { CreateComment } from './CreateComment'; // Import the CreateComment component
 import { getPlaylistById, createComment } from '../api'; // Import your API call
+import withNavigation from '../hoc.js';
 import '../../public/assets/styles/PlaylistView.css';
 
-export class PlaylistView extends React.Component {
+class PlaylistView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,8 +24,11 @@ export class PlaylistView extends React.Component {
             comments: [],
             ownerImage: "",
             ownerName: "",
+            ownerId: null,
             followers: null,
         };
+
+        this.hadleNavigateToProfile = this.hadleNavigateToProfile.bind(this);
     }
 
     async componentDidMount() {
@@ -33,12 +37,14 @@ export class PlaylistView extends React.Component {
         console.log(id);
         try {
             const playlist = await getPlaylistById(id); // Fetch the playlist data
+            console.log(playlist);
             this.setState({
-                playlist: playlist.playlist,
+                playlist: playlist.playlist || {},
                 comments: playlist.playlist?.comments || [],
                 followers: playlist.followers || 0,
                 ownerImage: playlist.playlist.OwnerImage || 'default.png',
                 ownerName: playlist.playlist.OwnerName || 'anonymous',
+                ownerId: playlist.profileId,
             });
         } catch (error) {
             console.error('Error fetching playlist:', error);
@@ -106,6 +112,10 @@ export class PlaylistView extends React.Component {
         }));
     };
 
+    hadleNavigateToProfile = () => {
+        sessionStorage.setItem('profileId', this.state.ownerId);
+        this.props.navigate('/profile');
+    }
     render() {
         const {
             playlist,
@@ -145,7 +155,7 @@ export class PlaylistView extends React.Component {
                 <div className="playlist-header">
                     <h1 className="playlist-name">{PlayListName}</h1>
                     <div className="vertical-line"></div>
-                    <div className="thePreview">
+                    <div className="thePreview" onClick={this.hadleNavigateToProfile}>
                         <ProfilePreview profileImage={ownerImage} userName={ownerName} followers={followers} />
                     </div>
                 </div>
@@ -175,3 +185,5 @@ export class PlaylistView extends React.Component {
         );
     }
 }
+
+export default withNavigation(PlaylistView);

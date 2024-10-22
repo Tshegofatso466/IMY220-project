@@ -59,13 +59,33 @@ export const createComment = async (data) => {
     const response = await fetch("/imy/createComment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({playlistId: data.playlistId,
+        body: JSON.stringify({
+            playlistId: data.playlistId,
             profileId: data.profileId,
             userId: data.userId,
-            comment: data.comment}),
+            comment: data.comment
+        }),
     });
     if (!response.ok) {
         throw new Error("comment creation failed");
     }
     return response.json();
 };
+
+export const updateProfile = async (data) => {
+    const response = await fetch("/imy/editProfile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: data.username,
+            profileImage: data.profileImage,
+            userId: data.userId,
+            bio: data.bio
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to update profile");
+    }
+    return response.json();
+}

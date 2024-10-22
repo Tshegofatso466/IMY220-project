@@ -18,8 +18,10 @@ export class Profile extends React.Component {
             friends: [],
             pictures: [],
             onPlaylistClick: null,
-            user: {}
+            user: {},
+            showfriends: false
         };
+        this.onPlaylistClick = this.onPlaylistClick.bind(this);
     }
 
     // Function to set active tab
@@ -33,12 +35,15 @@ export class Profile extends React.Component {
     };
 
     async componentDidMount() {
-        const userId  = sessionStorage.getItem('userId') || 0; // Get userId from props
+        const userId = sessionStorage.getItem('profileId') || 0; // Get userId from props
         console.log(userId);
         try {
             const user = await getUserById(userId); // Fetch user data using getUserById
-            this.setState({ playlists: user.playlists, friends: user.friends, pictures:user.pictures, user: user }); // Set user data in state
+            this.setState({ playlists: user.playlists, friends: user.friends, pictures: user.pictures, user: user }); // Set user data in state
             console.log('User data fetched successfully:', user);
+            if (sessionStorage.getItem('userId') === sessionStorage.getItem('profileId')) {
+                this.setState({ showfriends: true });
+            }
         } catch (error) {
             console.error("Error fetching user data:", error);
             this.setState({ loading: false }); // Handle loading state
@@ -47,7 +52,11 @@ export class Profile extends React.Component {
 
     onPlaylistClick = (playlist) => {
         sessionStorage.setItem('playlistId', playlist.id);
-        this.props.navigate('playlistReview/1');
+        this.props.navigate('/playlistReview');
+    }
+
+    handleAddFriend = (friend) => {
+        
     }
 
     // Function to render content based on the active tab
@@ -95,7 +104,7 @@ export class Profile extends React.Component {
 
     render() {
         const { profileImage, username, bio, followers, following } = this.state.user;
-        const { activeTab, openForm } = this.state;
+        const { activeTab, openForm, showfriends } = this.state;
 
         return (
             <div className="profile-page">
@@ -104,8 +113,9 @@ export class Profile extends React.Component {
 
                 <div className="profile-content">
                     {/* Top-right Edit Profile button */}
-                    <button className="edit-profile-btn" onClick={this.toggleEditProfileForm}>Edit Profile</button>
-
+                    {showfriends &&
+                        <button className="edit-profile-btn" onClick={this.toggleEditProfileForm}>Edit Profile</button>
+                    }
                     {/* Conditionally render the EditProfile form */}
                     {openForm && (
                         <EditProfile
@@ -119,7 +129,7 @@ export class Profile extends React.Component {
                     <div className="profile-header">
                         {/* Left side: Profile Picture */}
                         <div className="profile-picture">
-                            <img src={`/assets/images/USERS-PROFILE-PICTURES/${profileImage}`} alt="Profile" style={{ width: '160px', height: '160px', borderRadius: '50%' }} />
+                            <img src={`${profileImage}`} alt="Profile" style={{ width: '160px', height: '160px', borderRadius: '50%' }} />
                         </div>
 
                         {/* Right side: User Details */}
@@ -149,20 +159,22 @@ export class Profile extends React.Component {
 
                     {/* Tab Links: Playlists, Friends, Pictures */}
                     <div className="tab-links">
-                        <span 
-                            className={`tab-link ${activeTab === 'Playlists' ? 'active' : ''}`} 
+                        <span
+                            className={`tab-link ${activeTab === 'Playlists' ? 'active' : ''}`}
                             onClick={() => this.setActiveTab('Playlists')}
                         >
                             Playlists
                         </span>
-                        <span 
-                            className={`tab-link ${activeTab === 'Friends' ? 'active' : ''}`} 
-                            onClick={() => this.setActiveTab('Friends')}
-                        >
-                            Friends
-                        </span>
-                        <span 
-                            className={`tab-link ${activeTab === 'Pictures' ? 'active' : ''}`} 
+                        {this.state.showfriends &&
+                            <span
+                                className={`tab-link ${activeTab === 'Friends' ? 'active' : ''}`}
+                                onClick={() => this.setActiveTab('Friends')}
+                            >
+                                Friends
+                            </span>
+                        }
+                        <span
+                            className={`tab-link ${activeTab === 'Pictures' ? 'active' : ''}`}
                             onClick={() => this.setActiveTab('Pictures')}
                         >
                             Pictures
@@ -178,6 +190,6 @@ export class Profile extends React.Component {
         );
     }
 }
-Profile.protoTypes ={
+Profile.protoTypes = {
     userId: PropTypes.string.isRequired,
 }

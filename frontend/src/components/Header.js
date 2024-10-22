@@ -12,6 +12,7 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            just: false,
             userLoggedIn: false, // Eventually, this will be passed in as a prop
             showLoginForm: false, // Controls the visibility of the login form
             showSignUpForm: false // Controls the visibility of the sign-up form
@@ -38,7 +39,11 @@ class Header extends React.Component {
         this.props.navigate('/playlist'); // Navigate to the home page
     }
 
-    redirectToProfile = () => { 
+    redirectToProfile = () => {
+        // console.log('Before: ..... profileId: ', sessionStorage.getItem('profileId'), ', userId:', sessionStorage.getItem('userId'));
+        sessionStorage.setItem('profileId', sessionStorage.getItem('userId'));
+        this.setState((prevSate) => ({just: !prevSate.just}));
+        // console.log('after: ..... profileId: ', sessionStorage.getItem('profileId'), ', userId:', sessionStorage.getItem('userId'));
         this.props.navigate('/profile'); // Navigate to the profile page
     }
 
@@ -58,9 +63,9 @@ class Header extends React.Component {
                     <button className="login-btn" onClick={this.toggleLoginForm}>Login</button>
                     <button className="signup-btn" onClick={this.toggleSignUpForm}>Sign up</button>
                     <img src="/assets/icons/comment-alt.png" alt="Chat Icon" className="chat-icon" />
-                    <Link to="/profile">
+                    <div onClick={this.redirectToProfile}>
                         <img src="/assets/icons/user.png" alt="user Icon" className="user-icon" />
-                    </Link>
+                    </div>
                 </div>
 
                 {/* Conditionally render the LoginForm */}

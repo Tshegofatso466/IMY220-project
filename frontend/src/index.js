@@ -79,7 +79,7 @@ class App extends React.Component {
                         onChange={this.handleSearchChange}
                         onPlaylistClick={this.handlePlaylistClick}
                     />} />
-                    <Route path="/playlistReview/:id" element={<PlaylistReviewPage
+                    <Route path="/playlistReview" element={<PlaylistReviewPage
                         fetchPlaylistById={this.fetchPlaylistById}
                         searchQuery={this.state.searchQuery}
                         onChange={this.handleSearchChange} />} /> {/* Define the route for PlaylistView */}

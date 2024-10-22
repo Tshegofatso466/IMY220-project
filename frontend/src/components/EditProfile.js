@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { updateProfile } from '../api';
 import '../../public/assets/styles/EditProfile.css'; // Assuming the CSS file will handle the styling
 
 export class EditProfile extends React.Component {
@@ -29,7 +30,7 @@ export class EditProfile extends React.Component {
     handleFileUpload = async (e) => {
         const file = e.target.files[0];
         const base64 = await this.convertToBase64(file);
-        console.log(base64);
+        console.log('bio:', this.state.bio, 'username: ', this.state.userName, base64);
         this.setState({ profilePicture: base64 });
     };
 
@@ -45,12 +46,16 @@ export class EditProfile extends React.Component {
         if (userName.trim() === '' || bio.trim() === '') {
             this.setState({ error: 'Both username and bio must be filled out.' });
         } else {
-            // Here you would usually send the updated data to a backend
+            let response = updateProfile({username: userName, bio: bio, profileImage: profilePicture, userId: sessionStorage.getItem('userId')});
+            console.log(response);
             this.setState({ error: '' });
-            this.props.onClose();  // Close the modal after successful validation
+            this.props.onClose();
         }
-        
     };
+
+    handleSelectProfileImage = (event) => {
+        event.preventDefault();
+    }
 
     render() {
         const { error, userName, bio } = this.state;
