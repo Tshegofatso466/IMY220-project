@@ -26,6 +26,7 @@ class PlaylistView extends React.Component {
             ownerName: "",
             ownerId: null,
             followers: null,
+            playlistImage: ''
         };
 
         this.hadleNavigateToProfile = this.hadleNavigateToProfile.bind(this);
@@ -44,7 +45,8 @@ class PlaylistView extends React.Component {
                 followers: playlist.followers || 0,
                 ownerImage: playlist.playlist.OwnerImage || 'default.png',
                 ownerName: playlist.playlist.OwnerName || 'anonymous',
-                ownerId: playlist.profileId,
+                ownerId: playlist.playlist.OwnerId,
+                playlistImage: playlist.playlist.PlayListImage
             });
         } catch (error) {
             console.error('Error fetching playlist:', error);
@@ -163,7 +165,7 @@ class PlaylistView extends React.Component {
                 <div className="playlist-body">
                     <div className="song-list">
                         {songs.map((song, index) => (
-                            <Song key={index} title={song.title} artists={song.artists} />
+                            <Song key={index} title={song.title} artists={song.artists} image={song.image}/>
                         ))}
                     </div>
 

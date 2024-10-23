@@ -15,14 +15,14 @@ export class PlayList extends React.Component {
         return (
             <div onClick={onClick} className="container">
                 <div className="image_preview_container">
-                    <img src={`/assets/images/PLAYLISTS-IMAGES/${PlayListImage}`} alt="Playlist Image" className="playlist_image"/>
+                    <img src={`${PlayListImage}`} alt="Playlist Image" className="playlist_image"/>
                 </div>
 
                 <div className="details">
                     <h2 className="playlist_title">{PlayListName}</h2>
                     <hr />
                     <div className="owner_info">
-                        <img src={`/assets/images/USERS-PROFILE-PICTURES/${Ownerimage}`} alt="Owner Image" className="owner_image"/>
+                        <img src={`${Ownerimage}`} alt="Owner Image" className="owner_image"/>
                             <div className="owner_details">
                                 <h4 className="owner_name">{OwnerName}</h4>
                                 <p className="song_count">Number of songs: {songs.length}</p>

@@ -51,6 +51,7 @@ class Feed extends React.Component {
                                     key={songIndex}
                                     title={song.title || 'Unknown Song'}
                                     artists={song.artists || ['Unknown Artist']}
+                                    image={song.image}
                                 />
                             ))}
                         </div>
@@ -59,13 +60,15 @@ class Feed extends React.Component {
             );
         }
 
+        console.log(filteredPlaylists[0]);
+        console.log(filteredPlaylists[1]);
         // Otherwise, render playlists
         return (
             <div className="playlist-feed">
                 {filteredPlaylists.map((playlist, index) => (
                     <div
                         key={index}
-                        onClick={() => this.handlePlaylistClick(playlist._id?.$oid || playlist._id)} // Ensure playlist has an id
+                        onClick={() => this.handlePlaylistClick(playlist.id)} // Ensure playlist has an id
                     >
                         <PlayList
                             PlayListName={playlist.PlayListName || 'Untitled Playlist'}

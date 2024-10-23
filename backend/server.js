@@ -89,31 +89,79 @@ app.get("/imy/user/:id", async (req, res) => {
     }
 });
 
-app.get("/imy/playlists", async (req, res) => {
+app.get("/imy/playlists/:id", async (req, res) => {
+    const userId = req.params.id;
     try {
-        const users = await collection.find().toArray();
+        const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+        if (!user || !Array.isArray(user.playlists)) {
+            return res.status(404).json({ message: "No playlists for the current user." });
+        }
 
         const allPlaylists = [];
 
-        users.forEach(user => {
-            if (Array.isArray(user.playlists)) {
-                user.playlists.forEach(playlist => {
-                    allPlaylists.push({
-                        PlayListName: playlist.PlayListName,
-                        PlayListImage: playlist.PlayListImage,
-                        OwnerImage: playlist.OwnerImage,
-                        OwnerName: playlist.OwnerName,
-                        songs: playlist.songs,
-                        comments: playlist.comments,
-                        numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
-                        userId: user._id, // Optionally include userId for reference
-                        _id: playlist.id.toString() // Use the correct ID
-                    });
+        for (const playlist of user.playlists) {
+            console.log(playlist.reference, playlist.OwnerId);
+            if (playlist.reference && playlist.OwnerId) {
+                const owner = await collection.findOne({ _id: new ObjectId(playlist.OwnerId) });
+                // console.log("in here: " + owner);
+                if (owner) {
+                    // console.log(owner);
+                    const refPlayListData = owner.playlists.find(pl => pl.id.toString() === playlist.id.toString());
+                    // console.log(refPlayListData);
+
+                    if (refPlayListData) {
+                        // Add the referenced playlist's data to allPlaylists
+                        allPlaylists.push({
+                            PlayListName: refPlayListData.PlayListName,
+                            PlayListImage: refPlayListData.PlayListImage,
+                            OwnerImage: owner.profileImage || refPlayListData.OwnerImage, // Owner's profile image
+                            OwnerName: owner.username || refPlayListData.OwnerName,     // Owner's name
+                            songs: refPlayListData.songs,
+                            comments: refPlayListData.comments,
+                            numberOfSongs: Array.isArray(refPlayListData.songs) ? refPlayListData.songs.length : 0,
+                            id: refPlayListData.id.toString(),
+                            referencedFrom: owner.username // Add info about where the reference comes from (owner's username)
+                        });
+                    }
+                }
+            } else {
+                allPlaylists.push({
+                    PlayListName: playlist.PlayListName,
+                    PlayListImage: playlist.PlayListImage,
+                    OwnerImage: user.profileImage,
+                    OwnerName: user.username,
+                    songs: playlist.songs,
+                    comments: playlist.comments,
+                    numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
+                    id: playlist.id.toString()
                 });
             }
-        });
+        }
 
         res.status(200).json(allPlaylists);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/imy/search', async (req, res) => {
+    const searchTerm = req.query.q; // Get the search term from query params
+    try {
+        const regex = new RegExp(searchTerm, 'i'); // 'i' makes the search case-insensitive
+        const results = await collection.find({
+            $or: [
+                { "playlists.PlayListName": regex }, // Search in playlist names
+                { "username": regex },               // Search in usernames
+                { "playlists.songs.title": regex }   // Search in song titles
+            ]
+        }).toArray();
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No results found" });
+        }
+
+        res.status(200).json(results);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -124,17 +172,31 @@ app.get("/imy/playlist/:id", async (req, res) => {
     // console.log(`Received request for playlist ID: ${playlistId}`);
     try {
         // Use the 'id' field from the playlists array
-        const playlist = await collection.findOne(
-            { "playlists.id": new ObjectId(playlistId) }, // Change to 'playlists.id'
-            { projection: { "playlists.$": 1, "_id": 1, "followers": 1} }
+        const data = await collection.findOne(
+            {
+                playlists: {
+                    $elemMatch: { id: new ObjectId(playlistId), reference: false }
+                }
+            }, // Change to 'playlists.id'
+            { projection: { "playlists.$": 1, "_id": 1, "followers": 1, "username": 1, "profileImage": 1 } }
         );
 
-        if (!playlist || !playlist.playlists.length) {
+        if (!data || !data.playlists.length) {
             // console.log("Playlist not found");
             return res.status(404).json({ message: "Playlist not found" });
         }
 
-        res.status(200).json({playlist: playlist.playlists[0], profileId: playlist._id, followers: playlist.followers}); // Return the found playlist and owner
+        const newObj = {
+            playlist: data.playlists[0],
+            profileId: data._id,
+            followers: data.followers
+        }
+
+        newObj.playlist.OwnerImage = data.profileImage;
+        newObj.playlist.OwnerName = data.username;
+
+
+        res.status(200).json(newObj); // Return the found playlist and owner
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
@@ -351,8 +413,8 @@ app.put("/imy/editPlaylist", async (req, res) => {
         // Update the playlist in the user's playlists array
         const result = await collection.updateOne(
             { _id: new ObjectId(userId), "playlists._id": new ObjectId(playlistId) }, // Find user and playlist
-            { 
-                $set: { 
+            {
+                $set: {
                     "playlists.$.PlayListName": newPlaylistName, // Update the playlist name
                     "playlists.$.PlayListImage": newPlaylistImage // Update the playlist image
                 }
@@ -386,8 +448,8 @@ app.delete("/imy/deleteSong", async (req, res) => {
         // Update the user's playlist to remove the song
         const result = await collection.updateOne(
             { _id: new ObjectId(userId), "playlists.id": new ObjectId(playlistId) }, // Find user and playlist
-            { 
-                $pull: { 
+            {
+                $pull: {
                     "playlists.$.songs": songKey // Remove the song from the playlist's songs array
                 }
             }
@@ -422,7 +484,7 @@ app.post("/imy/friend", async (req, res) => {
 
         // Add the profile as a friend to the user's friends array
         const result = await collection.updateOne(
-            { _id: new ObjectId(userId) }, 
+            { _id: new ObjectId(userId) },
             {
                 $addToSet: {  // $addToSet ensures that duplicates are not added
                     friends: {
@@ -453,8 +515,8 @@ app.post("/imy/unfriend", async (req, res) => {
 
     try {
         // Check if the profile exists as a friend in the user's friends array
-        const user = await collection.findOne({ 
-            _id: new ObjectId(userId), 
+        const user = await collection.findOne({
+            _id: new ObjectId(userId),
             friends: { $elemMatch: { id: new ObjectId(profileId) } }  // Check if friend exists
         });
 
@@ -464,7 +526,7 @@ app.post("/imy/unfriend", async (req, res) => {
 
         // Remove the friend from the user's friends array
         const result = await collection.updateOne(
-            { _id: new ObjectId(userId) }, 
+            { _id: new ObjectId(userId) },
             {
                 $pull: {
                     friends: { id: new ObjectId(profileId) }  // Remove friend by matching id

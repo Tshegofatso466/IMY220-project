@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlayList } from '../components/PlayList';
 import PropTypes from 'prop-types';
-import { getUserById } from '../api';
+import { getUserById, toggleFriend } from '../api';
 import '../fontDefinition/fonts.css'; // Assuming fonts are already set up
 import '../../public/assets/styles/Profile.css'; // Custom CSS for Profile component
 import { EditProfile } from '../components/EditProfile'; // Importing the EditProfile component
@@ -19,7 +19,9 @@ export class Profile extends React.Component {
             pictures: [],
             onPlaylistClick: null,
             user: {},
-            showfriends: false
+            sameUser: false,
+            friendsWithUser: false,
+            userIsFriendWithProfile: false,
         };
         this.onPlaylistClick = this.onPlaylistClick.bind(this);
     }
@@ -42,7 +44,17 @@ export class Profile extends React.Component {
             this.setState({ playlists: user.playlists, friends: user.friends, pictures: user.pictures, user: user }); // Set user data in state
             console.log('User data fetched successfully:', user);
             if (sessionStorage.getItem('userId') === sessionStorage.getItem('profileId')) {
-                this.setState({ showfriends: true });
+                this.setState({ sameUser: true });
+            }
+            const profileIsFriendsWithUser = user.friends.some(friend => friend.id === (sessionStorage.getItem('userId')));
+            this.setState({ friendsWithUser: profileIsFriendsWithUser });
+
+            const mainUser = await getUserById(sessionStorage.getItem('userId'));
+            const userIsFriendWithProfile = mainUser.friends.some(friend => friend.id === (sessionStorage.getItem('profileId')));
+            this.setState({ userIsFriendWithProfile: userIsFriendWithProfile });
+
+            if (!this.state.userIsFriendWithProfile) {
+                this.setState({ activeTab: "--" });
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
@@ -55,8 +67,19 @@ export class Profile extends React.Component {
         this.props.navigate('/playlistReview');
     }
 
-    handleAddFriend = (friend) => {
-        
+    handleAddFriend = async () => {
+        //toggle the add or remove friend according to the 'userIsFriendWithProfile' flag.
+        let response = null;
+        if(this.state.sameUser) return;
+        else if(this.state.userIsFriendWithProfile){
+            response = await toggleFriend(false, {userId: sessionStorage.getItem('userId'), profileId: sessionStorage.getItem('profileId')});
+        }
+        else{
+            response = await toggleFriend(true, {userId: sessionStorage.getItem('userId'), profileId: sessionStorage.getItem('profileId')});
+        }
+        if(response.success){
+            this.setState(prevState => ({ userIsFriendWithProfile:!prevState.userIsFriendWithProfile }));
+        }
     }
 
     // Function to render content based on the active tab
@@ -104,7 +127,7 @@ export class Profile extends React.Component {
 
     render() {
         const { profileImage, username, bio, followers, following } = this.state.user;
-        const { activeTab, openForm, showfriends } = this.state;
+        const { activeTab, openForm, sameUser, friendsWithUser, userIsFriendWithProfile } = this.state;
 
         return (
             <div className="profile-page">
@@ -113,7 +136,7 @@ export class Profile extends React.Component {
 
                 <div className="profile-content">
                     {/* Top-right Edit Profile button */}
-                    {showfriends &&
+                    {sameUser &&
                         <button className="edit-profile-btn" onClick={this.toggleEditProfileForm}>Edit Profile</button>
                     }
                     {/* Conditionally render the EditProfile form */}
@@ -134,7 +157,7 @@ export class Profile extends React.Component {
 
                         {/* Right side: User Details */}
                         <div className="profile-details">
-                            <h2>{username}</h2>
+                            <h2>{username} {friendsWithUser && <span className="kinda-hidden">(Friends with you)</span>}</h2>
                             <p>{bio}</p>
                             <div className="followers-following">
                                 <a href="#followers" className="link">
@@ -149,23 +172,27 @@ export class Profile extends React.Component {
                     </div>
 
                     {/* Buttons: Follow and Add Friend */}
-                    <div className="action-buttons">
-                        <button className="btn follow-btn">Follow</button>
-                        <button className="btn add-friend-btn">Add Friend</button>
-                    </div>
+                    {!sameUser &&
+                        <div className="action-buttons">
+                            <button className="btn follow-btn">Follow</button>
+                            <button className="btn add-friend-btn" onClick={this.handleAddFriend}>{!userIsFriendWithProfile ? "Add Friend":"Unfriend"}</button>
+                        </div>
+                    }
 
                     {/* Horizontal Line */}
                     <hr />
 
                     {/* Tab Links: Playlists, Friends, Pictures */}
                     <div className="tab-links">
-                        <span
-                            className={`tab-link ${activeTab === 'Playlists' ? 'active' : ''}`}
-                            onClick={() => this.setActiveTab('Playlists')}
-                        >
-                            Playlists
-                        </span>
-                        {this.state.showfriends &&
+                        {(userIsFriendWithProfile || sameUser) &&
+                            <span
+                                className={`tab-link ${activeTab === 'Playlists' ? 'active' : ''}`}
+                                onClick={() => this.setActiveTab('Playlists')}
+                            >
+                                Playlists
+                            </span>
+                        }
+                        {(userIsFriendWithProfile || sameUser) &&
                             <span
                                 className={`tab-link ${activeTab === 'Friends' ? 'active' : ''}`}
                                 onClick={() => this.setActiveTab('Friends')}
@@ -173,12 +200,14 @@ export class Profile extends React.Component {
                                 Friends
                             </span>
                         }
-                        <span
-                            className={`tab-link ${activeTab === 'Pictures' ? 'active' : ''}`}
-                            onClick={() => this.setActiveTab('Pictures')}
-                        >
-                            Pictures
-                        </span>
+                        {(userIsFriendWithProfile || sameUser) &&
+                            <span
+                                className={`tab-link ${activeTab === 'Pictures' ? 'active' : ''}`}
+                                onClick={() => this.setActiveTab('Pictures')}
+                            >
+                                Pictures
+                            </span>
+                        }
                     </div>
 
                     {/* Render the content based on the active tab */}

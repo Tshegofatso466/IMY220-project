@@ -46,16 +46,32 @@ export class EditProfile extends React.Component {
         if (userName.trim() === '' || bio.trim() === '') {
             this.setState({ error: 'Both username and bio must be filled out.' });
         } else {
-            let response = updateProfile({username: userName, bio: bio, profileImage: profilePicture, userId: sessionStorage.getItem('userId')});
+            let response = updateProfile({ username: userName, bio: bio, profileImage: profilePicture, userId: sessionStorage.getItem('userId') });
             console.log(response);
             this.setState({ error: '' });
             this.props.onClose();
         }
     };
 
-    handleSelectProfileImage = (event) => {
-        event.preventDefault();
-    }
+    // handleSelectProfileImage = (event) => {
+    //     event.preventDefault();
+    // }
+
+    handleDragOver = (e) => {
+        e.preventDefault(); // Prevents the default behavior (which prevents the file from being opened)
+    };
+
+    handleDrop = async (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0]; // Get the file being dragged
+        //if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
+            const base64 = await this.convertToBase64(file);
+            this.setState({ profilePicture: base64 }); // Update the profile picture state with the new image
+            console.log(this.state.profilePicture);
+        //} else {
+            //alert('Please drop a valid image file.');
+        //}
+    };
 
     render() {
         const { error, userName, bio } = this.state;
@@ -101,6 +117,8 @@ export class EditProfile extends React.Component {
                             <input
                                 type="file"
                                 accept=".jpeg, .png, .jpg"
+                                onDragOver={this.handleDragOver}
+                                onDrop={this.handleDrop}
                                 id='profilePicture'
                                 name='profilePicture'
                                 onChange={this.handleFileUpload}

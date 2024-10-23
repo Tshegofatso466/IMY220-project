@@ -1,0 +1,170 @@
+{
+    "_id": {
+        "$oid": "66fab93da198692f4ebd98a7"
+    },
+    "profileImage": "base64IMG",
+    "bio": "the profile just changed but i am still the same :)",
+    "followers": {
+        "$numberInt": "1200"
+    },
+    "following": {
+        "$numberInt": "60"
+    },
+    "playlists": [
+        {
+            "PlayListName": "Chill Vibes",
+            "PlayListImage": "base64IMG",
+            "songs": [
+                {
+                    "title": "Esangweni",
+                    "artists": [
+                        "Nkosazana Daughter",
+                        "Murumba Pitch"
+                    ],
+                    "image": "base64IMG",
+                    "sportifyURL": "https://open.spotify.com/track/1kKltSWkRUTB7LYVFJXS2w?si=7599f0fe513b4c15",
+                    "deleted": false
+                },
+                {
+                    "title": "One Last Time",
+                    "artists": [
+                        "Ariana Grande"
+                    ],
+                    "deleted": false,
+                    "image": "base64IMG",
+                    "sportifyURL": "https://open.spotify.com/track/7xoUc6faLbCqZO6fQEYprd?si=d5cc468a58fc4e88"
+                }
+            ],
+            "comments": [
+                {
+                    "profileImage": "base64IMG",
+                    "userName": "Alice",
+                    "followers": {
+                        "$numberInt": "250"
+                    },
+                    "commentText": "Love this playlist!",
+                    "timestamp": "2024-09-30T12:34:56Z",
+                    "pinned": false
+                },
+                {
+                    "profileImage": "base64IMG",
+                    "userName": "Bob",
+                    "followers": {
+                        "$numberInt": "150"
+                    },
+                    "commentText": "Chill vibes indeed!",
+                    "timestamp": "2024-09-30T12:45:23Z",
+                    "pinned": false
+                },
+                {
+                    "profileImage": "base64IMG",
+                    "userName": "Kylie Rec",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "this is goood!!!",
+                    "timestamp": {
+                        "$date": {
+                            "$numberLong": "1729182513069"
+                        }
+                    },
+                    "pinned": false
+                },
+                {
+                    "profileImage": "base64IMG",
+                    "userName": "Kylie Rec",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "this is so much enjoyable\n",
+                    "timestamp": {
+                        "$date": {
+                            "$numberLong": "1729204420373"
+                        }
+                    },
+                    "pinned": true
+                }
+            ],
+            "id": {
+                "$oid": "66fb36c2086b1a070b8a1c2b"
+            },
+            "reference": false
+        },
+        {
+            "PlayListName": "Workout Hits",
+            "PlayListImage": "ariana grande.jpg",
+            "OwnerImage": "pfp2.jpg",
+            "OwnerName": "Jane Smith",
+            "songs": [
+                {
+                    "title": "Song Three",
+                    "artists": [
+                        "Artist D"
+                    ]
+                },
+                {
+                    "title": "Song Four",
+                    "artists": [
+                        "Artist E",
+                        "Artist F"
+                    ]
+                }
+            ],
+            "comments": [
+                {
+                    "profileImage": "base64IMG",
+                    "userName": "Charlie",
+                    "followers": {
+                        "$numberInt": "300"
+                    },
+                    "commentText": "Perfect for workouts!",
+                    "timestamp": "2024-09-30T13:00:00Z"
+                }
+            ],
+            "id": {
+                "$oid": "66fb36d1086b1a070b8a1c2c"
+            },
+            "reference": false
+        },
+        {
+            "reference": true,
+            "OwnerId": {
+                "$oid": "66fb26cb0397b60c2c85a5c5"
+            },
+            "id": {
+                "$oid": "66fb40e4861ad36f073190e8"
+            }
+        }
+    ],
+    "friends": [
+        {
+            "id": {
+                "$oid": "66fab93da198692f4ebd98a7"
+            },
+            "name": "Sizwe CR7"
+        }
+    ],
+    "pictures": [
+        {
+            "id": {
+                "$oid": "671934293bb33cd02b36bf23"
+            },
+            "url": "base64IMG"
+        },
+        {
+            "id": {
+                "$oid": "671934343bb33cd02b36bf24"
+            },
+            "url": "base64IMG"
+        }
+    ],
+    "email": "tshegofatsomahlase466@gmail.com",
+    "password": "Tshego@12345",
+    "username": "Kylie Recs",
+    "messages": [
+        {
+            "title": "Update thunder now!",
+            "content": "a newer version of thunder is available, go to software to update. :)"
+        }
+    ]
+}

@@ -12,7 +12,7 @@ export class ProfilePreview extends React.Component {
         const { profileImage, userName, followers } = this.props;
         return (
             <div className="profile-preview">
-                <img src={`/assets/images/USERS-PROFILE-PICTURES/${profileImage}`} alt={`${userName}'s profile`} className="profile-picture" />
+                <img src={`${profileImage}`} alt={`${userName}'s profile`} className="profile-picture" />
                 <div className="profile-info">
                     <h4>{userName}</h4>
                     <label className="followers-text">{followers} followers</label>

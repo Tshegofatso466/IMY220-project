@@ -22,10 +22,9 @@ class App extends React.Component {
     Login = async (data) => {
         try {
             const response = await login(data);
-            // console.log(response)
             this.setState({ id: response.id, isLoggedIn: true });
-            const playlists = await getPlaylists();  // Fetch playlists after login
-            // console.log("Fetched playlists:", playlists);
+            // console.log(response.id);
+            const playlists = await getPlaylists(response.id);  // Fetch playlists after login
             this.setState({ playlists });
             sessionStorage.setItem('userId', this.state.id);
             return true;

@@ -27,8 +27,8 @@ export const login = async (data) => {
     return response.json();
 };
 
-export const getPlaylists = async () => {
-    const response = await fetch("/imy/playlists");
+export const getPlaylists = async (id) => {
+    const response = await fetch(`/imy/playlists/${id}`);
     if (!response.ok) {
         throw new Error("Failed to fetch playlists");
     }
@@ -36,6 +36,7 @@ export const getPlaylists = async () => {
 };
 
 export async function getPlaylistById(id) {
+    console.log(id);
     return fetch(`/imy/playlist/${id}`)
         .then((response) => {
             if (!response.ok) {
@@ -86,6 +87,27 @@ export const updateProfile = async (data) => {
 
     if (!response.ok) {
         throw new Error("Failed to update profile");
+    }
+    return response.json();
+}
+
+export const getRandomImageUrl = async () => { // TO BE USED WHEN REGISTERING
+    let imgNo = Math.floor(Math.random() * 10) + 1;
+    let endpointImage = `pfp${imgNo}.jpg`;
+    return (`/assets/images/USERS-PROFILE-PICTURES/${endpointImage}`);
+}
+
+export const toggleFriend = async (flag, data) => {
+    const response = await fetch(`/imy/${flag ? 'friend':'unfriend'}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: data.userId,
+            profileId: data.profileId
+        }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add/unfriend user");
     }
     return response.json();
 }
