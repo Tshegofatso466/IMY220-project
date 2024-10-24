@@ -21,26 +21,26 @@ function connectToDatabase() {
   return _connectToDatabase.apply(this, arguments);
 }
 function _connectToDatabase() {
-  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
-    return _regeneratorRuntime().wrap(function _callee16$(_context17) {
-      while (1) switch (_context17.prev = _context17.next) {
+  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
+    return _regeneratorRuntime().wrap(function _callee17$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
-          _context17.prev = 0;
-          _context17.next = 3;
+          _context18.prev = 0;
+          _context18.next = 3;
           return client.connect();
         case 3:
           console.log("MongoDB connected successfully");
-          _context17.next = 9;
+          _context18.next = 9;
           break;
         case 6:
-          _context17.prev = 6;
-          _context17.t0 = _context17["catch"](0);
-          console.error("MongoDB connection error:", _context17.t0);
+          _context18.prev = 6;
+          _context18.t0 = _context18["catch"](0);
+          console.error("MongoDB connection error:", _context18.t0);
         case 9:
         case "end":
-          return _context17.stop();
+          return _context18.stop();
       }
-    }, _callee16, null, [[0, 6]]);
+    }, _callee17, null, [[0, 6]]);
   }));
   return _connectToDatabase.apply(this, arguments);
 }
@@ -324,15 +324,68 @@ app.get("/imy/playlists/:id", /*#__PURE__*/function () {
     return _ref4.apply(this, arguments);
   };
 }());
-app.get("/imy/playlist/:id", /*#__PURE__*/function () {
+app.get('/imy/search', /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
-    var playlistId, data, newObj;
+    var searchTerm, regex, results;
     return _regeneratorRuntime().wrap(function _callee5$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          playlistId = req.params.id; // console.log(`Received request for playlist ID: ${playlistId}`);
+          searchTerm = req.query.q; // Get the search term from query params
           _context6.prev = 1;
-          _context6.next = 4;
+          regex = new RegExp(searchTerm, 'i'); // 'i' makes the search case-insensitive
+          _context6.next = 5;
+          return collection.find({
+            $or: [{
+              "playlists.PlayListName": regex
+            },
+            // Search in playlist names
+            {
+              "username": regex
+            },
+            // Search in usernames
+            {
+              "playlists.songs.title": regex
+            } // Search in song titles
+            ]
+          }).toArray();
+        case 5:
+          results = _context6.sent;
+          if (!(results.length === 0)) {
+            _context6.next = 8;
+            break;
+          }
+          return _context6.abrupt("return", res.status(404).json({
+            message: "No results found"
+          }));
+        case 8:
+          res.status(200).json(results);
+          _context6.next = 14;
+          break;
+        case 11:
+          _context6.prev = 11;
+          _context6.t0 = _context6["catch"](1);
+          res.status(500).json({
+            error: _context6.t0.message
+          });
+        case 14:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee5, null, [[1, 11]]);
+  }));
+  return function (_x9, _x10) {
+    return _ref5.apply(this, arguments);
+  };
+}());
+app.get("/imy/playlist/:id", /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+    var playlistId, data, newObj;
+    return _regeneratorRuntime().wrap(function _callee6$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
+        case 0:
+          playlistId = req.params.id; // console.log(`Received request for playlist ID: ${playlistId}`);
+          _context7.prev = 1;
+          _context7.next = 4;
           return collection.findOne({
             playlists: {
               $elemMatch: {
@@ -352,12 +405,12 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
             }
           });
         case 4:
-          data = _context6.sent;
+          data = _context7.sent;
           if (!(!data || !data.playlists.length)) {
-            _context6.next = 7;
+            _context7.next = 7;
             break;
           }
-          return _context6.abrupt("return", res.status(404).json({
+          return _context7.abrupt("return", res.status(404).json({
             message: "Playlist not found"
           }));
         case 7:
@@ -369,37 +422,37 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
           newObj.playlist.OwnerImage = data.profileImage;
           newObj.playlist.OwnerName = data.username;
           res.status(200).json(newObj); // Return the found playlist and owner
-          _context6.next = 17;
+          _context7.next = 17;
           break;
         case 13:
-          _context6.prev = 13;
-          _context6.t0 = _context6["catch"](1);
-          console.error(_context6.t0);
+          _context7.prev = 13;
+          _context7.t0 = _context7["catch"](1);
+          console.error(_context7.t0);
           res.status(500).json({
-            error: _context6.t0.message
+            error: _context7.t0.message
           });
         case 17:
         case "end":
-          return _context6.stop();
+          return _context7.stop();
       }
-    }, _callee5, null, [[1, 13]]);
+    }, _callee6, null, [[1, 13]]);
   }));
-  return function (_x9, _x10) {
-    return _ref5.apply(this, arguments);
+  return function (_x11, _x12) {
+    return _ref6.apply(this, arguments);
   };
 }());
 app.post("/imy/createPlaylist", /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+  var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
     var _req$body3, playlistName, OwnerImage, PlaylistImage, OwnerName, userId, newPlaylist, result;
-    return _regeneratorRuntime().wrap(function _callee6$(_context7) {
-      while (1) switch (_context7.prev = _context7.next) {
+    return _regeneratorRuntime().wrap(function _callee7$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
         case 0:
           _req$body3 = req.body, playlistName = _req$body3.playlistName, OwnerImage = _req$body3.OwnerImage, PlaylistImage = _req$body3.PlaylistImage, OwnerName = _req$body3.OwnerName, userId = _req$body3.userId; // Validate the incoming data
           if (!(!playlistName || !OwnerImage || !PlaylistImage || !OwnerName || !userId)) {
-            _context7.next = 3;
+            _context8.next = 3;
             break;
           }
-          return _context7.abrupt("return", res.status(400).json({
+          return _context8.abrupt("return", res.status(400).json({
             error: "All fields are required."
           }));
         case 3:
@@ -416,8 +469,8 @@ app.post("/imy/createPlaylist", /*#__PURE__*/function () {
             // Initialize with empty comments array
             id: new _mongodb.ObjectId() // Generate a new ObjectId for the playlist
           };
-          _context7.prev = 4;
-          _context7.next = 7;
+          _context8.prev = 4;
+          _context8.next = 7;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId)
           },
@@ -429,12 +482,12 @@ app.post("/imy/createPlaylist", /*#__PURE__*/function () {
           } // Push the new playlist into the playlists array
           );
         case 7:
-          result = _context7.sent;
+          result = _context8.sent;
           if (!(result.modifiedCount === 0)) {
-            _context7.next = 10;
+            _context8.next = 10;
             break;
           }
-          return _context7.abrupt("return", res.status(404).json({
+          return _context8.abrupt("return", res.status(404).json({
             error: "could not insert playlist."
           }));
         case 10:
@@ -442,37 +495,37 @@ app.post("/imy/createPlaylist", /*#__PURE__*/function () {
             message: "Playlist created successfully",
             playlistId: newPlaylist.id
           });
-          _context7.next = 17;
+          _context8.next = 17;
           break;
         case 13:
-          _context7.prev = 13;
-          _context7.t0 = _context7["catch"](4);
-          console.error(_context7.t0);
+          _context8.prev = 13;
+          _context8.t0 = _context8["catch"](4);
+          console.error(_context8.t0);
           res.status(500).json({
             error: "An error occurred while creating the playlist."
           });
         case 17:
         case "end":
-          return _context7.stop();
+          return _context8.stop();
       }
-    }, _callee6, null, [[4, 13]]);
+    }, _callee7, null, [[4, 13]]);
   }));
-  return function (_x11, _x12) {
-    return _ref6.apply(this, arguments);
+  return function (_x13, _x14) {
+    return _ref7.apply(this, arguments);
   };
 }());
 app.post("/imy/createSong", /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
+  var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
     var _req$body4, songTitle, artists, profileId, playlistId, newSong, result;
-    return _regeneratorRuntime().wrap(function _callee7$(_context8) {
-      while (1) switch (_context8.prev = _context8.next) {
+    return _regeneratorRuntime().wrap(function _callee8$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
         case 0:
           _req$body4 = req.body, songTitle = _req$body4.songTitle, artists = _req$body4.artists, profileId = _req$body4.profileId, playlistId = _req$body4.playlistId; // Validate the incoming data
           if (!(!songTitle || !artists || !Array.isArray(artists) || artists.length === 0 || !profileId || !playlistId)) {
-            _context8.next = 3;
+            _context9.next = 3;
             break;
           }
-          return _context8.abrupt("return", res.status(400).json({
+          return _context9.abrupt("return", res.status(400).json({
             error: "All fields are required, and artists must be an array."
           }));
         case 3:
@@ -481,8 +534,8 @@ app.post("/imy/createSong", /*#__PURE__*/function () {
             title: songTitle,
             artists: artists
           };
-          _context8.prev = 4;
-          _context8.next = 7;
+          _context9.prev = 4;
+          _context9.next = 7;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(profileId),
             "playlists.id": new _mongodb.ObjectId(playlistId)
@@ -495,12 +548,12 @@ app.post("/imy/createSong", /*#__PURE__*/function () {
           } // Push the new song into the playlist's songs array
           );
         case 7:
-          result = _context8.sent;
+          result = _context9.sent;
           if (!(result.modifiedCount === 0)) {
-            _context8.next = 10;
+            _context9.next = 10;
             break;
           }
-          return _context8.abrupt("return", res.status(404).json({
+          return _context9.abrupt("return", res.status(404).json({
             error: "User or playlist not found, or song not created."
           }));
         case 10:
@@ -508,54 +561,54 @@ app.post("/imy/createSong", /*#__PURE__*/function () {
             message: "Song added successfully",
             song: newSong
           });
-          _context8.next = 17;
+          _context9.next = 17;
           break;
         case 13:
-          _context8.prev = 13;
-          _context8.t0 = _context8["catch"](4);
-          console.error(_context8.t0);
+          _context9.prev = 13;
+          _context9.t0 = _context9["catch"](4);
+          console.error(_context9.t0);
           res.status(500).json({
             error: "An error occurred while adding the song."
           });
         case 17:
         case "end":
-          return _context8.stop();
+          return _context9.stop();
       }
-    }, _callee7, null, [[4, 13]]);
+    }, _callee8, null, [[4, 13]]);
   }));
-  return function (_x13, _x14) {
-    return _ref7.apply(this, arguments);
+  return function (_x15, _x16) {
+    return _ref8.apply(this, arguments);
   };
 }());
 app.post("/imy/createComment", /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
+  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
     var _req$body5, playlistId, profileId, userId, comment, commenter, newComment, result;
-    return _regeneratorRuntime().wrap(function _callee8$(_context9) {
-      while (1) switch (_context9.prev = _context9.next) {
+    return _regeneratorRuntime().wrap(function _callee9$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
         case 0:
           _req$body5 = req.body, playlistId = _req$body5.playlistId, profileId = _req$body5.profileId, userId = _req$body5.userId, comment = _req$body5.comment; //userId =  the person who commented.
           //profileId = the profile that is being commented on
           // Validate the incoming data
           if (!(!playlistId || !profileId || !userId || !comment)) {
-            _context9.next = 3;
+            _context10.next = 3;
             break;
           }
-          return _context9.abrupt("return", res.status(400).json({
+          return _context10.abrupt("return", res.status(400).json({
             error: "All fields are required."
           }));
         case 3:
-          _context9.prev = 3;
-          _context9.next = 6;
+          _context10.prev = 3;
+          _context10.next = 6;
           return collection.findOne({
             _id: new _mongodb.ObjectId(userId)
           });
         case 6:
-          commenter = _context9.sent;
+          commenter = _context10.sent;
           if (commenter) {
-            _context9.next = 9;
+            _context10.next = 9;
             break;
           }
-          return _context9.abrupt("return", res.status(404).json({
+          return _context10.abrupt("return", res.status(404).json({
             error: "Commenter not found."
           }));
         case 9:
@@ -570,7 +623,7 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
             commentText: comment,
             timestamp: new Date() // Current timestamp
           }; // Update the specific playlist by adding the new comment to the comments array
-          _context9.next = 12;
+          _context10.next = 12;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(profileId),
             "playlists.id": new _mongodb.ObjectId(playlistId)
@@ -583,12 +636,12 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
           } // Push the new comment into the playlist's comments array
           );
         case 12:
-          result = _context9.sent;
+          result = _context10.sent;
           if (!(result.modifiedCount === 0)) {
-            _context9.next = 15;
+            _context10.next = 15;
             break;
           }
-          return _context9.abrupt("return", res.status(404).json({
+          return _context10.abrupt("return", res.status(404).json({
             error: "User or playlist not found, or comment not created."
           }));
         case 15:
@@ -596,89 +649,89 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
             message: "Comment added successfully",
             comment: newComment
           });
-          _context9.next = 22;
+          _context10.next = 22;
           break;
         case 18:
-          _context9.prev = 18;
-          _context9.t0 = _context9["catch"](3);
-          console.error(_context9.t0);
+          _context10.prev = 18;
+          _context10.t0 = _context10["catch"](3);
+          console.error(_context10.t0);
           res.status(500).json({
             error: "An error occurred while adding the comment."
           });
         case 22:
         case "end":
-          return _context9.stop();
+          return _context10.stop();
       }
-    }, _callee8, null, [[3, 18]]);
+    }, _callee9, null, [[3, 18]]);
   }));
-  return function (_x15, _x16) {
-    return _ref8.apply(this, arguments);
+  return function (_x17, _x18) {
+    return _ref9.apply(this, arguments);
   };
 }());
 app["delete"]("/imy/deleteProfile/:profileId", /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
     var profileId, result;
-    return _regeneratorRuntime().wrap(function _callee9$(_context10) {
-      while (1) switch (_context10.prev = _context10.next) {
+    return _regeneratorRuntime().wrap(function _callee10$(_context11) {
+      while (1) switch (_context11.prev = _context11.next) {
         case 0:
           profileId = req.params.profileId; // Validate the incoming data
           if (profileId) {
-            _context10.next = 3;
+            _context11.next = 3;
             break;
           }
-          return _context10.abrupt("return", res.status(400).json({
+          return _context11.abrupt("return", res.status(400).json({
             error: "Profile ID is required."
           }));
         case 3:
-          _context10.prev = 3;
-          _context10.next = 6;
+          _context11.prev = 3;
+          _context11.next = 6;
           return collection.deleteOne({
             _id: new _mongodb.ObjectId(profileId)
           });
         case 6:
-          result = _context10.sent;
+          result = _context11.sent;
           if (!(result.deletedCount === 0)) {
-            _context10.next = 9;
+            _context11.next = 9;
             break;
           }
-          return _context10.abrupt("return", res.status(404).json({
+          return _context11.abrupt("return", res.status(404).json({
             error: "Profile not found."
           }));
         case 9:
           res.status(200).json({
             message: "Profile deleted successfully."
           });
-          _context10.next = 16;
+          _context11.next = 16;
           break;
         case 12:
-          _context10.prev = 12;
-          _context10.t0 = _context10["catch"](3);
-          console.error(_context10.t0);
+          _context11.prev = 12;
+          _context11.t0 = _context11["catch"](3);
+          console.error(_context11.t0);
           res.status(500).json({
             error: "An error occurred while deleting the profile."
           });
         case 16:
         case "end":
-          return _context10.stop();
+          return _context11.stop();
       }
-    }, _callee9, null, [[3, 12]]);
+    }, _callee10, null, [[3, 12]]);
   }));
-  return function (_x17, _x18) {
-    return _ref9.apply(this, arguments);
+  return function (_x19, _x20) {
+    return _ref10.apply(this, arguments);
   };
 }());
 app.patch("/imy/editProfile", /*#__PURE__*/function () {
-  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
+  var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(req, res) {
     var _req$body6, userId, profileImage, bio, username, updateData, result;
-    return _regeneratorRuntime().wrap(function _callee10$(_context11) {
-      while (1) switch (_context11.prev = _context11.next) {
+    return _regeneratorRuntime().wrap(function _callee11$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
         case 0:
           _req$body6 = req.body, userId = _req$body6.userId, profileImage = _req$body6.profileImage, bio = _req$body6.bio, username = _req$body6.username; // Validate the incoming data
           if (userId) {
-            _context11.next = 3;
+            _context12.next = 3;
             break;
           }
-          return _context11.abrupt("return", res.status(400).json({
+          return _context12.abrupt("return", res.status(400).json({
             error: "User ID is required."
           }));
         case 3:
@@ -687,8 +740,8 @@ app.patch("/imy/editProfile", /*#__PURE__*/function () {
           if (profileImage) updateData.profileImage = profileImage;
           if (bio) updateData.bio = bio;
           if (username) updateData.username = username;
-          _context11.prev = 7;
-          _context11.next = 10;
+          _context12.prev = 7;
+          _context12.next = 10;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId)
           },
@@ -698,54 +751,54 @@ app.patch("/imy/editProfile", /*#__PURE__*/function () {
           } // Update only the provided fields
           );
         case 10:
-          result = _context11.sent;
+          result = _context12.sent;
           if (!(result.matchedCount === 0)) {
-            _context11.next = 13;
+            _context12.next = 13;
             break;
           }
-          return _context11.abrupt("return", res.status(404).json({
+          return _context12.abrupt("return", res.status(404).json({
             error: "Profile not found."
           }));
         case 13:
           res.status(200).json({
             message: "Profile updated successfully."
           });
-          _context11.next = 20;
+          _context12.next = 20;
           break;
         case 16:
-          _context11.prev = 16;
-          _context11.t0 = _context11["catch"](7);
-          console.error(_context11.t0);
+          _context12.prev = 16;
+          _context12.t0 = _context12["catch"](7);
+          console.error(_context12.t0);
           res.status(500).json({
             error: "An error occurred while updating the profile."
           });
         case 20:
         case "end":
-          return _context11.stop();
+          return _context12.stop();
       }
-    }, _callee10, null, [[7, 16]]);
+    }, _callee11, null, [[7, 16]]);
   }));
-  return function (_x19, _x20) {
-    return _ref10.apply(this, arguments);
+  return function (_x21, _x22) {
+    return _ref11.apply(this, arguments);
   };
 }());
 app["delete"]("/imy/deletePlaylist", /*#__PURE__*/function () {
-  var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(req, res) {
+  var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
     var _req$body7, userId, playlistId, result;
-    return _regeneratorRuntime().wrap(function _callee11$(_context12) {
-      while (1) switch (_context12.prev = _context12.next) {
+    return _regeneratorRuntime().wrap(function _callee12$(_context13) {
+      while (1) switch (_context13.prev = _context13.next) {
         case 0:
           _req$body7 = req.body, userId = _req$body7.userId, playlistId = _req$body7.playlistId; // Validate incoming data
           if (!(!userId || !playlistId)) {
-            _context12.next = 3;
+            _context13.next = 3;
             break;
           }
-          return _context12.abrupt("return", res.status(400).json({
+          return _context13.abrupt("return", res.status(400).json({
             error: "User ID and Playlist ID are required."
           }));
         case 3:
-          _context12.prev = 3;
-          _context12.next = 6;
+          _context13.prev = 3;
+          _context13.next = 6;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId)
           },
@@ -759,54 +812,54 @@ app["delete"]("/imy/deletePlaylist", /*#__PURE__*/function () {
           } // Remove the playlist by its ID
           );
         case 6:
-          result = _context12.sent;
+          result = _context13.sent;
           if (!(result.modifiedCount === 0)) {
-            _context12.next = 9;
+            _context13.next = 9;
             break;
           }
-          return _context12.abrupt("return", res.status(404).json({
+          return _context13.abrupt("return", res.status(404).json({
             error: "Playlist not found or already deleted."
           }));
         case 9:
           res.status(200).json({
             message: "Playlist deleted successfully."
           });
-          _context12.next = 16;
+          _context13.next = 16;
           break;
         case 12:
-          _context12.prev = 12;
-          _context12.t0 = _context12["catch"](3);
-          console.error(_context12.t0);
+          _context13.prev = 12;
+          _context13.t0 = _context13["catch"](3);
+          console.error(_context13.t0);
           res.status(500).json({
             error: "An error occurred while deleting the playlist."
           });
         case 16:
         case "end":
-          return _context12.stop();
+          return _context13.stop();
       }
-    }, _callee11, null, [[3, 12]]);
+    }, _callee12, null, [[3, 12]]);
   }));
-  return function (_x21, _x22) {
-    return _ref11.apply(this, arguments);
+  return function (_x23, _x24) {
+    return _ref12.apply(this, arguments);
   };
 }());
 app.put("/imy/editPlaylist", /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
+  var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res) {
     var _req$body8, playlistId, userId, newPlaylistName, newPlaylistImage, result;
-    return _regeneratorRuntime().wrap(function _callee12$(_context13) {
-      while (1) switch (_context13.prev = _context13.next) {
+    return _regeneratorRuntime().wrap(function _callee13$(_context14) {
+      while (1) switch (_context14.prev = _context14.next) {
         case 0:
           _req$body8 = req.body, playlistId = _req$body8.playlistId, userId = _req$body8.userId, newPlaylistName = _req$body8.newPlaylistName, newPlaylistImage = _req$body8.newPlaylistImage; // Validate incoming data
           if (!(!playlistId || !userId || !newPlaylistName || !newPlaylistImage)) {
-            _context13.next = 3;
+            _context14.next = 3;
             break;
           }
-          return _context13.abrupt("return", res.status(400).json({
+          return _context14.abrupt("return", res.status(400).json({
             error: "Playlist ID, User ID, new Playlist Name, and new Playlist Image are required."
           }));
         case 3:
-          _context13.prev = 3;
-          _context13.next = 6;
+          _context14.prev = 3;
+          _context14.next = 6;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId),
             "playlists._id": new _mongodb.ObjectId(playlistId)
@@ -820,59 +873,59 @@ app.put("/imy/editPlaylist", /*#__PURE__*/function () {
             }
           });
         case 6:
-          result = _context13.sent;
+          result = _context14.sent;
           if (!(result.modifiedCount === 0)) {
-            _context13.next = 9;
+            _context14.next = 9;
             break;
           }
-          return _context13.abrupt("return", res.status(404).json({
+          return _context14.abrupt("return", res.status(404).json({
             error: "Playlist not found or no changes made."
           }));
         case 9:
           res.status(200).json({
             message: "Playlist updated successfully."
           });
-          _context13.next = 16;
+          _context14.next = 16;
           break;
         case 12:
-          _context13.prev = 12;
-          _context13.t0 = _context13["catch"](3);
-          console.error(_context13.t0);
+          _context14.prev = 12;
+          _context14.t0 = _context14["catch"](3);
+          console.error(_context14.t0);
           res.status(500).json({
             error: "An error occurred while updating the playlist."
           });
         case 16:
         case "end":
-          return _context13.stop();
+          return _context14.stop();
       }
-    }, _callee12, null, [[3, 12]]);
+    }, _callee13, null, [[3, 12]]);
   }));
-  return function (_x23, _x24) {
-    return _ref12.apply(this, arguments);
+  return function (_x25, _x26) {
+    return _ref13.apply(this, arguments);
   };
 }());
 app["delete"]("/imy/deleteSong", /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res) {
+  var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
     var _req$body9, userId, playlistId, songName, artists, songKey, result;
-    return _regeneratorRuntime().wrap(function _callee13$(_context14) {
-      while (1) switch (_context14.prev = _context14.next) {
+    return _regeneratorRuntime().wrap(function _callee14$(_context15) {
+      while (1) switch (_context15.prev = _context15.next) {
         case 0:
           _req$body9 = req.body, userId = _req$body9.userId, playlistId = _req$body9.playlistId, songName = _req$body9.songName, artists = _req$body9.artists; // Validate incoming data
           if (!(!userId || !playlistId || !songName || !artists || !Array.isArray(artists))) {
-            _context14.next = 3;
+            _context15.next = 3;
             break;
           }
-          return _context14.abrupt("return", res.status(400).json({
+          return _context15.abrupt("return", res.status(400).json({
             error: "User ID, Playlist ID, Song Name, and Artists are required."
           }));
         case 3:
-          _context14.prev = 3;
+          _context15.prev = 3;
           // Create a unique key based on songName and artists
           songKey = {
             title: songName,
             artists: artists
           }; // Update the user's playlist to remove the song
-          _context14.next = 7;
+          _context15.next = 7;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId),
             "playlists.id": new _mongodb.ObjectId(playlistId)
@@ -884,68 +937,68 @@ app["delete"]("/imy/deleteSong", /*#__PURE__*/function () {
             }
           });
         case 7:
-          result = _context14.sent;
+          result = _context15.sent;
           if (!(result.modifiedCount === 0)) {
-            _context14.next = 10;
+            _context15.next = 10;
             break;
           }
-          return _context14.abrupt("return", res.status(404).json({
+          return _context15.abrupt("return", res.status(404).json({
             error: "Song not found in the specified playlist."
           }));
         case 10:
           res.status(200).json({
             message: "Song deleted successfully."
           });
-          _context14.next = 17;
+          _context15.next = 17;
           break;
         case 13:
-          _context14.prev = 13;
-          _context14.t0 = _context14["catch"](3);
-          console.error(_context14.t0);
+          _context15.prev = 13;
+          _context15.t0 = _context15["catch"](3);
+          console.error(_context15.t0);
           res.status(500).json({
             error: "An error occurred while deleting the song."
           });
         case 17:
         case "end":
-          return _context14.stop();
+          return _context15.stop();
       }
-    }, _callee13, null, [[3, 13]]);
+    }, _callee14, null, [[3, 13]]);
   }));
-  return function (_x25, _x26) {
-    return _ref13.apply(this, arguments);
+  return function (_x27, _x28) {
+    return _ref14.apply(this, arguments);
   };
 }());
 app.post("/imy/friend", /*#__PURE__*/function () {
-  var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
+  var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
     var _req$body10, userId, profileId, profileToAdd, result;
-    return _regeneratorRuntime().wrap(function _callee14$(_context15) {
-      while (1) switch (_context15.prev = _context15.next) {
+    return _regeneratorRuntime().wrap(function _callee15$(_context16) {
+      while (1) switch (_context16.prev = _context16.next) {
         case 0:
           _req$body10 = req.body, userId = _req$body10.userId, profileId = _req$body10.profileId;
           if (!(!userId || !profileId)) {
-            _context15.next = 3;
+            _context16.next = 3;
             break;
           }
-          return _context15.abrupt("return", res.status(400).json({
+          return _context16.abrupt("return", res.status(400).json({
             error: "User ID and Profile ID are required."
           }));
         case 3:
-          _context15.prev = 3;
-          _context15.next = 6;
+          _context16.prev = 3;
+          _context16.next = 6;
           return collection.findOne({
             _id: new _mongodb.ObjectId(profileId)
           });
         case 6:
-          profileToAdd = _context15.sent;
+          profileToAdd = _context16.sent;
           if (profileToAdd) {
-            _context15.next = 9;
+            _context16.next = 9;
             break;
           }
-          return _context15.abrupt("return", res.status(404).json({
+          return _context16.abrupt("return", res.status(404).json({
             error: "Profile to add as friend not found."
           }));
         case 9:
-          _context15.next = 11;
+          _context16.next = 11;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId)
           }, {
@@ -958,54 +1011,54 @@ app.post("/imy/friend", /*#__PURE__*/function () {
             }
           });
         case 11:
-          result = _context15.sent;
+          result = _context16.sent;
           if (!(result.modifiedCount === 0)) {
-            _context15.next = 14;
+            _context16.next = 14;
             break;
           }
-          return _context15.abrupt("return", res.status(404).json({
+          return _context16.abrupt("return", res.status(404).json({
             error: "User not found or friend already added."
           }));
         case 14:
           res.status(200).json({
             message: "Friend added successfully."
           });
-          _context15.next = 21;
+          _context16.next = 21;
           break;
         case 17:
-          _context15.prev = 17;
-          _context15.t0 = _context15["catch"](3);
-          console.error(_context15.t0);
+          _context16.prev = 17;
+          _context16.t0 = _context16["catch"](3);
+          console.error(_context16.t0);
           res.status(500).json({
             error: "An error occurred while adding the friend."
           });
         case 21:
         case "end":
-          return _context15.stop();
+          return _context16.stop();
       }
-    }, _callee14, null, [[3, 17]]);
+    }, _callee15, null, [[3, 17]]);
   }));
-  return function (_x27, _x28) {
-    return _ref14.apply(this, arguments);
+  return function (_x29, _x30) {
+    return _ref15.apply(this, arguments);
   };
 }());
 app.post("/imy/unfriend", /*#__PURE__*/function () {
-  var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
+  var _ref16 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res) {
     var _req$body11, userId, profileId, user, result;
-    return _regeneratorRuntime().wrap(function _callee15$(_context16) {
-      while (1) switch (_context16.prev = _context16.next) {
+    return _regeneratorRuntime().wrap(function _callee16$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
         case 0:
           _req$body11 = req.body, userId = _req$body11.userId, profileId = _req$body11.profileId;
           if (!(!userId || !profileId)) {
-            _context16.next = 3;
+            _context17.next = 3;
             break;
           }
-          return _context16.abrupt("return", res.status(400).json({
+          return _context17.abrupt("return", res.status(400).json({
             error: "User ID and Profile ID are required."
           }));
         case 3:
-          _context16.prev = 3;
-          _context16.next = 6;
+          _context17.prev = 3;
+          _context17.next = 6;
           return collection.findOne({
             _id: new _mongodb.ObjectId(userId),
             friends: {
@@ -1015,16 +1068,16 @@ app.post("/imy/unfriend", /*#__PURE__*/function () {
             } // Check if friend exists
           });
         case 6:
-          user = _context16.sent;
+          user = _context17.sent;
           if (user) {
-            _context16.next = 9;
+            _context17.next = 9;
             break;
           }
-          return _context16.abrupt("return", res.status(404).json({
+          return _context17.abrupt("return", res.status(404).json({
             error: "Friend not found in user's friends list."
           }));
         case 9:
-          _context16.next = 11;
+          _context17.next = 11;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId)
           }, {
@@ -1035,35 +1088,35 @@ app.post("/imy/unfriend", /*#__PURE__*/function () {
             }
           });
         case 11:
-          result = _context16.sent;
+          result = _context17.sent;
           if (!(result.modifiedCount === 0)) {
-            _context16.next = 14;
+            _context17.next = 14;
             break;
           }
-          return _context16.abrupt("return", res.status(404).json({
+          return _context17.abrupt("return", res.status(404).json({
             error: "Failed to remove friend."
           }));
         case 14:
           res.status(200).json({
             message: "Friend removed successfully."
           });
-          _context16.next = 21;
+          _context17.next = 21;
           break;
         case 17:
-          _context16.prev = 17;
-          _context16.t0 = _context16["catch"](3);
-          console.error(_context16.t0);
+          _context17.prev = 17;
+          _context17.t0 = _context17["catch"](3);
+          console.error(_context17.t0);
           res.status(500).json({
             error: "An error occurred while removing the friend."
           });
         case 21:
         case "end":
-          return _context16.stop();
+          return _context17.stop();
       }
-    }, _callee15, null, [[3, 17]]);
+    }, _callee16, null, [[3, 17]]);
   }));
-  return function (_x29, _x30) {
-    return _ref15.apply(this, arguments);
+  return function (_x31, _x32) {
+    return _ref16.apply(this, arguments);
   };
 }());
 

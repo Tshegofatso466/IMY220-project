@@ -15,7 +15,7 @@ export class Song extends React.Component {
             <div className='general'>
                 <img src={this.props.image || '/assets/images/SONGS-IMAGES/esangweni-murumba.jpg'} alt='song image' />
                 <div className='details'>
-                    <h3>{this.props.title} </h3>
+                    <h3>{this.props.title}  <a href={this.props.sportifyURL || '#noUrlProvided'}>(see more)</a></h3>
                     <label>{this.props.artists.join(', ')}</label>
                 </div>
                 <img src={"/assets/icons/menu-dots-vertical.png"} />
@@ -27,5 +27,6 @@ export class Song extends React.Component {
 Song.propTypes = {
     title: PropTypes.string.isRequired,
     artists: PropTypes.arrayOf(PropTypes.string).isRequired,
-    image: PropTypes.string
+    image: PropTypes.string,
+    sportifyURL: PropTypes.string
 }

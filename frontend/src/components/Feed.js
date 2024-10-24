@@ -52,6 +52,7 @@ class Feed extends React.Component {
                                     title={song.title || 'Unknown Song'}
                                     artists={song.artists || ['Unknown Artist']}
                                     image={song.image}
+                                    sportifyURL={song.sportifyURL}
                                 />
                             ))}
                         </div>

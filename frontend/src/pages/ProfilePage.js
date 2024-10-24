@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import { Profile } from '../components/Profile'; // Importing the Profile component
+import Profile from '../components/Profile'; // Importing the Profile component
 
 export class ProfilePage extends React.Component {
     constructor(props) {

@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { ProfilePreview } from './ProfilePreview';
 import { Song } from './Song';
 import { CommentList } from './CommentList';
@@ -45,7 +44,7 @@ class PlaylistView extends React.Component {
                 followers: playlist.followers || 0,
                 ownerImage: playlist.playlist.OwnerImage || 'default.png',
                 ownerName: playlist.playlist.OwnerName || 'anonymous',
-                ownerId: playlist.playlist.OwnerId,
+                ownerId: playlist.profileId,
                 playlistImage: playlist.playlist.PlayListImage
             });
         } catch (error) {
@@ -116,6 +115,7 @@ class PlaylistView extends React.Component {
 
     hadleNavigateToProfile = () => {
         sessionStorage.setItem('profileId', this.state.ownerId);
+        console.log('profileId: ', sessionStorage.getItem('profileId'));
         this.props.navigate('/profile');
     }
     render() {
@@ -165,14 +165,14 @@ class PlaylistView extends React.Component {
                 <div className="playlist-body">
                     <div className="song-list">
                         {songs.map((song, index) => (
-                            <Song key={index} title={song.title} artists={song.artists} image={song.image}/>
+                            <Song key={index} title={song.title} artists={song.artists} image={song.image} sportifyURL={song.sportifyURL}/>
                         ))}
                     </div>
 
                     <div className="icon-group">
-                            <img className="icon-heart" onClick={this.handleLike} src="/assets/icons/heart.png" />
-                            <img className="icon-comment" onClick={this.handleComment} src="/assets/icons/comment-alt.png" />
-                            <img className="icon-add" onClick={this.handleCreateComment} src="/assets/icons/comment-medical.png" />
+                        <img className="icon-heart" onClick={this.handleLike} src="/assets/icons/heart.png" />
+                        <img className="icon-comment" onClick={this.handleComment} src="/assets/icons/comment-alt.png" />
+                        <img className="icon-add" onClick={this.handleCreateComment} src="/assets/icons/comment-medical.png" />
                     </div>
                 </div>
 

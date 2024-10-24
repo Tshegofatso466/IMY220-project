@@ -1,13 +1,14 @@
 import React from 'react';
 import { PlayList } from '../components/PlayList';
 import PropTypes from 'prop-types';
-import { getUserById, toggleFriend } from '../api';
+import { getUserById, toggleFriend, getPlaylistById } from '../api';
+import withNavigation from '../hoc.js';
 import '../fontDefinition/fonts.css'; // Assuming fonts are already set up
 import '../../public/assets/styles/Profile.css'; // Custom CSS for Profile component
 import { EditProfile } from '../components/EditProfile'; // Importing the EditProfile component
 // import { prototype } from 'file-loader';
 
-export class Profile extends React.Component {
+class Profile extends React.Component {
     constructor(props) {
         super(props);
         // State for the current tab (Playlists, Friends, Pictures) and toggling the edit profile form
@@ -53,9 +54,12 @@ export class Profile extends React.Component {
             const userIsFriendWithProfile = mainUser.friends.some(friend => friend.id === (sessionStorage.getItem('profileId')));
             this.setState({ userIsFriendWithProfile: userIsFriendWithProfile });
 
-            if (!this.state.userIsFriendWithProfile) {
+            if (!userIsFriendWithProfile) {
                 this.setState({ activeTab: "--" });
             }
+
+            this.updatePlaylists();
+            console.log('this is the updated playlists', this.state.playlists);
         } catch (error) {
             console.error("Error fetching user data:", error);
             this.setState({ loading: false }); // Handle loading state
@@ -70,21 +74,38 @@ export class Profile extends React.Component {
     handleAddFriend = async () => {
         //toggle the add or remove friend according to the 'userIsFriendWithProfile' flag.
         let response = null;
-        if(this.state.sameUser) return;
-        else if(this.state.userIsFriendWithProfile){
-            response = await toggleFriend(false, {userId: sessionStorage.getItem('userId'), profileId: sessionStorage.getItem('profileId')});
+        if (this.state.sameUser) return;
+        else if (this.state.userIsFriendWithProfile) {
+            response = await toggleFriend(false, { userId: sessionStorage.getItem('userId'), profileId: sessionStorage.getItem('profileId') });
         }
-        else{
-            response = await toggleFriend(true, {userId: sessionStorage.getItem('userId'), profileId: sessionStorage.getItem('profileId')});
+        else {
+            response = await toggleFriend(true, { userId: sessionStorage.getItem('userId'), profileId: sessionStorage.getItem('profileId') });
         }
-        if(response.success){
-            this.setState(prevState => ({ userIsFriendWithProfile:!prevState.userIsFriendWithProfile }));
+        if (response.success) {
+            this.setState(prevState => ({ userIsFriendWithProfile: !prevState.userIsFriendWithProfile }));
         }
     }
 
+    updatePlaylists = async () => {
+        const { playlists } = this.state;
+
+        const updatedPlaylists = await Promise.all(
+            playlists.map(async (playlist) => {
+                if (playlist.reference) {
+                    const data = await getPlaylistById(playlist.id);
+                    return data || playlist;  // Return fetched data or original playlist if failed
+                } else {
+                    return playlist;  // Return original playlist if no reference
+                }
+            })
+        );
+
+        // Update the state once all playlists are processed
+        this.setState({ playlists: updatedPlaylists });
+    };
     // Function to render content based on the active tab
     renderContent() {
-        const { playlists, friends, pictures, onPlaylistClick } = this.state;
+        const { playlists, friends, pictures, onPlaylistClick, user } = this.state;
         const { activeTab } = this.state;
 
         console.log("renderContent");
@@ -96,12 +117,12 @@ export class Profile extends React.Component {
                         {playlists.map(playlist => (
                             <PlayList
                                 key={playlist.id}
-                                PlayListName={playlist.PlayListName}
-                                PlayListImage={playlist.PlayListImage}
-                                Ownerimage={playlist.OwnerImage}
-                                OwnerName={playlist.OwnerName}
-                                songs={playlist.songs}
-                                onClick={() => onPlaylistClick(playlist)}
+                                PlayListName={playlist.PlayListName || 'unknown'}
+                                PlayListImage={playlist.PlayListImage || 'default.jpg'}
+                                Ownerimage={ playlist.OwnerImage || user.profileImage || 'anonymous.jpg'}
+                                OwnerName={playlist.OwnerName || user.username || 'Anonymous'}
+                                songs={playlist.songs || []}
+                                onClick={() => this.onPlaylistClick(playlist)}
                             />
                         ))}
                     </div>
@@ -157,7 +178,7 @@ export class Profile extends React.Component {
 
                         {/* Right side: User Details */}
                         <div className="profile-details">
-                            <h2>{username} {friendsWithUser && <span className="kinda-hidden">(Friends with you)</span>}</h2>
+                            <h2>{username} {friendsWithUser && !sameUser && <span className="kinda-hidden">(Friends with you)</span>}</h2>
                             <p>{bio}</p>
                             <div className="followers-following">
                                 <a href="#followers" className="link">
@@ -175,7 +196,7 @@ export class Profile extends React.Component {
                     {!sameUser &&
                         <div className="action-buttons">
                             <button className="btn follow-btn">Follow</button>
-                            <button className="btn add-friend-btn" onClick={this.handleAddFriend}>{!userIsFriendWithProfile ? "Add Friend":"Unfriend"}</button>
+                            <button className="btn add-friend-btn" onClick={this.handleAddFriend}>{!userIsFriendWithProfile ? "Add Friend" : "Unfriend"}</button>
                         </div>
                     }
 
@@ -222,3 +243,5 @@ export class Profile extends React.Component {
 Profile.protoTypes = {
     userId: PropTypes.string.isRequired,
 }
+
+export default withNavigation(Profile);
