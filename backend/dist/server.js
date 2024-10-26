@@ -21,26 +21,26 @@ function connectToDatabase() {
   return _connectToDatabase.apply(this, arguments);
 }
 function _connectToDatabase() {
-  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
-    return _regeneratorRuntime().wrap(function _callee18$(_context19) {
-      while (1) switch (_context19.prev = _context19.next) {
+  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20() {
+    return _regeneratorRuntime().wrap(function _callee20$(_context21) {
+      while (1) switch (_context21.prev = _context21.next) {
         case 0:
-          _context19.prev = 0;
-          _context19.next = 3;
+          _context21.prev = 0;
+          _context21.next = 3;
           return client.connect();
         case 3:
           console.log("MongoDB connected successfully");
-          _context19.next = 9;
+          _context21.next = 9;
           break;
         case 6:
-          _context19.prev = 6;
-          _context19.t0 = _context19["catch"](0);
-          console.error("MongoDB connection error:", _context19.t0);
+          _context21.prev = 6;
+          _context21.t0 = _context21["catch"](0);
+          console.error("MongoDB connection error:", _context21.t0);
         case 9:
         case "end":
-          return _context19.stop();
+          return _context21.stop();
       }
-    }, _callee18, null, [[0, 6]]);
+    }, _callee20, null, [[0, 6]]);
   }));
   return _connectToDatabase.apply(this, arguments);
 }
@@ -918,63 +918,58 @@ app.put("/imy/editPlaylist", /*#__PURE__*/function () {
 }());
 app["delete"]("/imy/deleteSong", /*#__PURE__*/function () {
   var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
-    var _req$body9, userId, playlistId, songName, artists, songKey, result;
+    var _req$body9, userId, playlistId, songId, result;
     return _regeneratorRuntime().wrap(function _callee14$(_context15) {
       while (1) switch (_context15.prev = _context15.next) {
         case 0:
-          _req$body9 = req.body, userId = _req$body9.userId, playlistId = _req$body9.playlistId, songName = _req$body9.songName, artists = _req$body9.artists; // Validate incoming data
-          if (!(!userId || !playlistId || !songName || !artists || !Array.isArray(artists))) {
+          _req$body9 = req.body, userId = _req$body9.userId, playlistId = _req$body9.playlistId, songId = _req$body9.songId; // Validate incoming data
+          if (!(!userId || !playlistId || !songId)) {
             _context15.next = 3;
             break;
           }
           return _context15.abrupt("return", res.status(400).json({
-            error: "User ID, Playlist ID, Song Name, and Artists are required."
+            error: "User ID, Playlist ID, and Song ID are required."
           }));
         case 3:
           _context15.prev = 3;
-          // Create a unique key based on songName and artists
-          songKey = {
-            title: songName,
-            artists: artists
-          }; // Update the user's playlist to remove the song
-          _context15.next = 7;
+          _context15.next = 6;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId),
-            "playlists.id": new _mongodb.ObjectId(playlistId)
-          },
-          // Find user and playlist
-          {
+            "playlists.id": new _mongodb.ObjectId(playlistId) // Find user and playlist
+          }, {
             $pull: {
-              "playlists.$.songs": songKey // Remove the song from the playlist's songs array
+              "playlists.$.songs": {
+                songId: new _mongodb.ObjectId(songId)
+              } // Remove the song based on ObjectId
             }
           });
-        case 7:
+        case 6:
           result = _context15.sent;
           if (!(result.modifiedCount === 0)) {
-            _context15.next = 10;
+            _context15.next = 9;
             break;
           }
           return _context15.abrupt("return", res.status(404).json({
             error: "Song not found in the specified playlist."
           }));
-        case 10:
+        case 9:
           res.status(200).json({
             message: "Song deleted successfully."
           });
-          _context15.next = 17;
+          _context15.next = 16;
           break;
-        case 13:
-          _context15.prev = 13;
+        case 12:
+          _context15.prev = 12;
           _context15.t0 = _context15["catch"](3);
-          console.error(_context15.t0);
+          console.error("Error deleting song:", _context15.t0);
           res.status(500).json({
             error: "An error occurred while deleting the song."
           });
-        case 17:
+        case 16:
         case "end":
           return _context15.stop();
       }
-    }, _callee14, null, [[3, 13]]);
+    }, _callee14, null, [[3, 12]]);
   }));
   return function (_x27, _x28) {
     return _ref14.apply(this, arguments);
@@ -1229,6 +1224,82 @@ app.post("/imy/saveplaylist", /*#__PURE__*/function () {
   }));
   return function (_x33, _x34) {
     return _ref17.apply(this, arguments);
+  };
+}());
+
+//superUser requests ::
+
+var adminpersonels = db.collection("IMY-admin-personels");
+var adminData = db.collection("IMY-admin");
+app.get("/imy/admin/getUsers", /*#__PURE__*/function () {
+  var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
+    var users;
+    return _regeneratorRuntime().wrap(function _callee18$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
+        case 0:
+          _context19.prev = 0;
+          _context19.next = 3;
+          return collection.find({}).toArray();
+        case 3:
+          users = _context19.sent;
+          res.status(200).json(users);
+          _context19.next = 11;
+          break;
+        case 7:
+          _context19.prev = 7;
+          _context19.t0 = _context19["catch"](0);
+          console.error(_context19.t0);
+          res.status(500).json({
+            error: "An error occurred while retrieving users."
+          });
+        case 11:
+        case "end":
+          return _context19.stop();
+      }
+    }, _callee18, null, [[0, 7]]);
+  }));
+  return function (_x35, _x36) {
+    return _ref18.apply(this, arguments);
+  };
+}());
+app.get("/imy/admin/getGenres", /*#__PURE__*/function () {
+  var _ref19 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee19(req, res) {
+    var adminDocument, genres;
+    return _regeneratorRuntime().wrap(function _callee19$(_context20) {
+      while (1) switch (_context20.prev = _context20.next) {
+        case 0:
+          _context20.prev = 0;
+          _context20.next = 3;
+          return adminData.findOne({});
+        case 3:
+          adminDocument = _context20.sent;
+          if (!(!adminDocument || !adminDocument.genre)) {
+            _context20.next = 6;
+            break;
+          }
+          return _context20.abrupt("return", res.status(404).json({
+            error: "Genres not found."
+          }));
+        case 6:
+          genres = adminDocument.genre; // Access the genre array
+          res.status(200).json(genres); // Return only the genre array
+          _context20.next = 14;
+          break;
+        case 10:
+          _context20.prev = 10;
+          _context20.t0 = _context20["catch"](0);
+          console.error(_context20.t0);
+          res.status(500).json({
+            error: "An error occurred while retrieving genres."
+          });
+        case 14:
+        case "end":
+          return _context20.stop();
+      }
+    }, _callee19, null, [[0, 10]]);
+  }));
+  return function (_x37, _x38) {
+    return _ref19.apply(this, arguments);
   };
 }());
 

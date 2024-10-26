@@ -2,8 +2,8 @@
     "_id": {
         "$oid": "66fab93da198692f4ebd98a7"
     },
-    "profileImage": "base64IMG",
-    "bio": "the profile just changed but i am still the same :)",
+    "profileImage": "data:image/jpeg;base64,...",
+    "bio": "i changed it again ohhe yeah >>>>",
     "followers": {
         "$numberInt": "1200"
     },
@@ -13,7 +13,7 @@
     "playlists": [
         {
             "PlayListName": "Chill Vibes",
-            "PlayListImage": "base64IMG",
+            "PlayListImage": "data:image/jpeg;base64,...",
             "songs": [
                 {
                     "title": "Esangweni",
@@ -21,9 +21,13 @@
                         "Nkosazana Daughter",
                         "Murumba Pitch"
                     ],
-                    "image": "base64IMG",
+                    "image": "data:image/jpeg;base64,...",
                     "sportifyURL": "https://open.spotify.com/track/1kKltSWkRUTB7LYVFJXS2w?si=7599f0fe513b4c15",
-                    "deleted": false
+                    "deleted": false,
+                    "dateAdded": "2024-09-30T12:34:56Z",
+                    "songId": {
+                        "$oid": "671c0cc96c1fcbd5652fbf9e"
+                    }
                 },
                 {
                     "title": "One Last Time",
@@ -31,13 +35,17 @@
                         "Ariana Grande"
                     ],
                     "deleted": false,
-                    "image": "base64IMG",
-                    "sportifyURL": "https://open.spotify.com/track/7xoUc6faLbCqZO6fQEYprd?si=d5cc468a58fc4e88"
+                    "image": "data:image/jpeg;base64,...",
+                    "sportifyURL": "https://open.spotify.com/track/7xoUc6faLbCqZO6fQEYprd?si=d5cc468a58fc4e88",
+                    "dateAdded": "2024-09-30T12::56Z",
+                    "songId": {
+                        "$oid": "671c0ce06c1fcbd5652fbf9f"
+                    }
                 }
             ],
             "comments": [
                 {
-                    "profileImage": "base64IMG",
+                    "profileImage": "data:image/jpeg;base64,...",
                     "userName": "Alice",
                     "followers": {
                         "$numberInt": "250"
@@ -47,7 +55,7 @@
                     "pinned": false
                 },
                 {
-                    "profileImage": "base64IMG",
+                    "profileImage": "data:image/jpeg;base64,...",
                     "userName": "Bob",
                     "followers": {
                         "$numberInt": "150"
@@ -57,7 +65,7 @@
                     "pinned": false
                 },
                 {
-                    "profileImage": "base64IMG",
+                    "profileImage": "data:image/jpeg;base64,...",
                     "userName": "Kylie Rec",
                     "followers": {
                         "$numberInt": "1200"
@@ -71,7 +79,7 @@
                     "pinned": false
                 },
                 {
-                    "profileImage": "base64IMG",
+                    "profileImage": "data:image/jpeg;base64,...",
                     "userName": "Kylie Rec",
                     "followers": {
                         "$numberInt": "1200"
@@ -88,31 +96,69 @@
             "id": {
                 "$oid": "66fb36c2086b1a070b8a1c2b"
             },
-            "reference": false
+            "OwnerId": {
+                "$oid": "66fab93da198692f4ebd98a7"
+            },
+            "reference": false,
+            "genre": [
+                "amapiano",
+                "hip-hop"
+            ],
+            "hashtags": [
+                "#chill",
+                "#vibey",
+                "#fresh",
+                "#longRoad",
+                "#sick"
+            ]
         },
         {
             "PlayListName": "Workout Hits",
-            "PlayListImage": "ariana grande.jpg",
-            "OwnerImage": "pfp2.jpg",
-            "OwnerName": "Jane Smith",
+            "PlayListImage": "data:image/jpeg;base64,...",
             "songs": [
                 {
-                    "title": "Song Three",
+                    "title": "Make it Home",
                     "artists": [
-                        "Artist D"
-                    ]
+                        "August Alsina"
+                    ],
+                    "image": "data:image/jpeg;base64,..",
+                    "sportifyURL": "https://open.spotify.com/track/2XK0gPB8oQImEWZDP7ydSs?si=5e9e7b6edff84a3a",
+                    "dateAdded": "2024-09-30T12::56Z",
+                    "deleted": false,
+                    "songId": {
+                        "$oid": "671c0d2a6c1fcbd5652fbfa0"
+                    }
                 },
                 {
-                    "title": "Song Four",
+                    "title": "Me and u",
                     "artists": [
-                        "Artist E",
-                        "Artist F"
-                    ]
+                        "tems"
+                    ],
+                    "image": "data:image/jpeg;base64,...",
+                    "sportifyURL": "https://open.spotify.com/track/4nFrcGM7MY1mpoQCC7Kefj?si=885ecb4237cd4ce9",
+                    "dateAdded": "2024-09-30T12::56Z",
+                    "deleted": false,
+                    "songId": {
+                        "$oid": "671c0d3c6c1fcbd5652fbfa1"
+                    }
+                },
+                {
+                    "title": "washumlilo",
+                    "artists": [
+                        "Bucy Radebe"
+                    ],
+                    "sportifyURL": "https://open.spotify.com/track/1cpEKqRRI4O7U5tQyS1DeC?si=c56733e8c2124f68",
+                    "dateAdded": "2024-10-26T00:22:44.430Z",
+                    "deleted": false,
+                    "image": "data:image/jpeg;base64,...",
+                    "songId": {
+                        "$oid": "671c3654d0b74dc09abca338"
+                    }
                 }
             ],
             "comments": [
                 {
-                    "profileImage": "base64IMG",
+                    "profileImage": "data:image/jpeg;base64,...",
                     "userName": "Charlie",
                     "followers": {
                         "$numberInt": "300"
@@ -124,24 +170,50 @@
             "id": {
                 "$oid": "66fb36d1086b1a070b8a1c2c"
             },
-            "reference": false
+            "reference": false,
+            "genre": [
+                "rnb",
+                "afrobeats"
+            ],
+            "hashtags": [
+                "#gym",
+                "#workout",
+                "#hits",
+                "#african",
+                "#topOfWorld"
+            ]
         },
         {
             "reference": true,
             "OwnerId": {
-                "$oid": "66fb26cb0397b60c2c85a5c5"
+                "$oid": "671937f5bcddefe55dd942ef"
             },
             "id": {
-                "$oid": "66fb40e4861ad36f073190e8"
+                "$oid": "6719397d3bb33cd02b36bf26"
             }
+        },
+        {
+            "id": {
+                "$oid": "66fb36c2086b1a070b8a1c2b"
+            },
+            "OwnerId": {
+                "$oid": "66fab93da198692f4ebd98a7"
+            },
+            "reference": true
         }
     ],
     "friends": [
         {
             "id": {
-                "$oid": "66fab93da198692f4ebd98a7"
+                "$oid": "67193e83679293e414fb0772"
             },
-            "name": "Sizwe CR7"
+            "name": "ElectroFan"
+        },
+        {
+            "id": {
+                "$oid": "671937f5bcddefe55dd942ef"
+            },
+            "name": "TunesLover"
         }
     ],
     "pictures": [
@@ -149,13 +221,13 @@
             "id": {
                 "$oid": "671934293bb33cd02b36bf23"
             },
-            "url": "base64IMG"
+            "url": "data:image/jpeg;base64,..."
         },
         {
             "id": {
                 "$oid": "671934343bb33cd02b36bf24"
             },
-            "url": "base64IMG"
+            "url": "data:image/jpeg;base64,..."
         }
     ],
     "email": "tshegofatsomahlase466@gmail.com",

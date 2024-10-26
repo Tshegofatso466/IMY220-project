@@ -140,11 +140,12 @@ class PlaylistView extends React.Component {
         console.log('the songssss...', songs);
         console.log('the date....', new Date().toISOString());
         //const { ownerImage, ownerName, followers } = this.state;
+        const sameUser = sessionStorage.getItem('userId') === sessionStorage.getItem('profileId')
 
         return (
             <div className="playlist-view-container">
                 <img src={`/assets/images/RANDOM/latest2.jpg`} alt="Playlist background" className="playlist-background" />
-                <div className="header-btn-container">
+                {sameUser && <div className="header-btn-container">
                     <button className="header-btn" onClick={this.handleCreatePlaylist}>
                         Create Playlist
                     </button>
@@ -154,7 +155,7 @@ class PlaylistView extends React.Component {
                     <button className="header-btn" onClick={this.handleAddSong}>
                         Add Song
                     </button>
-                </div>
+                </div>}
 
                 <div className="playlist-header">
                     <h1 className="playlist-name">{PlayListName}</h1>
@@ -165,7 +166,7 @@ class PlaylistView extends React.Component {
                 </div>
 
                 <div className="playlist-body">
-                    <div className="song-list">
+                    {songs.length !== 0 ? (<div className="song-list">
                         {songs.map((song, index) => (
                             <Song
                                 key={index}
@@ -177,7 +178,9 @@ class PlaylistView extends React.Component {
                                 deleted={song.deleted}
                                 songId={song.songId} />
                         ))}
-                    </div>
+                    </div>) : (
+                        <h5 className="no-songs">No songs in current playlist</h5>
+                    ) }
 
                     <div className="icon-group">
                         <img className="icon-heart" onClick={this.handleLike} src="/assets/icons/heart.png" />
@@ -187,7 +190,7 @@ class PlaylistView extends React.Component {
                 </div>
 
                 {showComments && <CommentList comments={comments} onClose={this.handleComment} />}
-                {showEditPlaylist && <EditPlaylist playlistName={PlayListName} songs={songs} onClose={this.handleEditPlaylist} />}
+                {showEditPlaylist && <EditPlaylist playlist={playlist} onClose={this.handleEditPlaylist} />}
                 {showCreatePlaylist && <CreatePlaylist onClose={this.handleCreatePlaylist} />}
                 {showAddSong && <AddSong onClose={this.handleAddSong} />}
                 {showCreateComment && (

@@ -140,7 +140,52 @@ export const addSong = async (userId, playlistId, song) => {
     });
     if (!response.ok) {
         const errorData = await response.json(); // Parse the response body to get error details
-        throw new Error(errorData.error || "Failed to save playlist");
+        throw new Error(errorData.error || "Failed to save song");
+    }    
+    return response.json();
+}
+
+export const deleteSong = async (userId, playlistId, songId) => {
+    const response = await fetch(`/imy/deleteSong`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: userId,
+            playlistId: playlistId,
+            songId: songId
+        }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get error details
+        throw new Error(errorData.error || "Failed to delete song");
+    }    
+    return response.json();
+}
+
+export const getGenres = async () => {
+    const response = await fetch(`/imy/admin/getGenres`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get error details
+        throw new Error(errorData.error || "Failed to fetch genres");
+    }    
+    return response.json();
+}
+
+export const deletePlaylist = async (userId, playlistId) => {
+    const response = await fetch(`/imy/deletePlaylist`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: userId,
+            playlistId: playlistId
+        }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get error details
+        throw new Error(errorData.error || "Failed to delete playlist");
     }    
     return response.json();
 }

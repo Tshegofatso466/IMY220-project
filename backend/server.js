@@ -445,23 +445,23 @@ app.put("/imy/editPlaylist", async (req, res) => {
 });
 
 app.delete("/imy/deleteSong", async (req, res) => {
-    const { userId, playlistId, songName, artists } = req.body;
+    const { userId, playlistId, songId } = req.body;
 
     // Validate incoming data
-    if (!userId || !playlistId || !songName || !artists || !Array.isArray(artists)) {
-        return res.status(400).json({ error: "User ID, Playlist ID, Song Name, and Artists are required." });
+    if (!userId || !playlistId || !songId) {
+        return res.status(400).json({ error: "User ID, Playlist ID, and Song ID are required." });
     }
 
     try {
-        // Create a unique key based on songName and artists
-        const songKey = { title: songName, artists: artists };
-
         // Update the user's playlist to remove the song
         const result = await collection.updateOne(
-            { _id: new ObjectId(userId), "playlists.id": new ObjectId(playlistId) }, // Find user and playlist
+            { 
+                _id: new ObjectId(userId), 
+                "playlists.id": new ObjectId(playlistId) // Find user and playlist
+            },
             {
                 $pull: {
-                    "playlists.$.songs": songKey // Remove the song from the playlist's songs array
+                    "playlists.$.songs": { songId: new ObjectId(songId) } // Remove the song based on ObjectId
                 }
             }
         );
@@ -473,7 +473,7 @@ app.delete("/imy/deleteSong", async (req, res) => {
 
         res.status(200).json({ message: "Song deleted successfully." });
     } catch (err) {
-        console.error(err);
+        console.error("Error deleting song:", err);
         res.status(500).json({ error: "An error occurred while deleting the song." });
     }
 });
@@ -608,6 +608,34 @@ app.post("/imy/saveplaylist", async (req, res) => {
     }
 });
 
+//superUser requests ::
+
+const adminpersonels = db.collection("IMY-admin-personels");
+const adminData = db.collection("IMY-admin");
+
+app.get("/imy/admin/getUsers", async (req, res) => {
+    try {
+        const users = await collection.find({}).toArray();
+        res.status(200).json(users);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while retrieving users." });
+    }
+});
+
+app.get("/imy/admin/getGenres", async (req, res) => {
+    try {
+        const adminDocument = await adminData.findOne({}); // Fetch the first document in the collection
+        if (!adminDocument || !adminDocument.genre) {
+            return res.status(404).json({ error: "Genres not found." });
+        }
+        const genres = adminDocument.genre; // Access the genre array
+        res.status(200).json(genres); // Return only the genre array
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while retrieving genres." });
+    }
+});
 
 //PORT TO LISTEN TO
 app.listen(1337, () => {

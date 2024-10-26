@@ -1,51 +1,220 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../fontDefinition/fonts.css';
+import { getGenres } from '../api';
 import '../../public/assets/styles/EditPlaylist.css';  // Create this file for custom styles.
-import { Song } from './Song';  // Import the Song component
+// import { Song } from './Song';  // Import the Song component
 
 export class EditPlaylist extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            songs: props.songs,  // Initialize with the current playlist songs
+            playlistName: '',
+            image: '',
+            hashtags: [],
+            genres: [],
+            genreOptions: ['Pop', 'Rock', 'Jazz', 'Classical', 'Hip-Hop'],  // Preset genres
+            hashtagInput: '',
+            selectedGenre: '',
+            errorMessage: '' 
         };
     }
 
+    async componentDidMount(){
+        const genres = await getGenres();
+        const { PlayListName, hashtags, genre, } = this.props.playlist;
+        this.setState({playlistName: PlayListName, hashtags: hashtags, genres: genre, genreOptions: genres});
+        console.log('EditPlaylist Mounted');
+    }
+
     // Method to delete a song from the playlist
-    handleDeleteSong = (index) => {
-        const updatedSongs = this.state.songs.filter((_, i) => i !== index);
-        this.setState({ songs: updatedSongs });
+    handleInputChange = (event) => {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
     };
 
+    convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+
+    handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+        const base64 = await this.convertToBase64(file);
+        this.setState({ image: base64 });
+    };
+
+    handleAddHashtag = (event) => {
+        event.preventDefault();
+        const { hashtagInput, hashtags } = this.state;
+        if (hashtagInput.trim() === '') {
+            this.setState({ errorMessage: 'Hashtag cannot be empty' });
+            return;
+        }
+        this.setState({
+            hashtags: [...hashtags, hashtagInput.trim()],
+            hashtagInput: '',
+            errorMessage: ''
+        });
+    };
+
+    handleRemoveHashtag = (index) => {
+        this.setState((prevState) => ({
+            hashtags: prevState.hashtags.filter((_, i) => i !== index)
+        }));
+    };
+
+    handleAddGenre = (event) => {
+        event.preventDefault();
+        const { selectedGenre, genres } = this.state;
+        if (selectedGenre && !genres.includes(selectedGenre)) {
+            this.setState({ genres: [...genres, selectedGenre] });
+        }
+    };
+
+    handleRemoveGenre = (index) => {
+        this.setState((prevState) => ({
+            genres: prevState.genres.filter((_, i) => i !== index)
+        }));
+    };
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log('ready to submit data to server ........');
+        // Send the updated playlist data to the backend API
+        // Example:
+        // fetch('/api/playlists', {
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         playlistId: this.props.playlistId, // Get playlist ID from props
+        //         playlistName,
+        //         hashtags,
+        //         genres,
+        //         image
+        //     })
+        // })
+        //.then(response => response.json())
+        //.then(data => {
+        //     console.log('Playlist updated successfully:', data);
+        // })
+        //.catch(error => {
+        //     console.error('Error updating playlist:', error);
+        // });
+        // Clos
+    }
+
     render() {
-        const { playlistName, onClose } = this.props;
-        const { songs } = this.state;
+        const { playlistName, hashtagInput, hashtags, genres, genreOptions, selectedGenre, errorMessage } = this.state;
+        const { onClose } = this.props;
 
         return (
             <div className="edit-playlist-overlay">
                 <div className="edit-playlist-container">
                     <h2>Edit Playlist: {playlistName}</h2>
-                    <button className="close-button" onClick={onClose}>✕</button>
+                    <button className="close-button" onClick={onClose}>x</button>
 
-                    <div className="songs-list">
-                        {songs.length === 0 ? (
-                            <p>No songs in this playlist.</p>
-                        ) : (
-                            songs.map((song, index) => (
-                                <div key={index} className="song-edit-item">
-                                    {/* Reuse the Song component */}
-                                    <Song title={song.title} artists={song.artists} />
-                                    <button
-                                        className="delete-button"
-                                        onClick={() => this.handleDeleteSong(index)}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            ))
+                    <form onSubmit={this.handleSubmit}>
+                        {/* Playlist Name */}
+                        <div className="form-groupT">
+                            <label htmlFor="playlistName">Playlist Name</label>
+                            <input
+                                type="text"
+                                id="playlistName"
+                                name="playlistName"
+                                value={playlistName}
+                                onChange={this.handleInputChange}
+                                required
+                            />
+                        </div>
+
+                        {/* Playlist Image */}
+                        <div className="form-groupT">
+                            <label htmlFor="image">Playlist Image (Optional)</label>
+                            <input
+                                type="file"
+                                accept=".jpeg, .png, .jpg"
+                                id="image"
+                                name="image"
+                                onChange={this.handleFileUpload}
+                            />
+                        </div>
+
+                        {/* Add Hashtags */}
+                        <div className="form-group">
+                            <label htmlFor="hashtagInput">Add Hashtag</label>
+                            <input
+                                type="text"
+                                id="hashtagInput"
+                                name="hashtagInput"
+                                value={hashtagInput}
+                                onChange={this.handleInputChange}
+                            />
+                            <button className="add-hashtag-btnT" onClick={this.handleAddHashtag}>Add Hashtag</button>
+                        </div>
+
+                        {/* Display added hashtags */}
+                        {hashtags.length > 0 && (
+                            <div className="hashtag-listT">
+                                <h4>Hashtags:</h4>
+                                <ul>
+                                    {hashtags.map((hashtag, index) => (
+                                        <li key={index}>
+                                            {hashtag}
+                                            <button type="button" className="remove-btnT" onClick={() => this.handleRemoveHashtag(index)}>Remove</button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         )}
-                    </div>
+
+                        {/* Genre Dropdown */}
+                        <div className="form-groupT">
+                            <label htmlFor="selectedGenre">Select Genre</label>
+                            <select
+                                id="selectedGenre"
+                                name="selectedGenre"
+                                value={selectedGenre}
+                                onChange={this.handleInputChange}
+                            >
+                                <option value="">Select a genre</option>
+                                {genreOptions.map((genre, index) => (
+                                    <option key={index} value={genre}>{genre}</option>
+                                ))}
+                            </select>
+                            <button className="add-genre-btnT" onClick={this.handleAddGenre}>Add Genre</button>
+                        </div>
+
+                        {/* Display added genres */}
+                        {genres.length > 0 && (
+                            <div className="genre-listT">
+                                <h4>Genres:</h4>
+                                <ul>
+                                    {genres.map((genre, index) => (
+                                        <li key={index}>
+                                            {genre}
+                                            <button type="button" className="remove-btnT" onClick={() => this.handleRemoveGenre(index)}>Remove</button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        {/* Error Message */}
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+                        {/* Buttons */}
+                        <div className="button-groupT">
+                            <button type="submit" className="submit-btnT">Save Playlist</button>
+                            <button type="button" className="cancel-btnT" onClick={onClose}>Cancel</button>
+                        </div>
+                    </form>
                 </div>
                 <div className="dark-background"></div>
             </div>
@@ -54,12 +223,31 @@ export class EditPlaylist extends React.Component {
 }
 
 EditPlaylist.propTypes = {
-    playlistName: PropTypes.string.isRequired,  // Playlist title
-    songs: PropTypes.arrayOf(
-        PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            artists: PropTypes.arrayOf(PropTypes.string).isRequired,
-        })
-    ).isRequired,
-    onClose: PropTypes.func.isRequired,  // Function to close the modal
+    playlist: PropTypes.shape({
+        id: PropTypes.oneOfType([
+            PropTypes.string.isRequired,
+            PropTypes.shape({ $oid: PropTypes.string.isRequired }) // To accommodate MongoDB ID structure
+        ]),
+        PlayListName: PropTypes.string.isRequired,
+        PlayListImage: PropTypes.string, // Optional, if no image is provided
+        OwnerImage: PropTypes.string,
+        OwnerName: PropTypes.string,
+        reference: PropTypes.bool, // Assuming it’s optional if not always present
+        genre: PropTypes.arrayOf(PropTypes.string).isRequired,
+        hashtags: PropTypes.arrayOf(PropTypes.string).isRequired,
+        songs: PropTypes.arrayOf(
+            PropTypes.shape({
+                title: PropTypes.string.isRequired,
+                artists: PropTypes.arrayOf(PropTypes.string).isRequired,
+                image: PropTypes.string, // Optional, if image isn't mandatory
+                sportifyURL: PropTypes.string.isRequired,
+                dateAdded: PropTypes.string.isRequired,
+                deleted: PropTypes.bool,
+                songId: PropTypes.string.isRequired
+            })
+        ),
+    }),
+    profileId: PropTypes.string,
+    followers: PropTypes.number,
+    onClose: PropTypes.func.isRequired  // Function to close the modal
 };

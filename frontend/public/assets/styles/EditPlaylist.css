@@ -41,7 +41,7 @@
     cursor: pointer;
 }
 
-.songs-list {
+/* .songs-list {
     margin-top: 20px;
     max-height: 400px;
     overflow-y: auto;
@@ -52,17 +52,118 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+} */
+
+.form-groupT, .form-group {
+    margin-bottom: 15px;
+    font-family: Arial, sans-serif;
 }
 
-.delete-button {
-    background-color: red;
+/* Label Styling */
+.form-groupT label, .form-group label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Input and Select Styling */
+.form-groupT input[type="text"],
+.form-groupT input[type="file"],
+.form-group input[type="text"],
+.form-groupT select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+/* Button Styling */
+.add-hashtag-btnT, .add-genre-btnT {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 5px 10px;
-    cursor: pointer;
     border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.delete-button:hover {
-    background-color: darkred;
+.add-hashtag-btnT:hover, .add-genre-btnT:hover {
+    background-color: #45a049;
+}
+
+/* Hashtag and Genre List Styling */
+.hashtag-listT, .genre-listT {
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+}
+
+.hashtag-listT ul, .genre-listT ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.hashtag-listT li, .genre-listT li {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+/* Remove Button */
+.remove-btnT {
+    margin-left: 10px;
+    color: #e74c3c;
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.remove-btnT:hover {
+    color: #c0392b;
+}
+
+/* Error Message */
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Submit and Cancel Buttons */
+.button-groupT .submit-btnT, .button-groupT .cancel-btnT {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.button-groupT .submit-btnT {
+    background-color: #3498db;
+    color: white;
+}
+
+.button-groupT .submit-btnT:hover {
+    background-color: #2980b9;
+}
+
+.button-groupT .cancel-btnT {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.button-groupT .cancel-btnT:hover {
+    background-color: #c0392b;
 }

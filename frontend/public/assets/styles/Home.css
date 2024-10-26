@@ -61,7 +61,7 @@
     align-items: center;
     color: white;
     text-align: center;
-    margin-top: 500px;
+    margin-top: 100px;
 }
 
 .login-btn, .signup-btn {
@@ -72,6 +72,7 @@
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    width: 180px;
 }
 
 .login-btn {
@@ -97,4 +98,8 @@
     margin-top: 300px;
     font-size: 14px;
     color: #f0f0f0;
+}
+
+.about{
+    color: black;
 }

@@ -57,7 +57,7 @@ export class Home extends React.Component {
                     <div className="overlay-content">
                         <button className="login-btn" onClick={this.toggleLoginForm}>Log in</button>
                         <button className="signup-btn" onClick={this.toggleSignUpForm}>Sign up</button>
-                        <span onClick={this.toggleAboutPage}>About</span>
+                        <span className='about' onClick={this.toggleAboutPage}>About</span>
                     </div>
                 </div>
 
