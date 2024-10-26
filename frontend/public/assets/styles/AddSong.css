@@ -5,6 +5,7 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.7);
+    font-family: 'outfit';
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,6 +15,7 @@
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
+    font-family: 'outfit';
     width: 400px;
     max-width: 90%;
 }
@@ -25,6 +27,7 @@ h2 {
 
 .form-group {
     margin-bottom: 15px;
+    font-family: 'outfit';
 }
 
 label {

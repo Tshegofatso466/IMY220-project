@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { addSong } from '../api'
 import '../../public/assets/styles/AddSong.css';
 
 export class AddSong extends React.Component {
@@ -9,6 +10,8 @@ export class AddSong extends React.Component {
             songName: '',
             artistInput: '',
             artists: [],
+            songURL: '',
+            image: '',
             errorMessage: ''
         };
     }
@@ -42,23 +45,69 @@ export class AddSong extends React.Component {
         }));
     };
 
-    handleSubmit = (event) => {
-        event.preventDefault();
-        const { songName, artists } = this.state;
+    isValidSpotifySongURL = (url) => {
+        const spotifyPattern = /^https:\/\/open\.spotify\.com\/track\/[A-Za-z0-9]+(\?.*)?$/;
+        return spotifyPattern.test(url);
+        //https://open.spotify.com/track/1cpEKqRRI4O7U5tQyS1DeC?si=c56733e8c2124f68
+    };
 
+    convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    }
+
+    handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await this.convertToBase64(file);
+        console.log(base64);
+        this.setState({ image: base64 });
+    };
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        const { songName, artists, songURL, image } = this.state;
+        const vcalidUR = this.isValidSpotifySongURL(songURL);
+        console.log(this.state);
+        console.log(vcalidUR);
         // Ensure that both songName and artists have values
-        if (!songName || artists.length === 0) {
-            this.setState({ errorMessage: 'Please enter a song name and at least one artist.' });
+        if (!songName || !image || artists.length === 0 || !this.isValidSpotifySongURL(songURL)) {
+            this.setState({ errorMessage: 'Please enter a song name, at least one artist, a spotify url and a song image.' });
+            return;
+        }
+
+        try {
+            const song = {
+                title: songName,
+                artists: artists,
+                spotifyURL: songURL,
+                image: image
+            }
+
+            const response = await addSong(sessionStorage.getItem('userId'), sessionStorage.getItem('playlistId'), song);
+            if (response.status !== 201) {
+                this.setState({ errorMessage: response.error });
+            }
+            alert('song added successfully');
+        } catch (err) {
+            console.error(err);
             return;
         }
 
         // Process the new song (integrate your API or backend logic here)
-        console.log('New Song:', { songName, artists });
+        console.log('New Song:', { songName, artists, songURL });
         this.props.onClose(); // Close modal after submitting
     };
 
     render() {
-        const { songName, artistInput, artists, errorMessage } = this.state;
+        const { songName, artistInput, artists, errorMessage, songURL } = this.state;
 
         return (
             <div className="modal-overlay">
@@ -67,6 +116,18 @@ export class AddSong extends React.Component {
                     <form onSubmit={this.handleSubmit}>
                         {/* Song Name */}
                         <div className="form-group">
+                            <label htmlFor="songURL">Spotify Song-Link</label>
+                            <input
+                                type="text"
+                                id="songURL"
+                                name="songURL"
+                                value={songURL}
+                                onChange={this.handleInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
                             <label htmlFor="songName">Song Name</label>
                             <input
                                 type="text"
@@ -74,6 +135,18 @@ export class AddSong extends React.Component {
                                 name="songName"
                                 value={songName}
                                 onChange={this.handleInputChange}
+                                required
+                            />
+                        </div>
+
+                        <div className='form-group'>
+                            <label htmlFor="image">Profile-Picture:</label>
+                            <input
+                                type="file"
+                                accept=".jpeg, .png, .jpg"
+                                id='image'
+                                name='image'
+                                onChange={this.handleFileUpload}
                                 required
                             />
                         </div>

@@ -21,26 +21,26 @@ function connectToDatabase() {
   return _connectToDatabase.apply(this, arguments);
 }
 function _connectToDatabase() {
-  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
-    return _regeneratorRuntime().wrap(function _callee17$(_context18) {
-      while (1) switch (_context18.prev = _context18.next) {
+  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
+    return _regeneratorRuntime().wrap(function _callee18$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
         case 0:
-          _context18.prev = 0;
-          _context18.next = 3;
+          _context19.prev = 0;
+          _context19.next = 3;
           return client.connect();
         case 3:
           console.log("MongoDB connected successfully");
-          _context18.next = 9;
+          _context19.next = 9;
           break;
         case 6:
-          _context18.prev = 6;
-          _context18.t0 = _context18["catch"](0);
-          console.error("MongoDB connection error:", _context18.t0);
+          _context19.prev = 6;
+          _context19.t0 = _context19["catch"](0);
+          console.error("MongoDB connection error:", _context19.t0);
         case 9:
         case "end":
-          return _context18.stop();
+          return _context19.stop();
       }
-    }, _callee17, null, [[0, 6]]);
+    }, _callee18, null, [[0, 6]]);
   }));
   return _connectToDatabase.apply(this, arguments);
 }
@@ -260,7 +260,11 @@ app.get("/imy/playlists/:id", /*#__PURE__*/function () {
                         comments: refPlayListData.comments,
                         numberOfSongs: Array.isArray(refPlayListData.songs) ? refPlayListData.songs.length : 0,
                         id: refPlayListData.id.toString(),
-                        referencedFrom: owner.username // Add info about where the reference comes from (owner's username)
+                        profileId: playlist.OwnerId.toString(),
+                        referencedFrom: owner.username,
+                        // Add info about where the reference comes from (owner's username)
+                        genre: refPlayListData.genre,
+                        hashtags: refPlayListData.hashtags
                       });
                     }
                   }
@@ -275,7 +279,10 @@ app.get("/imy/playlists/:id", /*#__PURE__*/function () {
                     songs: playlist.songs,
                     comments: playlist.comments,
                     numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
-                    id: playlist.id.toString()
+                    id: playlist.id.toString(),
+                    profileId: userId,
+                    genre: playlist.genre,
+                    hashtags: playlist.hashtags
                   });
                 case 10:
                 case "end":
@@ -516,12 +523,12 @@ app.post("/imy/createPlaylist", /*#__PURE__*/function () {
 }());
 app.post("/imy/createSong", /*#__PURE__*/function () {
   var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-    var _req$body4, songTitle, artists, profileId, playlistId, newSong, result;
+    var _req$body4, song, userId, playlistId, newSong, result;
     return _regeneratorRuntime().wrap(function _callee8$(_context9) {
       while (1) switch (_context9.prev = _context9.next) {
         case 0:
-          _req$body4 = req.body, songTitle = _req$body4.songTitle, artists = _req$body4.artists, profileId = _req$body4.profileId, playlistId = _req$body4.playlistId; // Validate the incoming data
-          if (!(!songTitle || !artists || !Array.isArray(artists) || artists.length === 0 || !profileId || !playlistId)) {
+          _req$body4 = req.body, song = _req$body4.song, userId = _req$body4.userId, playlistId = _req$body4.playlistId; // Validate the incoming data
+          if (!(!userId || !song.title || !song.artists || !Array.isArray(song.artists) || song.artists.length === 0 || !song.spotifyURL || !song.image || !playlistId)) {
             _context9.next = 3;
             break;
           }
@@ -531,13 +538,18 @@ app.post("/imy/createSong", /*#__PURE__*/function () {
         case 3:
           // Create a new song object
           newSong = {
-            title: songTitle,
-            artists: artists
+            title: song.title,
+            artists: song.artists,
+            sportifyURL: song.spotifyURL,
+            dateAdded: new Date().toISOString(),
+            deleted: false,
+            image: song.image,
+            songId: new _mongodb.ObjectId() // Generate a new ObjectId for the song
           };
           _context9.prev = 4;
           _context9.next = 7;
           return collection.updateOne({
-            _id: new _mongodb.ObjectId(profileId),
+            _id: new _mongodb.ObjectId(userId),
             "playlists.id": new _mongodb.ObjectId(playlistId)
           },
           // Find the user and the specific playlist
@@ -1117,6 +1129,106 @@ app.post("/imy/unfriend", /*#__PURE__*/function () {
   }));
   return function (_x31, _x32) {
     return _ref16.apply(this, arguments);
+  };
+}());
+app.post("/imy/saveplaylist", /*#__PURE__*/function () {
+  var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
+    var _req$body12, userId, playlistId, profileId, userCollection, ownerCollection, originalPlaylist, playlistReference;
+    return _regeneratorRuntime().wrap(function _callee17$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
+        case 0:
+          _req$body12 = req.body, userId = _req$body12.userId, playlistId = _req$body12.playlistId, profileId = _req$body12.profileId; // Validate that all required fields are provided
+          if (!(!userId || !profileId || !playlistId)) {
+            _context18.next = 3;
+            break;
+          }
+          return _context18.abrupt("return", res.status(400).json({
+            error: "User ID, Playlist ID and Profile ID are required."
+          }));
+        case 3:
+          _context18.prev = 3;
+          _context18.next = 6;
+          return collection.findOne({
+            _id: new _mongodb.ObjectId(userId)
+          });
+        case 6:
+          userCollection = _context18.sent;
+          _context18.next = 9;
+          return collection.findOne({
+            _id: new _mongodb.ObjectId(profileId)
+          });
+        case 9:
+          ownerCollection = _context18.sent;
+          if (userCollection) {
+            _context18.next = 12;
+            break;
+          }
+          return _context18.abrupt("return", res.status(404).json({
+            error: "User not found."
+          }));
+        case 12:
+          if (ownerCollection) {
+            _context18.next = 14;
+            break;
+          }
+          return _context18.abrupt("return", res.status(404).json({
+            error: "Playlist owner not found."
+          }));
+        case 14:
+          // Find the original playlist by playlistId in the owner's playlists array
+          originalPlaylist = ownerCollection.playlists.find(function (pl) {
+            return pl.id.toString() === playlistId;
+          });
+          if (originalPlaylist) {
+            _context18.next = 17;
+            break;
+          }
+          return _context18.abrupt("return", res.status(404).json({
+            error: "Playlist not found."
+          }));
+        case 17:
+          // Create a new playlist reference object to add to the user's playlists
+          playlistReference = {
+            id: new _mongodb.ObjectId(playlistId),
+            // ID of the original playlist
+            OwnerId: new _mongodb.ObjectId(profileId),
+            // Owner of the original playlist
+            reference: true // Indicates that this is a reference
+            // PlayListName: originalPlaylist.PlayListName,
+            // PlayListImage: originalPlaylist.PlayListImage,
+            // OwnerImage: originalPlaylist.OwnerImage,
+            // OwnerName: originalPlaylist.OwnerName,
+            // songs: originalPlaylist.songs
+          }; // Push the new reference into the user's playlists array
+          _context18.next = 20;
+          return collection.updateOne({
+            _id: new _mongodb.ObjectId(userId)
+          }, {
+            $push: {
+              playlists: playlistReference
+            }
+          });
+        case 20:
+          res.status(200).json({
+            message: "Playlist saved successfully as a reference."
+          });
+          _context18.next = 27;
+          break;
+        case 23:
+          _context18.prev = 23;
+          _context18.t0 = _context18["catch"](3);
+          console.error(_context18.t0);
+          res.status(500).json({
+            error: "An error occurred while saving the playlist."
+          });
+        case 27:
+        case "end":
+          return _context18.stop();
+      }
+    }, _callee17, null, [[3, 23]]);
+  }));
+  return function (_x33, _x34) {
+    return _ref17.apply(this, arguments);
   };
 }());
 

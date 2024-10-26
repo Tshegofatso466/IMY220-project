@@ -111,3 +111,36 @@ export const toggleFriend = async (flag, data) => {
     }
     return response.json();
 }
+
+export const savePlaylist = async (userId, profileId, playlistId) => {
+    const response = await fetch(`/imy/savePlaylist`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: userId,
+            profileId: profileId,
+            playlistId: playlistId
+        }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to save playlist");
+    }
+    return response.json();
+}
+
+export const addSong = async (userId, playlistId, song) => {
+    const response = await fetch(`/imy/createSong`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: userId,
+            playlistId: playlistId,
+            song: song
+        }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get error details
+        throw new Error(errorData.error || "Failed to save playlist");
+    }    
+    return response.json();
+}

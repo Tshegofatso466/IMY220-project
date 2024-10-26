@@ -4,21 +4,33 @@ import { PlayList } from './PlayList';
 import { Song } from './Song';
 import { getPlaylistById } from '../api'; // Import the API function
 import withNavigation from '../hoc'; // Import the HOC
+import Fuse from 'fuse.js';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/Feed.css';
 
 class Feed extends React.Component {
     filterPlaylists = () => {
-        const { searchQuery, playLists } = this.props; // Use props for searchQuery
-
+        const { searchQuery, playLists } = this.props;
+    
         if (!searchQuery) {
             return playLists;
         }
-
-        return playLists.filter((playlist) =>
-            playlist.OwnerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            playlist.PlayListName.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+    
+        const options = {
+            keys: [
+                'OwnerName',
+                'PlayListName',
+                'genre',
+                'hashtags',
+                'songs.title',
+                'songs.artists'
+            ],
+            threshold: 0.4
+        };
+    
+        const fuse = new Fuse(playLists, options);
+    
+        return fuse.search(searchQuery).map(result => result.item);
     };
 
     handlePlaylistClick = async (playlistId) => {
@@ -63,13 +75,14 @@ class Feed extends React.Component {
 
         console.log(filteredPlaylists[0]);
         console.log(filteredPlaylists[1]);
+        console.log(filteredPlaylists[2]);
         // Otherwise, render playlists
         return (
             <div className="playlist-feed">
                 {filteredPlaylists.map((playlist, index) => (
                     <div
                         key={index}
-                        onClick={() => this.handlePlaylistClick(playlist.id)} // Ensure playlist has an id
+                        // onClick={() => this.handlePlaylistClick(playlist.id)} // Ensure playlist has an id
                     >
                         <PlayList
                             PlayListName={playlist.PlayListName || 'Untitled Playlist'}
@@ -78,6 +91,9 @@ class Feed extends React.Component {
                             OwnerName={playlist.OwnerName || 'Unknown Owner'}
                             songs={playlist.songs || []}
                             comments={playlist.comments || []}
+                            profileId={playlist.profileId || ''} 
+                            playlistId={playlist.id || ''}
+                            onplaylistClick={() => this.handlePlaylistClick(playlist.id)}
                         />
                     </div>
                 ))}

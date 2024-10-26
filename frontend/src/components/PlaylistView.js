@@ -137,6 +137,8 @@ class PlaylistView extends React.Component {
         }
 
         const { PlayListName, songs } = playlist;
+        console.log('the songssss...', songs);
+        console.log('the date....', new Date().toISOString());
         //const { ownerImage, ownerName, followers } = this.state;
 
         return (
@@ -165,7 +167,15 @@ class PlaylistView extends React.Component {
                 <div className="playlist-body">
                     <div className="song-list">
                         {songs.map((song, index) => (
-                            <Song key={index} title={song.title} artists={song.artists} image={song.image} sportifyURL={song.sportifyURL}/>
+                            <Song
+                                key={index}
+                                title={song.title}
+                                artists={song.artists}
+                                image={song.image}
+                                spotifyURL={song.sportifyURL || '#here'}
+                                dateAdded={song.dateAdded || "2024-09-30T12:34:56Z"} 
+                                deleted={song.deleted}
+                                songId={song.songId} />
                         ))}
                     </div>
 
@@ -177,7 +187,7 @@ class PlaylistView extends React.Component {
                 </div>
 
                 {showComments && <CommentList comments={comments} onClose={this.handleComment} />}
-                {showEditPlaylist && <EditPlaylist playlistName={playlistName} songs={songs} onClose={this.handleEditPlaylist} />}
+                {showEditPlaylist && <EditPlaylist playlistName={PlayListName} songs={songs} onClose={this.handleEditPlaylist} />}
                 {showCreatePlaylist && <CreatePlaylist onClose={this.handleCreatePlaylist} />}
                 {showAddSong && <AddSong onClose={this.handleAddSong} />}
                 {showCreateComment && (

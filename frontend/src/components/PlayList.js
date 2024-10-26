@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Song } from './Song';
+import { savePlaylist } from '../api';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/PlayList.css';
 
@@ -10,31 +11,42 @@ export class PlayList extends React.Component {
         super(props);
     }
 
+    savePlaylist = async () => {
+        const { profileId, playlistId } = this.props;
+        const userId = sessionStorage.getItem('userId');
+        try {
+            await savePlaylist(userId, profileId, playlistId);
+            alert('Playlist saved successfully.');
+        } catch (error) {
+            console.error(error);
+            alert('Failed to save playlist.');
+        }
+    }
+
     render() {
         const { PlayListName, PlayListImage, Ownerimage, OwnerName, songs, onClick } = this.props;
         return (
             <div onClick={onClick} className="container">
-                <div className="image_preview_container">
-                    <img src={`${PlayListImage}`} alt="Playlist Image" className="playlist_image"/>
+                <div className="image_preview_container" onClick={this.props.onplaylistClick}>
+                    <img src={`${PlayListImage}`} alt="Playlist Image" className="playlist_image" />
                 </div>
 
                 <div className="details">
                     <h2 className="playlist_title">{PlayListName}</h2>
                     <hr />
                     <div className="owner_info">
-                        <img src={`${Ownerimage}`} alt="Owner Image" className="owner_image"/>
-                            <div className="owner_details">
-                                <h4 className="owner_name">{OwnerName}</h4>
-                                <p className="song_count">Number of songs: {songs.length}</p>
-                            </div>
+                        <img src={`${Ownerimage}`} alt="Owner Image" className="owner_image" />
+                        <div className="owner_details">
+                            <h4 className="owner_name">{OwnerName}</h4>
+                            <p className="song_count">Number of songs: {songs.length}</p>
+                        </div>
+                    </div>
+                    <div className='button_container'>
+                        <button className='save_button' onClick={this.savePlaylist}>Save</button>
                     </div>
                 </div>
             </div>
         );
-    }
-
-    displayPlaylist(info){
-
     }
 }
 
@@ -58,5 +70,8 @@ PlayList.propTypes = {
             commentText: PropTypes.string.isRequired,
             timestamp: PropTypes.string.isRequired
         })
-    )
+    ),
+    profileId: PropTypes.string.isRequired,
+    playlistId: PropTypes.string.isRequired,
+    onplaylistClick: PropTypes.func.isRequired,
 };

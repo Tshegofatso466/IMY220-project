@@ -10,7 +10,8 @@
     color: rgb(246, 238, 222);
     z-index: 2;
     overflow-y: auto; /* Allow the child feed to be scrollable */
-    max-height: calc(100vh - 160px); /* Adjust height based on header and other margins */
+    max-height: 500px;
+    /* max-height: calc(100vh - 160px); Adjust height based on header and other margins */
     margin: 0 auto;
 }
 

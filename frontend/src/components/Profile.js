@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlayList } from '../components/PlayList';
 import PropTypes from 'prop-types';
-import { getUserById, toggleFriend, getPlaylistById } from '../api';
+import { getUserById, toggleFriend, getPlaylists } from '../api';
 import withNavigation from '../hoc.js';
 import '../fontDefinition/fonts.css'; // Assuming fonts are already set up
 import '../../public/assets/styles/Profile.css'; // Custom CSS for Profile component
@@ -89,16 +89,18 @@ class Profile extends React.Component {
     updatePlaylists = async () => {
         const { playlists } = this.state;
 
-        const updatedPlaylists = await Promise.all(
-            playlists.map(async (playlist) => {
-                if (playlist.reference) {
-                    const data = await getPlaylistById(playlist.id);
-                    return data || playlist;  // Return fetched data or original playlist if failed
-                } else {
-                    return playlist;  // Return original playlist if no reference
-                }
-            })
-        );
+        // const updatedPlaylists = await Promise.all(
+        //     playlists.map(async (playlist) => {
+        //         if (playlist.reference) {
+        //             const data = await getPlaylists(playlist.id);
+        //             return data || playlist;  // Return fetched data or original playlist if failed
+        //         } else {
+        //             return playlist;  // Return original playlist if no reference
+        //         }
+        //     })
+        // );
+        console.log('the id ... p ', sessionStorage.getItem('profileId'));
+        const updatedPlaylists = await getPlaylists(sessionStorage.getItem('profileId'));
 
         // Update the state once all playlists are processed
         this.setState({ playlists: updatedPlaylists });
@@ -114,18 +116,31 @@ class Profile extends React.Component {
             case 'Playlists':
                 return (
                     <div className="playlist-container">
-                        {playlists.map(playlist => (
+                        {playlists.map((playlist, index)=> (
                             <PlayList
-                                key={playlist.id}
+                                key={index}
                                 PlayListName={playlist.PlayListName || 'unknown'}
                                 PlayListImage={playlist.PlayListImage || 'default.jpg'}
                                 Ownerimage={ playlist.OwnerImage || user.profileImage || 'anonymous.jpg'}
                                 OwnerName={playlist.OwnerName || user.username || 'Anonymous'}
                                 songs={playlist.songs || []}
-                                onClick={() => this.onPlaylistClick(playlist)}
+                                onplaylistClick={() => this.onPlaylistClick(playlist)}
+                                playlistId={playlist.id || ''}
+                                profileId={playlist.profileId || ''}
                             />
                         ))}
                     </div>
+                //     <PlayList
+                //     PlayListName={playlist.PlayListName || 'Untitled Playlist'}
+                //     PlayListImage={playlist.PlayListImage || 'default_image.jpg'}
+                //     Ownerimage={playlist.OwnerImage || 'default_owner.jpg'}
+                //     OwnerName={playlist.OwnerName || 'Unknown Owner'}
+                //     songs={playlist.songs || []}
+                //     comments={playlist.comments || []}
+                //     profileId={playlist.profileId || ''} 
+                //     playlistId={playlist.id || ''}
+                //     onplaylistClick={() => this.handlePlaylistClick(playlist.id)}
+                // />
                 );
             case 'Friends':
                 return (
@@ -137,7 +152,7 @@ class Profile extends React.Component {
                 return (
                     <div className="pictures-gallery">
                         {pictures.map(picture => (
-                            <img key={picture.id} src={`/assets/images/USERS-PROFILE-PICTURES/${picture.url}`} alt="User Pic" />
+                            <img key={picture.id} src={`${picture.url}`} alt="User Pic" />
                         ))}
                     </div>
                 );

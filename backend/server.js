@@ -121,7 +121,10 @@ app.get("/imy/playlists/:id", async (req, res) => {
                             comments: refPlayListData.comments,
                             numberOfSongs: Array.isArray(refPlayListData.songs) ? refPlayListData.songs.length : 0,
                             id: refPlayListData.id.toString(),
-                            referencedFrom: owner.username // Add info about where the reference comes from (owner's username)
+                            profileId: playlist.OwnerId.toString(),
+                            referencedFrom: owner.username, // Add info about where the reference comes from (owner's username)
+                            genre: refPlayListData.genre,
+                            hashtags: refPlayListData.hashtags
                         });
                     }
                 }
@@ -134,7 +137,10 @@ app.get("/imy/playlists/:id", async (req, res) => {
                     songs: playlist.songs,
                     comments: playlist.comments,
                     numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
-                    id: playlist.id.toString()
+                    id: playlist.id.toString(),
+                    profileId: userId,
+                    genre: playlist.genre,
+                    hashtags: playlist.hashtags
                 });
             }
         }
@@ -241,23 +247,28 @@ app.post("/imy/createPlaylist", async (req, res) => {
 });
 
 app.post("/imy/createSong", async (req, res) => {
-    const { songTitle, artists, profileId, playlistId } = req.body;
+    const { song, userId, playlistId } = req.body;
 
     // Validate the incoming data
-    if (!songTitle || !artists || !Array.isArray(artists) || artists.length === 0 || !profileId || !playlistId) {
+    if (!userId || !song.title || !song.artists || !Array.isArray(song.artists) || song.artists.length === 0 || !song.spotifyURL || !song.image || !playlistId) {
         return res.status(400).json({ error: "All fields are required, and artists must be an array." });
     }
 
     // Create a new song object
     const newSong = {
-        title: songTitle,
-        artists: artists,
+        title: song.title,
+        artists: song.artists,
+        sportifyURL: song.spotifyURL,
+        dateAdded: new Date().toISOString(),
+        deleted: false,
+        image: song.image,
+        songId: new ObjectId() // Generate a new ObjectId for the song
     };
 
     try {
         // Update the specific playlist by adding the new song to the songs array
         const result = await collection.updateOne(
-            { _id: new ObjectId(profileId), "playlists.id": new ObjectId(playlistId) }, // Find the user and the specific playlist
+            { _id: new ObjectId(userId), "playlists.id": new ObjectId(playlistId) }, // Find the user and the specific playlist
             { $push: { "playlists.$.songs": newSong } } // Push the new song into the playlist's songs array
         );
 
@@ -542,6 +553,58 @@ app.post("/imy/unfriend", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "An error occurred while removing the friend." });
+    }
+});
+
+app.post("/imy/saveplaylist", async (req, res) => {
+    const { userId, playlistId, profileId } = req.body;
+
+    // Validate that all required fields are provided
+    if (!userId || !profileId || !playlistId) {
+        return res.status(400).json({ error: "User ID, Playlist ID and Profile ID are required." });
+    }
+
+    try {
+        const userCollection = await collection.findOne({ _id: new ObjectId(userId) });
+        const ownerCollection = await collection.findOne({ _id: new ObjectId(profileId) });
+
+        if (!userCollection) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        if (!ownerCollection) {
+            return res.status(404).json({ error: "Playlist owner not found." });
+        }
+
+        // Find the original playlist by playlistId in the owner's playlists array
+        const originalPlaylist = ownerCollection.playlists.find(pl => pl.id.toString() === playlistId);
+
+        if (!originalPlaylist) {
+            return res.status(404).json({ error: "Playlist not found." });
+        }
+
+        // Create a new playlist reference object to add to the user's playlists
+        const playlistReference = {
+            id: new ObjectId(playlistId),     // ID of the original playlist
+            OwnerId: new ObjectId(profileId), // Owner of the original playlist
+            reference: true                  // Indicates that this is a reference
+            // PlayListName: originalPlaylist.PlayListName,
+            // PlayListImage: originalPlaylist.PlayListImage,
+            // OwnerImage: originalPlaylist.OwnerImage,
+            // OwnerName: originalPlaylist.OwnerName,
+            // songs: originalPlaylist.songs
+        };
+
+        // Push the new reference into the user's playlists array
+        await collection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $push: { playlists: playlistReference } }
+        );
+
+        res.status(200).json({ message: "Playlist saved successfully as a reference." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while saving the playlist." });
     }
 });
 
