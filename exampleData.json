@@ -52,7 +52,10 @@
                     },
                     "commentText": "Love this playlist!",
                     "timestamp": "2024-09-30T12:34:56Z",
-                    "pinned": false
+                    "pinned": false,
+                    "commentId":{
+                        "Soid": "33jnf3fi4f923fjuj320hy999u"
+                    }
                 },
                 {
                     "profileImage": "data:image/jpeg;base64,...",

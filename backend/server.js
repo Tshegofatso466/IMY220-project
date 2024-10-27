@@ -311,6 +311,8 @@ app.post("/imy/createComment", async (req, res) => {
             followers: commenter.followers || 0, // Use the number of followers from the user document
             commentText: comment,
             timestamp: new Date(), // Current timestamp
+            commentId: new ObjectId(),
+            pinned: false,
         };
 
         // Update the specific playlist by adding the new comment to the comments array
@@ -413,11 +415,11 @@ app.delete("/imy/deletePlaylist", async (req, res) => {
 });
 
 app.put("/imy/editPlaylist", async (req, res) => {
-    const { playlistId, userId, newPlaylistName, newPlaylistImage } = req.body;
+    const { playlistId, userId, newPlaylistName, newPlaylistImage, genres, hashtags } = req.body;
 
     // Validate incoming data
-    if (!playlistId || !userId || !newPlaylistName || !newPlaylistImage) {
-        return res.status(400).json({ error: "Playlist ID, User ID, new Playlist Name, and new Playlist Image are required." });
+    if (!playlistId || !userId || !newPlaylistName || !newPlaylistImage || !genres || !hashtags) {
+        return res.status(400).json({ error: "Playlist ID, User ID, new Playlist Name, new Playlist Image, genres, and hashtags are required." });
     }
 
     try {
@@ -426,8 +428,10 @@ app.put("/imy/editPlaylist", async (req, res) => {
             { _id: new ObjectId(userId), "playlists._id": new ObjectId(playlistId) }, // Find user and playlist
             {
                 $set: {
-                    "playlists.$.PlayListName": newPlaylistName, // Update the playlist name
-                    "playlists.$.PlayListImage": newPlaylistImage // Update the playlist image
+                    "playlists.$.PlayListName": newPlaylistName,       // Update playlist name
+                    "playlists.$.PlayListImage": newPlaylistImage,     // Update playlist image
+                    "playlists.$.genres": genres,                      // Update playlist genres
+                    "playlists.$.hashtags": hashtags                   // Update playlist hashtags
                 }
             }
         );
@@ -634,6 +638,46 @@ app.get("/imy/admin/getGenres", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "An error occurred while retrieving genres." });
+    }
+});
+
+// Server-side endpoint (e.g., in your Express server file)const { ObjectId } = require('mongodb');
+
+app.put("/imy/pinComment", async (req, res) => {
+    const { userId, playlistId, commentId, pin } = req.body;
+
+    // Validate incoming data
+    if (!userId || !playlistId || !commentId || pin === undefined) {
+        return res.status(400).json({ error: "User ID, Playlist ID, Comment ID, and pin status are required." });
+    }
+
+    try {
+        // Find the specific playlist and comment by their IDs without using arrayFilters
+        const result = await collection.updateOne(
+            { 
+                _id: new ObjectId(userId), 
+                "playlists.id": new ObjectId(playlistId), 
+                "playlists.comments.commentId": new ObjectId(commentId) 
+            },
+            {
+                $set: {
+                    "playlists.$.comments.$[comment].pinned": pin
+                }
+            },
+            {
+                arrayFilters: [{ "comment.commentId": new ObjectId(commentId) }]
+            }
+        );
+
+        // Check if any documents were modified
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ error: "Comment not found or no changes made." });
+        }
+
+        res.status(200).json({ message: "Comment pin status updated successfully." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while updating the comment pin status." });
     }
 });
 

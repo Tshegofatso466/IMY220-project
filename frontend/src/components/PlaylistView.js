@@ -6,7 +6,7 @@ import { EditPlaylist } from './EditPlaylist';
 import { CreatePlaylist } from './CreatePlaylist';
 import { AddSong } from './AddSong';
 import { CreateComment } from './CreateComment'; // Import the CreateComment component
-import { getPlaylistById, createComment } from '../api'; // Import your API call
+import { getPlaylistById, createComment, deletePlaylist } from '../api'; // Import your API call
 import withNavigation from '../hoc.js';
 import '../../public/assets/styles/PlaylistView.css';
 
@@ -91,6 +91,24 @@ class PlaylistView extends React.Component {
         }));
     };
 
+    handleDelete = async () => {
+        console.log('About to delete a playlist');
+        
+        if (!confirm('Are you sure you want to delete this playlist?')) return;
+    
+        try {
+            const response = await deletePlaylist(sessionStorage.getItem('userId'), sessionStorage.getItem('playlistId'));
+            
+            if (!response.error) {
+                console.log('Playlist deleted successfully');
+            } else {
+                console.error('Error deleting playlist:', response.error);
+            }
+        } catch (error) {
+            console.error('An error occurred during deletion:', error);
+        }
+    }    
+
     handleAddComment = async (newComment) => {
         const returnedData = await createComment({
             playlistId: sessionStorage.getItem('playlistId'),
@@ -145,17 +163,20 @@ class PlaylistView extends React.Component {
         return (
             <div className="playlist-view-container">
                 <img src={`/assets/images/RANDOM/latest2.jpg`} alt="Playlist background" className="playlist-background" />
-                {sameUser && <div className="header-btn-container">
+                <div className="header-btn-container">
                     <button className="header-btn" onClick={this.handleCreatePlaylist}>
                         Create Playlist
                     </button>
-                    <button className="header-btn" onClick={this.handleEditPlaylist}>
+                    {sameUser && <button className="header-btn" onClick={this.handleEditPlaylist}>
                         Edit Playlist
-                    </button>
-                    <button className="header-btn" onClick={this.handleAddSong}>
+                    </button>}
+                    {sameUser && <button className="header-btn" onClick={this.handleAddSong}>
                         Add Song
-                    </button>
-                </div>}
+                    </button>}
+                    {sameUser && <button className="header-btn" onClick={this.handleDelete}>
+                        Delete Playlist
+                    </button>}
+                </div>
 
                 <div className="playlist-header">
                     <h1 className="playlist-name">{PlayListName}</h1>
@@ -174,13 +195,13 @@ class PlaylistView extends React.Component {
                                 artists={song.artists}
                                 image={song.image}
                                 spotifyURL={song.sportifyURL || '#here'}
-                                dateAdded={song.dateAdded || "2024-09-30T12:34:56Z"} 
+                                dateAdded={song.dateAdded || "2024-09-30T12:34:56Z"}
                                 deleted={song.deleted}
                                 songId={song.songId} />
                         ))}
                     </div>) : (
                         <h5 className="no-songs">No songs in current playlist</h5>
-                    ) }
+                    )}
 
                     <div className="icon-group">
                         <img className="icon-heart" onClick={this.handleLike} src="/assets/icons/heart.png" />

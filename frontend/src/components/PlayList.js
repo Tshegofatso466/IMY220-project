@@ -24,7 +24,8 @@ export class PlayList extends React.Component {
     }
 
     render() {
-        const { PlayListName, PlayListImage, Ownerimage, OwnerName, songs, onClick } = this.props;
+        const { PlayListName, PlayListImage, Ownerimage, OwnerName, songs, onClick, profileId } = this.props;
+        const sameUser = sessionStorage.getItem('userId') === profileId;
         return (
             <div onClick={onClick} className="container">
                 <div className="image_preview_container" onClick={this.props.onplaylistClick}>
@@ -42,7 +43,7 @@ export class PlayList extends React.Component {
                         </div>
                     </div>
                     <div className='button_container'>
-                        <button className='save_button' onClick={this.savePlaylist}>Save</button>
+                        {!sameUser && <button className='save_button' onClick={this.savePlaylist}>Save</button>}
                     </div>
                 </div>
             </div>

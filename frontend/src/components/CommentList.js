@@ -27,6 +27,8 @@ export class CommentList extends React.Component {
                                     followers={comment.followers}
                                     commentText={comment.commentText}
                                     timestamp={comment.timestamp}
+                                    pinned={comment.pinned}
+                                    commentId={comment.commentId}
                                 />
                             ))
                         )}

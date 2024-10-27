@@ -21,26 +21,26 @@ function connectToDatabase() {
   return _connectToDatabase.apply(this, arguments);
 }
 function _connectToDatabase() {
-  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20() {
-    return _regeneratorRuntime().wrap(function _callee20$(_context21) {
-      while (1) switch (_context21.prev = _context21.next) {
+  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
+    return _regeneratorRuntime().wrap(function _callee21$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
         case 0:
-          _context21.prev = 0;
-          _context21.next = 3;
+          _context22.prev = 0;
+          _context22.next = 3;
           return client.connect();
         case 3:
           console.log("MongoDB connected successfully");
-          _context21.next = 9;
+          _context22.next = 9;
           break;
         case 6:
-          _context21.prev = 6;
-          _context21.t0 = _context21["catch"](0);
-          console.error("MongoDB connection error:", _context21.t0);
+          _context22.prev = 6;
+          _context22.t0 = _context22["catch"](0);
+          console.error("MongoDB connection error:", _context22.t0);
         case 9:
         case "end":
-          return _context21.stop();
+          return _context22.stop();
       }
-    }, _callee20, null, [[0, 6]]);
+    }, _callee21, null, [[0, 6]]);
   }));
   return _connectToDatabase.apply(this, arguments);
 }
@@ -633,7 +633,10 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
             followers: commenter.followers || 0,
             // Use the number of followers from the user document
             commentText: comment,
-            timestamp: new Date() // Current timestamp
+            timestamp: new Date(),
+            // Current timestamp
+            commentId: new _mongodb.ObjectId(),
+            pinned: false
           }; // Update the specific playlist by adding the new comment to the comments array
           _context10.next = 12;
           return collection.updateOne({
@@ -857,17 +860,17 @@ app["delete"]("/imy/deletePlaylist", /*#__PURE__*/function () {
 }());
 app.put("/imy/editPlaylist", /*#__PURE__*/function () {
   var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res) {
-    var _req$body8, playlistId, userId, newPlaylistName, newPlaylistImage, result;
+    var _req$body8, playlistId, userId, newPlaylistName, newPlaylistImage, genres, hashtags, result;
     return _regeneratorRuntime().wrap(function _callee13$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
-          _req$body8 = req.body, playlistId = _req$body8.playlistId, userId = _req$body8.userId, newPlaylistName = _req$body8.newPlaylistName, newPlaylistImage = _req$body8.newPlaylistImage; // Validate incoming data
-          if (!(!playlistId || !userId || !newPlaylistName || !newPlaylistImage)) {
+          _req$body8 = req.body, playlistId = _req$body8.playlistId, userId = _req$body8.userId, newPlaylistName = _req$body8.newPlaylistName, newPlaylistImage = _req$body8.newPlaylistImage, genres = _req$body8.genres, hashtags = _req$body8.hashtags; // Validate incoming data
+          if (!(!playlistId || !userId || !newPlaylistName || !newPlaylistImage || !genres || !hashtags)) {
             _context14.next = 3;
             break;
           }
           return _context14.abrupt("return", res.status(400).json({
-            error: "Playlist ID, User ID, new Playlist Name, and new Playlist Image are required."
+            error: "Playlist ID, User ID, new Playlist Name, new Playlist Image, genres, and hashtags are required."
           }));
         case 3:
           _context14.prev = 3;
@@ -880,8 +883,12 @@ app.put("/imy/editPlaylist", /*#__PURE__*/function () {
           {
             $set: {
               "playlists.$.PlayListName": newPlaylistName,
-              // Update the playlist name
-              "playlists.$.PlayListImage": newPlaylistImage // Update the playlist image
+              // Update playlist name
+              "playlists.$.PlayListImage": newPlaylistImage,
+              // Update playlist image
+              "playlists.$.genres": genres,
+              // Update playlist genres
+              "playlists.$.hashtags": hashtags // Update playlist hashtags
             }
           });
         case 6:
@@ -1300,6 +1307,71 @@ app.get("/imy/admin/getGenres", /*#__PURE__*/function () {
   }));
   return function (_x37, _x38) {
     return _ref19.apply(this, arguments);
+  };
+}());
+
+// Server-side endpoint (e.g., in your Express server file)const { ObjectId } = require('mongodb');
+
+app.put("/imy/pinComment", /*#__PURE__*/function () {
+  var _ref20 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20(req, res) {
+    var _req$body13, userId, playlistId, commentId, pin, result;
+    return _regeneratorRuntime().wrap(function _callee20$(_context21) {
+      while (1) switch (_context21.prev = _context21.next) {
+        case 0:
+          _req$body13 = req.body, userId = _req$body13.userId, playlistId = _req$body13.playlistId, commentId = _req$body13.commentId, pin = _req$body13.pin; // Validate incoming data
+          if (!(!userId || !playlistId || !commentId || pin === undefined)) {
+            _context21.next = 3;
+            break;
+          }
+          return _context21.abrupt("return", res.status(400).json({
+            error: "User ID, Playlist ID, Comment ID, and pin status are required."
+          }));
+        case 3:
+          _context21.prev = 3;
+          _context21.next = 6;
+          return collection.updateOne({
+            _id: new _mongodb.ObjectId(userId),
+            "playlists.id": new _mongodb.ObjectId(playlistId),
+            "playlists.comments.commentId": new _mongodb.ObjectId(commentId)
+          }, {
+            $set: {
+              "playlists.$.comments.$[comment].pinned": pin
+            }
+          }, {
+            arrayFilters: [{
+              "comment.commentId": new _mongodb.ObjectId(commentId)
+            }]
+          });
+        case 6:
+          result = _context21.sent;
+          if (!(result.modifiedCount === 0)) {
+            _context21.next = 9;
+            break;
+          }
+          return _context21.abrupt("return", res.status(404).json({
+            error: "Comment not found or no changes made."
+          }));
+        case 9:
+          res.status(200).json({
+            message: "Comment pin status updated successfully."
+          });
+          _context21.next = 16;
+          break;
+        case 12:
+          _context21.prev = 12;
+          _context21.t0 = _context21["catch"](3);
+          console.error(_context21.t0);
+          res.status(500).json({
+            error: "An error occurred while updating the comment pin status."
+          });
+        case 16:
+        case "end":
+          return _context21.stop();
+      }
+    }, _callee20, null, [[3, 12]]);
+  }));
+  return function (_x39, _x40) {
+    return _ref20.apply(this, arguments);
   };
 }());
 

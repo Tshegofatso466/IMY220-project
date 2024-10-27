@@ -38,3 +38,11 @@
     color: #999;
     margin-top: 10px;
 }
+
+/* Style for the pinned icon */
+.pinned-icon {
+    width: 20px;  /* Adjust size as needed */
+    height: 20px;
+    margin-right: 5px; /* Space between icon and text */
+    vertical-align: middle;
+}

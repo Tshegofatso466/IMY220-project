@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../fontDefinition/fonts.css';
-import { getGenres } from '../api';
+import { getGenres, editPlaylist } from '../api';
 import '../../public/assets/styles/EditPlaylist.css';  // Create this file for custom styles.
 // import { Song } from './Song';  // Import the Song component
 
@@ -22,8 +22,8 @@ export class EditPlaylist extends React.Component {
 
     async componentDidMount(){
         const genres = await getGenres();
-        const { PlayListName, hashtags, genre, } = this.props.playlist;
-        this.setState({playlistName: PlayListName, hashtags: hashtags, genres: genre, genreOptions: genres});
+        const { PlayListName, hashtags, genre, PlayListImage} = this.props.playlist;
+        this.setState({playlistName: PlayListName, hashtags: hashtags, genres: genre, genreOptions: genres, image: PlayListImage});
         console.log('EditPlaylist Mounted');
     }
 
@@ -82,33 +82,31 @@ export class EditPlaylist extends React.Component {
         }));
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('ready to submit data to server ........');
-        // Send the updated playlist data to the backend API
-        // Example:
-        // fetch('/api/playlists', {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         playlistId: this.props.playlistId, // Get playlist ID from props
-        //         playlistName,
-        //         hashtags,
-        //         genres,
-        //         image
-        //     })
-        // })
-        //.then(response => response.json())
-        //.then(data => {
-        //     console.log('Playlist updated successfully:', data);
-        // })
-        //.catch(error => {
-        //     console.error('Error updating playlist:', error);
-        // });
-        // Clos
-    }
+        console.log('Ready to submit data to server...');
+    
+        const { genres, playlistName, hashtags, image } = this.state;
+    
+        // Validate that required fields are filled
+        if (genres.length === 0 || hashtags.length === 0 || !playlistName) {
+            this.setState({ errorMessage: 'Please select at least one playlist hashtag and genre, nameless playlists are not allowed.' });
+            return;
+        }
+    
+        try {
+            await editPlaylist(sessionStorage.getItem('profileId'), sessionStorage.getItem('playlistId'), {
+                newPlaylistName: playlistName,
+                newPlaylistImage: image,
+                genres: genres,
+                hashtags: hashtags
+            });
+            console.log('Playlist updated successfully');
+        } catch (err) {
+            console.error('Error submitting playlist:', err);
+            this.setState({ errorMessage: err.message });
+        }
+    }    
 
     render() {
         const { playlistName, hashtagInput, hashtags, genres, genreOptions, selectedGenre, errorMessage } = this.state;

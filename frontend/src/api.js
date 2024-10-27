@@ -162,6 +162,26 @@ export const deleteSong = async (userId, playlistId, songId) => {
     return response.json();
 }
 
+export const editPlaylist = async (userId, playlistId, data) => {
+    const response = await fetch(`/imy/editPlaylist`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: userId,
+            playlistId: playlistId,
+            newPlaylistName: data.newPlaylistName,
+            newPlaylistImage: data.newPlaylistImage,
+            genres: data.genres,
+            hashtags: data.hashtags
+        }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get error details
+        throw new Error(errorData.error || "Failed to update playlist");
+    }    
+    return response.json();
+}
+
 export const getGenres = async () => {
     const response = await fetch(`/imy/admin/getGenres`, {
         method: "GET",
@@ -189,3 +209,29 @@ export const deletePlaylist = async (userId, playlistId) => {
     }    
     return response.json();
 }
+
+// Client-side function to call the endpoint
+export const pinComment = async (userId, playlistId, commentId, pin) => {
+    try {
+        const response = await fetch(`/imy/pinComment`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId,
+                playlistId,
+                commentId,
+                pin
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to update comment pin status");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error updating comment pin status:", error);
+        throw error;
+    }
+};
