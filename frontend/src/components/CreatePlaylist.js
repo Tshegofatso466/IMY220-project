@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { createPlaylist } from '../api';
 import '../../public/assets/styles/CreatePlaylist.css';
 
 export class CreatePlaylist extends React.Component {
@@ -7,10 +8,25 @@ export class CreatePlaylist extends React.Component {
         super(props);
         this.state = {
             playlistName: '',
-            numberOfSongs: '',
+            image: '',
             errorMessage: ''
         };
     }
+
+    convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+
+    handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+        const base64 = await this.convertToBase64(file);
+        this.setState({ image: base64 });
+    };
 
     handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -18,27 +34,41 @@ export class CreatePlaylist extends React.Component {
     };
 
     validateInput = () => {
-        const { numberOfSongs } = this.state;
-        const songCount = Number(numberOfSongs);
 
-        if (songCount < 0 || songCount > 150) {
-            this.setState({ errorMessage: 'The number of songs should be between 0 and 150.' });
+        if(!this.state.playlistName){
+            this.setState({playlistName: "my-playlist"});
+        }
+
+        const { image, playlistName } = this.state;
+        if (!image || !playlistName) {
+            this.setState({ errorMessage: 'both playlist image and the playlist name are required.' });
             return false;
         }
         return true;
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
         if (this.validateInput()) {
-            // Call a function to create the playlist (you can integrate your backend call here)
-            console.log('Creating playlist with data:', this.state.playlistName, this.state.numberOfSongs);
+            const { image, playlistName } = this.state;
+            console.log()
+            try{
+                const response = await createPlaylist(sessionStorage.getItem('userId'), {playlistName: playlistName, playlistImage: image});
+                if(response.error) {
+                    console.error('Failed to create playlist:', response.error);
+                }
+            }
+            catch (err) {
+                console.error('Error creating playlist:', err);
+                this.setState({ errorMessage: err.message });
+            }
+            console.log('Creating playlist with data:', this.state.playlistName, this.state.image);
             this.props.onClose(); // Close the modal after submission
         }
     };
 
     render() {
-        const { playlistName, numberOfSongs, errorMessage } = this.state;
+        const { playlistName, errorMessage } = this.state;
 
         return (
             <div className="modal-overlay">
@@ -57,16 +87,15 @@ export class CreatePlaylist extends React.Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="numberOfSongs">Number of Songs</label>
+                            <label htmlFor="image">Playlist Image</label>
                             <input
-                                type="number"
-                                id="numberOfSongs"
-                                name="numberOfSongs"
-                                value={numberOfSongs}
-                                onChange={this.handleInputChange}
+                                type="file"
+                                id="image"
+                                name="image"
+                                accept=".jpeg, .png, .jpg"
+                                // value={numberOfSongs}
+                                onChange={this.handleFileUpload}
                                 required
-                                min="0"
-                                max="150"
                             />
                         </div>
 

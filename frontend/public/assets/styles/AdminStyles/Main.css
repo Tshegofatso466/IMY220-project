@@ -1,0 +1,22 @@
+.mainL {
+    position: relative;
+    height: 100vh;
+    font-family:'outfit';
+}
+
+.background-imageL {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    object-fit: cover;
+    z-index: -1; /* Make sure the background image stays behind content */
+}
+
+.contentL {
+    position: relative;
+    z-index: 1; /* Bring the content in front of the background image */
+    padding: 20px; /* Add some padding for aesthetics */
+    font-family:'outfit';
+}

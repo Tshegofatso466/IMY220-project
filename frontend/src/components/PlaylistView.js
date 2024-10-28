@@ -93,12 +93,12 @@ class PlaylistView extends React.Component {
 
     handleDelete = async () => {
         console.log('About to delete a playlist');
-        
+
         if (!confirm('Are you sure you want to delete this playlist?')) return;
-    
+
         try {
             const response = await deletePlaylist(sessionStorage.getItem('userId'), sessionStorage.getItem('playlistId'));
-            
+
             if (!response.error) {
                 console.log('Playlist deleted successfully');
             } else {
@@ -107,7 +107,7 @@ class PlaylistView extends React.Component {
         } catch (error) {
             console.error('An error occurred during deletion:', error);
         }
-    }    
+    }
 
     handleAddComment = async (newComment) => {
         const returnedData = await createComment({
@@ -200,7 +200,9 @@ class PlaylistView extends React.Component {
                                 songId={song.songId} />
                         ))}
                     </div>) : (
-                        <h5 className="no-songs">No songs in current playlist</h5>
+                        <div className="no-songs-container">
+                            <h5 className="no-songs">No songs in current playlist</h5>
+                        </div>
                     )}
 
                     <div className="icon-group">

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../../../public/assets/styles/AdminSyles/Controllers.css';
-import withNavigation from '../hoc.js';
+import '../../../public/assets/styles/AdminStyles/Controllers.css';
+import '../../fontDefinition/fonts.css';
+import withNavigation from '../../hoc.js';
 
 class Controllers extends React.Component {
     constructor(props) {
@@ -30,8 +31,8 @@ class Controllers extends React.Component {
         const { activeTab } = this.state;
         return (
             <div className="controllers">
-                <button className={`tab-link ${activeTab === 'Users' ? 'active' : ''}`} onClick={() => this.handleClick('Users')}>Users Opperations</button>
-                <button className={`tab-link ${activeTab === 'AdminOpps' ? 'active' : ''}`} onClick={() => this.handleClick('AdminOpps')}>Admin Opperations</button>
+                <button className={`tab-linkL ${activeTab === 'Users' ? 'active' : ''}`} onClick={() => this.handleClick('Users')}>Users Opperations</button>
+                <button className={`tab-linkL ${activeTab === 'AdminOpps' ? 'active' : ''}`} onClick={() => this.handleClick('AdminOpps')}>Admin Opperations</button>
             </div>
         );
     }

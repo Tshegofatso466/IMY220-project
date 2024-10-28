@@ -23,25 +23,43 @@ connectToDatabase();
 
 const db = client.db("IMY_project");
 const collection = db.collection("IMY-playlists");
+const adminpersonels = db.collection("IMY-admin-personels");
+const adminData = db.collection("IMY-admin");
 
 
 app.post("/imy/login", async (req, res) => {
     const { email, username, password } = req.body;
+    //isAdmin
 
     try {
-        const user = await collection.findOne({
+        let admin = false;
+        // First, check for a regular user
+        let user = await collection.findOne({
             $or: [{ email: email }, { username: username }]
         });
 
+        // If user not found, check for admin personnel
+        if (!user) {
+            user = await adminpersonels.findOne({
+                $or: [{ email: email }, { username: username }]
+            });
+
+            if (user) { console.log('user found in admins'); admin = true; }
+            else { console.log('user !found in admins'); }
+        }
+        console.log('user found in users or admins');
+
+        // If still not found, return 404
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Check password
         if (user.password !== password) {
             return res.status(401).json({ message: "Invalid password" });
         }
 
-        res.status(200).json({ id: user._id.toString(), message: "Login successful" });
+        res.status(200).json({ id: user._id.toString(), message: "Login successful", isAdmin: admin });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -49,6 +67,9 @@ app.post("/imy/login", async (req, res) => {
 
 app.post("/imy/signup", async (req, res) => {
     const { username, email, password, profileImage, bio } = req.body;
+    if(!profileImage || !email || !password || !bio || !username) {
+        return res.status(400).json({ error: "All fields are required." });
+    }
 
     // Create the user object
     const newUser = {
@@ -210,33 +231,29 @@ app.get("/imy/playlist/:id", async (req, res) => {
 });
 
 app.post("/imy/createPlaylist", async (req, res) => {
-    const { playlistName, OwnerImage, PlaylistImage, OwnerName, userId } = req.body;
+    const { playlistName, playlistImage, userId } = req.body;
 
-    // Validate the incoming data
-    if (!playlistName || !OwnerImage || !PlaylistImage || !OwnerName || !userId) {
+    if (!playlistName || !playlistImage || !userId) {
         return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Create a new playlist object
     const newPlaylist = {
         PlayListName: playlistName,
-        PlayListImage: PlaylistImage, // Assuming you want to use the OwnerImage as the playlist image
-        OwnerImage: OwnerImage,
-        OwnerName: OwnerName,
-        songs: [], // Initialize with empty songs array
-        comments: [], // Initialize with empty comments array
-        id: new ObjectId(), // Generate a new ObjectId for the playlist
+        PlayListImage: playlistImage,
+        songs: [],
+        comments: [],
+        id: new ObjectId(),
+        reference: false
     };
 
     try {
-        // Update the user's document by pushing the new playlist into the playlists array
         const result = await collection.updateOne(
-            { _id: new ObjectId(userId) }, // Find the user by ObjectId
-            { $push: { playlists: newPlaylist } } // Push the new playlist into the playlists array
+            { _id: new ObjectId(userId) },
+            { $push: { playlists: newPlaylist } }
         );
 
         if (result.modifiedCount === 0) {
-            return res.status(404).json({ error: "could not insert playlist." });
+            return res.status(404).json({ error: "Could not insert playlist." });
         }
 
         res.status(201).json({ message: "Playlist created successfully", playlistId: newPlaylist.id });
@@ -310,7 +327,7 @@ app.post("/imy/createComment", async (req, res) => {
             userName: commenter.username, // Assuming you have a username field in your user collection
             followers: commenter.followers || 0, // Use the number of followers from the user document
             commentText: comment,
-            timestamp: new Date(), // Current timestamp
+            timestamp: new Date().toISOString(), // Current timestamp
             commentId: new ObjectId(),
             pinned: false,
         };
@@ -332,7 +349,7 @@ app.post("/imy/createComment", async (req, res) => {
     }
 });
 
-app.delete("/imy/deleteProfile/:profileId", async (req, res) => {
+app.delete("/imy/Admin/deleteProfile/:profileId", async (req, res) => {
     const { profileId } = req.params;
 
     // Validate the incoming data
@@ -456,19 +473,41 @@ app.delete("/imy/deleteSong", async (req, res) => {
         return res.status(400).json({ error: "User ID, Playlist ID, and Song ID are required." });
     }
 
+    console.log(userId, playlistId, songId);
+
     try {
         // Update the user's playlist to remove the song
         const result = await collection.updateOne(
-            { 
-                _id: new ObjectId(userId), 
-                "playlists.id": new ObjectId(playlistId) // Find user and playlist
+            {
+                _id: new ObjectId(userId),
+                "playlists.id": new ObjectId(playlistId), // Find user and playlist
+                "playlists.songs.songId": new ObjectId(songId)
             },
             {
-                $pull: {
-                    "playlists.$.songs": { songId: new ObjectId(songId) } // Remove the song based on ObjectId
+                $set: {
+                    "playlists.$.songs.$[song].deleted": true
                 }
+            },
+            {
+                arrayFilters: [
+                    { "song.songId": new ObjectId(songId) }
+                ]
             }
         );
+
+        // {
+        //     _id: new ObjectId(userId),
+        //     "playlists.id": new ObjectId(playlistId),
+        //     "playlists.comments.commentId": new ObjectId(commentId)
+        // },
+        // {
+        //     $set: {
+        //         "playlists.$.comments.$[comment].pinned": pin
+        //     }
+        // },
+        // {
+        //     arrayFilters: [{ "comment.commentId": new ObjectId(commentId) }]
+        // }
 
         // Check if any documents were modified
         if (result.modifiedCount === 0) {
@@ -614,9 +653,6 @@ app.post("/imy/saveplaylist", async (req, res) => {
 
 //superUser requests ::
 
-const adminpersonels = db.collection("IMY-admin-personels");
-const adminData = db.collection("IMY-admin");
-
 app.get("/imy/admin/getUsers", async (req, res) => {
     try {
         const users = await collection.find({}).toArray();
@@ -654,10 +690,10 @@ app.put("/imy/pinComment", async (req, res) => {
     try {
         // Find the specific playlist and comment by their IDs without using arrayFilters
         const result = await collection.updateOne(
-            { 
-                _id: new ObjectId(userId), 
-                "playlists.id": new ObjectId(playlistId), 
-                "playlists.comments.commentId": new ObjectId(commentId) 
+            {
+                _id: new ObjectId(userId),
+                "playlists.id": new ObjectId(playlistId),
+                "playlists.comments.commentId": new ObjectId(commentId)
             },
             {
                 $set: {
@@ -678,6 +714,50 @@ app.put("/imy/pinComment", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "An error occurred while updating the comment pin status." });
+    }
+});
+
+app.get('/imy/admin/getUsers', async (req, res) => {
+    try {
+        const users = await collection.find({}).toArray(); // Retrieve all users
+        res.json(users); // Send users as JSON response
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/imy/admin/genreAction', async (req, res) => {
+    const { flag, genre } = req.body;
+    const action = flag ? 'Add' : 'Delete';
+    const timestamp = new Date().toISOString();
+    const actionDescription = `${action} ${genre} on ${timestamp}`;
+
+    try {
+
+        const update = flag
+            ? { $addToSet: { genre: genre } } // Adds the genre if it doesn't exist
+            : { $pull: { genre: genre } };    // Removes the genre if it exists
+
+        const result = await adminData.updateOne(
+            { _id: new ObjectId("671d242bef6678022fffbefd") }, // Replace with actual ID or criteria
+            {
+                ...update,
+                $push: { Record_changes: actionDescription } // Record the action with timestamp
+            }
+        );
+
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ message: "Genre not found or already in desired state", error: "not found"});
+        }
+
+        res.status(200).json({
+            message: `Genre ${action}ed successfully`,
+            record: actionDescription
+        });
+    } catch (error) {
+        console.error('Error updating genre:', error);
+        res.status(500).json({ message: 'An error occurred', error: error.message });
     }
 });
 

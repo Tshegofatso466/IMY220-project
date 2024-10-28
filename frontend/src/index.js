@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Main } from "./pages/Adminpages/Main";
 import { Playlists } from './pages/Playlists';
 import { Home } from './pages/SplashPage';
 import { ProfilePage } from './pages/ProfilePage'; // Import the Profile component
@@ -15,6 +16,7 @@ class App extends React.Component {
             playlists: [],
             id: null,
             isLoggedIn: false,
+            isAdmin: false
         };
     }
 
@@ -22,15 +24,18 @@ class App extends React.Component {
     Login = async (data) => {
         try {
             const response = await login(data);
-            this.setState({ id: response.id, isLoggedIn: true });
+            let playlists = [];
+            this.setState({ id: response.id, isLoggedIn: true, isAdmin: response.isAdmin });
             // console.log(response.id);
-            const playlists = await getPlaylists(response.id);  // Fetch playlists after login
+            if (!response.isAdmin) {
+                playlists = await getPlaylists(response.id);
+            }
             this.setState({ playlists });
             sessionStorage.setItem('userId', this.state.id);
-            return true;
+            return { loggedIn: true, isAdmin: response.isAdmin };
         } catch (error) {
             console.error(error);
-            return false;
+            return { loggedIn: false, error: error };
         }
     };
 
@@ -86,6 +91,7 @@ class App extends React.Component {
                         userName={this.state.id}
                         searchQuery={this.state.searchQuery}
                         onChange={this.handleSearchChange} />} />
+                    <Route path="/Admin" element={<Main />} />
                 </Routes>
             </Router>
         );

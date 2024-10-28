@@ -1,0 +1,31 @@
+.controllers {
+    background-color: #2b2a4a; /* Dark purple */
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    font-family: 'outfit';
+    justify-content: space-around;
+}
+
+.tab-linkL {
+    background: transparent; /* Tan buttons */
+    color: rgb(204, 204, 206); /* Black text for contrast */
+    border: none;
+    font-size: 30px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family:'outfit';
+}
+
+.tab-linkL.active {
+    font-weight: bolder; /* Emphasize active tab */
+    border-bottom: solid 1px;
+    color: #ffffff; /* White text for contrast */
+}
+
+.tab-linkL:hover {
+    background-color: #33315a; /* Darker tan on hover */
+    font-weight: bold
+}

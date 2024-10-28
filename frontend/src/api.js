@@ -1,18 +1,22 @@
 
 export async function signUp(data) {
-    return fetch('https://localhost:1337/imy/signup', {
+    data.bio = "Hello world!";
+    data.profileImage = getRandomImageUrl();
+    return fetch('/imy/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Error signing up');
-            }
-            return response.json();
-        });
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Error signing up');
+        }
+        return response.json();
+    }).catch(error => {
+        console.error("Sign-up request failed:", error.message); // Debugging log
+        throw error;
+    });
 }
 
 export const login = async (data) => {
@@ -91,14 +95,14 @@ export const updateProfile = async (data) => {
     return response.json();
 }
 
-export const getRandomImageUrl = async () => { // TO BE USED WHEN REGISTERING
+export const getRandomImageUrl = () => { // TO BE USED WHEN REGISTERING
     let imgNo = Math.floor(Math.random() * 10) + 1;
     let endpointImage = `pfp${imgNo}.jpg`;
     return (`/assets/images/USERS-PROFILE-PICTURES/${endpointImage}`);
 }
 
 export const toggleFriend = async (flag, data) => {
-    const response = await fetch(`/imy/${flag ? 'friend':'unfriend'}`, {
+    const response = await fetch(`/imy/${flag ? 'friend' : 'unfriend'}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -141,7 +145,7 @@ export const addSong = async (userId, playlistId, song) => {
     if (!response.ok) {
         const errorData = await response.json(); // Parse the response body to get error details
         throw new Error(errorData.error || "Failed to save song");
-    }    
+    }
     return response.json();
 }
 
@@ -158,7 +162,7 @@ export const deleteSong = async (userId, playlistId, songId) => {
     if (!response.ok) {
         const errorData = await response.json(); // Parse the response body to get error details
         throw new Error(errorData.error || "Failed to delete song");
-    }    
+    }
     return response.json();
 }
 
@@ -178,7 +182,7 @@ export const editPlaylist = async (userId, playlistId, data) => {
     if (!response.ok) {
         const errorData = await response.json(); // Parse the response body to get error details
         throw new Error(errorData.error || "Failed to update playlist");
-    }    
+    }
     return response.json();
 }
 
@@ -190,7 +194,7 @@ export const getGenres = async () => {
     if (!response.ok) {
         const errorData = await response.json(); // Parse the response body to get error details
         throw new Error(errorData.error || "Failed to fetch genres");
-    }    
+    }
     return response.json();
 }
 
@@ -206,7 +210,7 @@ export const deletePlaylist = async (userId, playlistId) => {
     if (!response.ok) {
         const errorData = await response.json(); // Parse the response body to get error details
         throw new Error(errorData.error || "Failed to delete playlist");
-    }    
+    }
     return response.json();
 }
 
@@ -235,3 +239,102 @@ export const pinComment = async (userId, playlistId, commentId, pin) => {
         throw error;
     }
 };
+
+export const getUsers = async () => {
+    try {
+        const response = await fetch(`/imy/admin/getUsers`, {
+            method: "GET", // Use GET method to retrieve data
+            headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to fetch users");
+        }
+
+        return await response.json(); // Return the users data
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        throw error; // Rethrow the error for handling in the calling function
+    }
+};
+
+// genreAction.js
+export async function genreAction(flag, genre) {
+    try {
+        const response = await fetch('/imy/admin/genreAction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ flag, genre })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Action successful:', result);
+        return result; // Return the response if needed elsewhere
+    } catch (error) {
+        console.error('Error performing genre action:', error);
+    }
+}
+
+export async function deleteProfile(profileId) {
+    if (!profileId) {
+        throw new Error("Profile ID is required.");
+    }
+
+    try {
+        const response = await fetch(`/imy/Admin/deleteProfile/${profileId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "An error occurred while deleting the profile.");
+        }
+
+        const data = await response.json();
+        console.log(data.message); // Profile deleted successfully
+        return data.message;
+    } catch (error) {
+        console.error("Error deleting profile:", error.message);
+        throw error;
+    }
+}
+
+export async function createPlaylist(userId, data) {
+    console.log("Submitting playlist with data:", playlistName, image);
+
+    if (!userId || !data) {
+        throw new Error("User ID and playlist data are required.");
+    }
+
+    try {
+        const response = await fetch(`/imy/createPlaylist`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ userId, playlistName: data.playlistName, playlistImage: data.playlistImage })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "An error occurred while adding the playlist.");
+        }
+
+        const responseData = await response.json();
+        console.log("Response from server:", responseData.message);
+        return responseData;
+    } catch (error) {
+        console.error("Error creating playlist:", error.message);
+        throw error;
+    }
+}

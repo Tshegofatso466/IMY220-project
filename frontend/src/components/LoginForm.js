@@ -54,11 +54,16 @@ class LoginForm extends Component {
             console.log('Form submitted successfully:', this.state);
 
             const data = { email: this.state.email, username: this.state.username, password: this.state.password };
-            const isLoggedIn = await this.props.Login(data);
+            const dataS = await this.props.Login(data);
 
-            if (isLoggedIn) {
-                // Redirect to playlist page after successful login
-                this.props.navigate('/playlist');
+            if (dataS.loggedIn) {
+                if (dataS.isAdmin) {
+                    console.log("Navigating to Admin page after login");
+                    this.props.navigate('/Admin');
+                } else {
+                    console.log("Navigating to playlist page after login");
+                    this.props.navigate('/playlist');
+                }
             } else {
                 // Handle login failure
                 this.setState({ errors: { login: 'Login failed. Please try again.' } });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { signUp } from '../api';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/SignUpForm.css';
 
@@ -45,22 +45,28 @@ export class SignUpForm extends Component {
     };
 
     // Handle form submission
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
+
         if (this.validateForm()) {
-            alert('Sign-up successful!');
-            const { email, password, surname, name, userName } = this.state;
+            alert('Sign-up submitted successful!');
             this.setState({ errorMessage: '', SignedIn: true });
-            this.props.goThrough(email, password, surname, name, userName);
+        }
+
+        try {
+            const { email, password, surname, name, username } = this.state;
+            const response = await signUp({ username, email, password });
+
+            if (response.error) {
+                console.error("An error occurred:", response.error);
+            } else {
+                console.log('User created successfully:', response.message);
+                console.log("Response data:", response); // Added logging to inspect response
+            }
+        } catch (error) {
+            console.error('Error during sign-up:', error.message);
         }
     };
-
-    goThrough = () => {
-        if (this.validateForm()) {
-            alert('Sign-up successful!');
-            this.setState({ errorMessage: '', SignedIn: true });
-        }
-    }
 
     // Handle input changes
     handleChange = (e) => {
@@ -118,9 +124,7 @@ export class SignUpForm extends Component {
                             onChange={this.handleChange}
                             required
                         />
-                        <Link to={this.state.SignedIn ? "/playlist" : ""}>
-                            <button onClick={this.goThrough} type="submit" className="signup-submit-btn">Sign Up</button>
-                        </Link>
+                        <button type="submit" className="signup-submit-btn">Sign Up</button>
                     </form>
                 </div>
             </div>

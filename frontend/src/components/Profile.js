@@ -120,8 +120,8 @@ class Profile extends React.Component {
                             <PlayList
                                 key={index}
                                 PlayListName={playlist.PlayListName || 'unknown'}
-                                PlayListImage={playlist.PlayListImage || 'default.jpg'}
-                                Ownerimage={ playlist.OwnerImage || user.profileImage || 'anonymous.jpg'}
+                                PlayListImage={playlist.PlayListImage || '/assets/images/RANDOM/latest2.jpg'}
+                                Ownerimage={ playlist.OwnerImage || user.profileImage || '/assets/images/RANDOM/latest2.jpg'}
                                 OwnerName={playlist.OwnerName || user.username || 'Anonymous'}
                                 songs={playlist.songs || []}
                                 onplaylistClick={() => this.onPlaylistClick(playlist)}

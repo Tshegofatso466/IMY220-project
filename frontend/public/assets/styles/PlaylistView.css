@@ -123,3 +123,17 @@
     width: 100%;
     margin-bottom: 20px; /* Space between buttons and playlist header */
 }
+
+.no-songs-container {
+    text-align: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.no-songs {
+    font-family: 'outfit';
+    color: white;
+    font-weight: bold;
+    font-size: 2em; /* Adjust size for an h1-like appearance */
+    /* margin-left: 50%; */
+}

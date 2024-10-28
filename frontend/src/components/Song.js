@@ -28,12 +28,12 @@ export class Song extends React.Component {
     };
 
     render() {
-        const { title, artists, image, spotifyURL, dateAdded } = this.props;
+        const { title, artists, deleted, image, spotifyURL, dateAdded } = this.props;
         const { showModal } = this.state;
         const sameUser = sessionStorage.getItem('userId') === sessionStorage.getItem('profileId')
 
         return (
-            <div className='general'>
+            <div className={`general ${deleted ? 'deleted' : ''}`}>
                 <img src={image || '/assets/images/SONGS-IMAGES/esangweni-murumba.jpg'} alt='song image' />
                 <div className='details'>
                     <h3>{title} {/*<a href={spotifyURL || '#noUrlProvided'}>(see more)</a>*/}</h3>
@@ -47,7 +47,7 @@ export class Song extends React.Component {
                     alt="menu"
                 />
 
-                {showModal && (
+                {showModal && !deleted && (
                     <div className="modal-overlay">
                         <div className="modal-content">
                             <button className="close-btn" onClick={this.toggleModal}>X</button>
@@ -67,5 +67,6 @@ Song.propTypes = {
     image: PropTypes.string.isRequired,
     spotifyURL: PropTypes.string.isRequired,
     dateAdded: PropTypes.string.isRequired,
-    songId: PropTypes.string.isRequired
+    songId: PropTypes.string.isRequired,
+    deleted: PropTypes.bool.isRequired
 };

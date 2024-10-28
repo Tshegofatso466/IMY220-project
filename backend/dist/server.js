@@ -5,6 +5,11 @@ var _express = _interopRequireDefault(require("express"));
 var _mongodb = require("mongodb");
 var _dotenv = _interopRequireDefault(require("dotenv"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
@@ -21,41 +26,44 @@ function connectToDatabase() {
   return _connectToDatabase.apply(this, arguments);
 }
 function _connectToDatabase() {
-  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
-    return _regeneratorRuntime().wrap(function _callee21$(_context22) {
-      while (1) switch (_context22.prev = _context22.next) {
+  _connectToDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23() {
+    return _regeneratorRuntime().wrap(function _callee23$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
         case 0:
-          _context22.prev = 0;
-          _context22.next = 3;
+          _context24.prev = 0;
+          _context24.next = 3;
           return client.connect();
         case 3:
           console.log("MongoDB connected successfully");
-          _context22.next = 9;
+          _context24.next = 9;
           break;
         case 6:
-          _context22.prev = 6;
-          _context22.t0 = _context22["catch"](0);
-          console.error("MongoDB connection error:", _context22.t0);
+          _context24.prev = 6;
+          _context24.t0 = _context24["catch"](0);
+          console.error("MongoDB connection error:", _context24.t0);
         case 9:
         case "end":
-          return _context22.stop();
+          return _context24.stop();
       }
-    }, _callee21, null, [[0, 6]]);
+    }, _callee23, null, [[0, 6]]);
   }));
   return _connectToDatabase.apply(this, arguments);
 }
 connectToDatabase();
 var db = client.db("IMY_project");
 var collection = db.collection("IMY-playlists");
+var adminpersonels = db.collection("IMY-admin-personels");
+var adminData = db.collection("IMY-admin");
 app.post("/imy/login", /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
-    var _req$body, email, username, password, user;
+    var _req$body, email, username, password, admin, user;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          _req$body = req.body, email = _req$body.email, username = _req$body.username, password = _req$body.password;
+          _req$body = req.body, email = _req$body.email, username = _req$body.username, password = _req$body.password; //isAdmin
           _context.prev = 1;
-          _context.next = 4;
+          admin = false; // First, check for a regular user
+          _context.next = 5;
           return collection.findOne({
             $or: [{
               email: email
@@ -63,41 +71,66 @@ app.post("/imy/login", /*#__PURE__*/function () {
               username: username
             }]
           });
-        case 4:
+        case 5:
           user = _context.sent;
           if (user) {
-            _context.next = 7;
+            _context.next = 11;
+            break;
+          }
+          _context.next = 9;
+          return adminpersonels.findOne({
+            $or: [{
+              email: email
+            }, {
+              username: username
+            }]
+          });
+        case 9:
+          user = _context.sent;
+          if (user) {
+            console.log('user found in admins');
+            admin = true;
+          } else {
+            console.log('user !found in admins');
+          }
+        case 11:
+          console.log('user found in users or admins');
+
+          // If still not found, return 404
+          if (user) {
+            _context.next = 14;
             break;
           }
           return _context.abrupt("return", res.status(404).json({
             message: "User not found"
           }));
-        case 7:
+        case 14:
           if (!(user.password !== password)) {
-            _context.next = 9;
+            _context.next = 16;
             break;
           }
           return _context.abrupt("return", res.status(401).json({
             message: "Invalid password"
           }));
-        case 9:
+        case 16:
           res.status(200).json({
             id: user._id.toString(),
-            message: "Login successful"
+            message: "Login successful",
+            isAdmin: admin
           });
-          _context.next = 15;
+          _context.next = 22;
           break;
-        case 12:
-          _context.prev = 12;
+        case 19:
+          _context.prev = 19;
           _context.t0 = _context["catch"](1);
           res.status(500).json({
             error: _context.t0.message
           });
-        case 15:
+        case 22:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[1, 12]]);
+    }, _callee, null, [[1, 19]]);
   }));
   return function (_x, _x2) {
     return _ref.apply(this, arguments);
@@ -109,7 +142,16 @@ app.post("/imy/signup", /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          _req$body2 = req.body, username = _req$body2.username, email = _req$body2.email, password = _req$body2.password, profileImage = _req$body2.profileImage, bio = _req$body2.bio; // Create the user object
+          _req$body2 = req.body, username = _req$body2.username, email = _req$body2.email, password = _req$body2.password, profileImage = _req$body2.profileImage, bio = _req$body2.bio;
+          if (!(!profileImage || !email || !password || !bio || !username)) {
+            _context2.next = 3;
+            break;
+          }
+          return _context2.abrupt("return", res.status(400).json({
+            error: "All fields are required."
+          }));
+        case 3:
+          // Create the user object
           newUser = {
             username: username,
             email: email,
@@ -129,30 +171,30 @@ app.post("/imy/signup", /*#__PURE__*/function () {
             // Empty array
             pictures: [] // Empty array
           };
-          _context2.prev = 2;
-          _context2.next = 5;
+          _context2.prev = 4;
+          _context2.next = 7;
           return collection.insertOne(newUser);
-        case 5:
+        case 7:
           result = _context2.sent;
           // Change "users" to your collection name
           res.status(201).json({
             message: "User created successfully",
             userId: result.insertedId
           });
-          _context2.next = 13;
+          _context2.next = 15;
           break;
-        case 9:
-          _context2.prev = 9;
-          _context2.t0 = _context2["catch"](2);
+        case 11:
+          _context2.prev = 11;
+          _context2.t0 = _context2["catch"](4);
           console.error(_context2.t0);
           res.status(500).json({
             error: "An error occurred while creating the user."
           });
-        case 13:
+        case 15:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[2, 9]]);
+    }, _callee2, null, [[4, 11]]);
   }));
   return function (_x3, _x4) {
     return _ref2.apply(this, arguments);
@@ -450,12 +492,12 @@ app.get("/imy/playlist/:id", /*#__PURE__*/function () {
 }());
 app.post("/imy/createPlaylist", /*#__PURE__*/function () {
   var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-    var _req$body3, playlistName, OwnerImage, PlaylistImage, OwnerName, userId, newPlaylist, result;
+    var _req$body3, playlistName, playlistImage, userId, newPlaylist, result;
     return _regeneratorRuntime().wrap(function _callee7$(_context8) {
       while (1) switch (_context8.prev = _context8.next) {
         case 0:
-          _req$body3 = req.body, playlistName = _req$body3.playlistName, OwnerImage = _req$body3.OwnerImage, PlaylistImage = _req$body3.PlaylistImage, OwnerName = _req$body3.OwnerName, userId = _req$body3.userId; // Validate the incoming data
-          if (!(!playlistName || !OwnerImage || !PlaylistImage || !OwnerName || !userId)) {
+          _req$body3 = req.body, playlistName = _req$body3.playlistName, playlistImage = _req$body3.playlistImage, userId = _req$body3.userId;
+          if (!(!playlistName || !playlistImage || !userId)) {
             _context8.next = 3;
             break;
           }
@@ -463,31 +505,23 @@ app.post("/imy/createPlaylist", /*#__PURE__*/function () {
             error: "All fields are required."
           }));
         case 3:
-          // Create a new playlist object
           newPlaylist = {
             PlayListName: playlistName,
-            PlayListImage: PlaylistImage,
-            // Assuming you want to use the OwnerImage as the playlist image
-            OwnerImage: OwnerImage,
-            OwnerName: OwnerName,
+            PlayListImage: playlistImage,
             songs: [],
-            // Initialize with empty songs array
             comments: [],
-            // Initialize with empty comments array
-            id: new _mongodb.ObjectId() // Generate a new ObjectId for the playlist
+            id: new _mongodb.ObjectId(),
+            reference: false
           };
           _context8.prev = 4;
           _context8.next = 7;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId)
-          },
-          // Find the user by ObjectId
-          {
+          }, {
             $push: {
               playlists: newPlaylist
             }
-          } // Push the new playlist into the playlists array
-          );
+          });
         case 7:
           result = _context8.sent;
           if (!(result.modifiedCount === 0)) {
@@ -495,7 +529,7 @@ app.post("/imy/createPlaylist", /*#__PURE__*/function () {
             break;
           }
           return _context8.abrupt("return", res.status(404).json({
-            error: "could not insert playlist."
+            error: "Could not insert playlist."
           }));
         case 10:
           res.status(201).json({
@@ -633,7 +667,7 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
             followers: commenter.followers || 0,
             // Use the number of followers from the user document
             commentText: comment,
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
             // Current timestamp
             commentId: new _mongodb.ObjectId(),
             pinned: false
@@ -683,7 +717,7 @@ app.post("/imy/createComment", /*#__PURE__*/function () {
     return _ref9.apply(this, arguments);
   };
 }());
-app["delete"]("/imy/deleteProfile/:profileId", /*#__PURE__*/function () {
+app["delete"]("/imy/Admin/deleteProfile/:profileId", /*#__PURE__*/function () {
   var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
     var profileId, result;
     return _regeneratorRuntime().wrap(function _callee10$(_context11) {
@@ -938,45 +972,50 @@ app["delete"]("/imy/deleteSong", /*#__PURE__*/function () {
             error: "User ID, Playlist ID, and Song ID are required."
           }));
         case 3:
-          _context15.prev = 3;
-          _context15.next = 6;
+          console.log(userId, playlistId, songId);
+          _context15.prev = 4;
+          _context15.next = 7;
           return collection.updateOne({
             _id: new _mongodb.ObjectId(userId),
-            "playlists.id": new _mongodb.ObjectId(playlistId) // Find user and playlist
+            "playlists.id": new _mongodb.ObjectId(playlistId),
+            // Find user and playlist
+            "playlists.songs.songId": new _mongodb.ObjectId(songId)
           }, {
-            $pull: {
-              "playlists.$.songs": {
-                songId: new _mongodb.ObjectId(songId)
-              } // Remove the song based on ObjectId
+            $set: {
+              "playlists.$.songs.$[song].deleted": true
             }
+          }, {
+            arrayFilters: [{
+              "song.songId": new _mongodb.ObjectId(songId)
+            }]
           });
-        case 6:
+        case 7:
           result = _context15.sent;
           if (!(result.modifiedCount === 0)) {
-            _context15.next = 9;
+            _context15.next = 10;
             break;
           }
           return _context15.abrupt("return", res.status(404).json({
             error: "Song not found in the specified playlist."
           }));
-        case 9:
+        case 10:
           res.status(200).json({
             message: "Song deleted successfully."
           });
-          _context15.next = 16;
+          _context15.next = 17;
           break;
-        case 12:
-          _context15.prev = 12;
-          _context15.t0 = _context15["catch"](3);
+        case 13:
+          _context15.prev = 13;
+          _context15.t0 = _context15["catch"](4);
           console.error("Error deleting song:", _context15.t0);
           res.status(500).json({
             error: "An error occurred while deleting the song."
           });
-        case 16:
+        case 17:
         case "end":
           return _context15.stop();
       }
-    }, _callee14, null, [[3, 12]]);
+    }, _callee14, null, [[4, 13]]);
   }));
   return function (_x27, _x28) {
     return _ref14.apply(this, arguments);
@@ -1236,8 +1275,6 @@ app.post("/imy/saveplaylist", /*#__PURE__*/function () {
 
 //superUser requests ::
 
-var adminpersonels = db.collection("IMY-admin-personels");
-var adminData = db.collection("IMY-admin");
 app.get("/imy/admin/getUsers", /*#__PURE__*/function () {
   var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
     var users;
@@ -1372,6 +1409,101 @@ app.put("/imy/pinComment", /*#__PURE__*/function () {
   }));
   return function (_x39, _x40) {
     return _ref20.apply(this, arguments);
+  };
+}());
+app.get('/imy/admin/getUsers', /*#__PURE__*/function () {
+  var _ref21 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21(req, res) {
+    var users;
+    return _regeneratorRuntime().wrap(function _callee21$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
+        case 0:
+          _context22.prev = 0;
+          _context22.next = 3;
+          return collection.find({}).toArray();
+        case 3:
+          users = _context22.sent;
+          // Retrieve all users
+          res.json(users); // Send users as JSON response
+          _context22.next = 11;
+          break;
+        case 7:
+          _context22.prev = 7;
+          _context22.t0 = _context22["catch"](0);
+          console.error('Error fetching users:', _context22.t0);
+          res.status(500).send('Internal Server Error');
+        case 11:
+        case "end":
+          return _context22.stop();
+      }
+    }, _callee21, null, [[0, 7]]);
+  }));
+  return function (_x41, _x42) {
+    return _ref21.apply(this, arguments);
+  };
+}());
+app.post('/imy/admin/genreAction', /*#__PURE__*/function () {
+  var _ref22 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee22(req, res) {
+    var _req$body14, flag, genre, action, timestamp, actionDescription, update, result;
+    return _regeneratorRuntime().wrap(function _callee22$(_context23) {
+      while (1) switch (_context23.prev = _context23.next) {
+        case 0:
+          _req$body14 = req.body, flag = _req$body14.flag, genre = _req$body14.genre;
+          action = flag ? 'Add' : 'Delete';
+          timestamp = new Date().toISOString();
+          actionDescription = "".concat(action, " ").concat(genre, " on ").concat(timestamp);
+          _context23.prev = 4;
+          update = flag ? {
+            $addToSet: {
+              genre: genre
+            }
+          } // Adds the genre if it doesn't exist
+          : {
+            $pull: {
+              genre: genre
+            }
+          }; // Removes the genre if it exists
+          _context23.next = 8;
+          return adminData.updateOne({
+            _id: new _mongodb.ObjectId("671d242bef6678022fffbefd")
+          }, // Replace with actual ID or criteria
+          _objectSpread(_objectSpread({}, update), {}, {
+            $push: {
+              Record_changes: actionDescription
+            } // Record the action with timestamp
+          }));
+        case 8:
+          result = _context23.sent;
+          if (!(result.modifiedCount === 0)) {
+            _context23.next = 11;
+            break;
+          }
+          return _context23.abrupt("return", res.status(404).json({
+            message: "Genre not found or already in desired state",
+            error: "not found"
+          }));
+        case 11:
+          res.status(200).json({
+            message: "Genre ".concat(action, "ed successfully"),
+            record: actionDescription
+          });
+          _context23.next = 18;
+          break;
+        case 14:
+          _context23.prev = 14;
+          _context23.t0 = _context23["catch"](4);
+          console.error('Error updating genre:', _context23.t0);
+          res.status(500).json({
+            message: 'An error occurred',
+            error: _context23.t0.message
+          });
+        case 18:
+        case "end":
+          return _context23.stop();
+      }
+    }, _callee22, null, [[4, 14]]);
+  }));
+  return function (_x43, _x44) {
+    return _ref22.apply(this, arguments);
   };
 }());
 

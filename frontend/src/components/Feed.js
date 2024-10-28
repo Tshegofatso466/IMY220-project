@@ -11,11 +11,11 @@ import '../../public/assets/styles/Feed.css';
 class Feed extends React.Component {
     filterPlaylists = () => {
         const { searchQuery, playLists } = this.props;
-    
+
         if (!searchQuery) {
             return playLists;
         }
-    
+
         const options = {
             keys: [
                 'OwnerName',
@@ -27,9 +27,9 @@ class Feed extends React.Component {
             ],
             threshold: 0.4
         };
-    
+
         const fuse = new Fuse(playLists, options);
-    
+
         return fuse.search(searchQuery).map(result => result.item);
     };
 
@@ -67,7 +67,7 @@ class Feed extends React.Component {
                                     spotifyURL={song.sportifyURL}
                                     dateAdded={song.dateAdded}
                                     songId={song.songId}
-                                    
+                                    deleted={song.deleted}
                                 />
                             ))}
                         </div>
@@ -85,7 +85,7 @@ class Feed extends React.Component {
                 {filteredPlaylists.map((playlist, index) => (
                     <div
                         key={index}
-                        // onClick={() => this.handlePlaylistClick(playlist.id)} // Ensure playlist has an id
+                    // onClick={() => this.handlePlaylistClick(playlist.id)} // Ensure playlist has an id
                     >
                         <PlayList
                             PlayListName={playlist.PlayListName || 'Untitled Playlist'}
@@ -94,7 +94,7 @@ class Feed extends React.Component {
                             OwnerName={playlist.OwnerName || 'Unknown Owner'}
                             songs={playlist.songs || []}
                             comments={playlist.comments || []}
-                            profileId={playlist.profileId || ''} 
+                            profileId={playlist.profileId || ''}
                             playlistId={playlist.id || ''}
                             onplaylistClick={() => this.handlePlaylistClick(playlist.id)}
                         />
