@@ -51,23 +51,23 @@ class LoginForm extends Component {
 
         if (Object.keys(errors).length === 0) {
             // Proceed with login logic (e.g., API call)
-            console.log('Form submitted successfully:', this.state);
+            // console.log('Form submitted successfully:', this.state);
 
             const data = { email: this.state.email, username: this.state.username, password: this.state.password };
             const dataS = await this.props.Login(data);
 
             if (dataS.loggedIn) {
-                console.log('navigating to playlists');
+                // console.log('navigating to playlists');
                 if (dataS.isAdmin) {
-                    console.log("Navigating to Admin page after login");
-                    console.log('navigating to admin......');
+                    // console.log("Navigating to Admin page after login");
+                    // console.log('navigating to admin......');
                     this.props.navigate('/Admin');
                 } else {
-                    console.log("Navigating to playlist page after login");
-                    console.log('navigating to playlists.......');
+                    // console.log("Navigating to playlist page after login");
+                    // console.log('navigating to playlists.......');
                     this.props.navigate('/playlist');
                 }
-                console.log('navigating to playlists');
+                // console.log('navigating to playlists');
             } else {
                 // Handle login failure
                 this.setState({ errors: { login: 'Login failed. Please try again.' } });

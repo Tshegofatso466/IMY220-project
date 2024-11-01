@@ -30,7 +30,7 @@ export class EditProfile extends React.Component {
     handleFileUpload = async (e) => {
         const file = e.target.files[0];
         const base64 = await this.convertToBase64(file);
-        console.log('bio:', this.state.bio, 'username: ', this.state.userName, base64);
+        // console.log('bio:', this.state.bio, 'username: ', this.state.userName, base64);
         this.setState({ profilePicture: base64 });
     };
 
@@ -47,7 +47,7 @@ export class EditProfile extends React.Component {
             this.setState({ error: 'Both username and bio must be filled out.' });
         } else {
             let response = updateProfile({ username: userName, bio: bio, profileImage: profilePicture, userId: sessionStorage.getItem('userId') });
-            console.log(response);
+            // console.log(response);
             this.setState({ error: '' });
             this.props.onClose();
         }
@@ -67,7 +67,7 @@ export class EditProfile extends React.Component {
         //if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
             const base64 = await this.convertToBase64(file);
             this.setState({ profilePicture: base64 }); // Update the profile picture state with the new image
-            console.log(this.state.profilePicture);
+            // console.log(this.state.profilePicture);
         //} else {
             //alert('Please drop a valid image file.');
         //}

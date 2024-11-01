@@ -39,11 +39,11 @@ class Profile extends React.Component {
 
     async componentDidMount() {
         const userId = sessionStorage.getItem('profileId') || 0; // Get userId from props
-        console.log(userId);
+        // console.log(userId);
         try {
             const user = await getUserById(userId); // Fetch user data using getUserById
             this.setState({ playlists: user.playlists, friends: user.friends, pictures: user.pictures, user: user }); // Set user data in state
-            console.log('User data fetched successfully:', user);
+            // console.log('User data fetched successfully:', user);
             if (sessionStorage.getItem('userId') === sessionStorage.getItem('profileId')) {
                 this.setState({ sameUser: true });
             }
@@ -59,7 +59,7 @@ class Profile extends React.Component {
             }
 
             this.updatePlaylists();
-            console.log('this is the updated playlists', this.state.playlists);
+            // console.log('this is the updated playlists', this.state.playlists);
         } catch (error) {
             console.error("Error fetching user data:", error);
             this.setState({ loading: false }); // Handle loading state
@@ -99,7 +99,7 @@ class Profile extends React.Component {
         //         }
         //     })
         // );
-        console.log('the id ... p ', sessionStorage.getItem('profileId'));
+        // console.log('the id ... p ', sessionStorage.getItem('profileId'));
         const updatedPlaylists = await getPlaylists(sessionStorage.getItem('profileId'));
 
         // Update the state once all playlists are processed
@@ -110,7 +110,7 @@ class Profile extends React.Component {
         const { playlists, friends, pictures, onPlaylistClick, user } = this.state;
         const { activeTab } = this.state;
 
-        console.log("renderContent");
+        // console.log("renderContent");
 
         switch (activeTab) {
             case 'Playlists':

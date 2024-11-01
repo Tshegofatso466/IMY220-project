@@ -67,7 +67,7 @@ export class AddSong extends React.Component {
     handleFileUpload = async (e) => {
         const file = e.target.files[0];
         const base64 = await this.convertToBase64(file);
-        console.log(base64);
+        // console.log(base64);
         this.setState({ image: base64 });
     };
 
@@ -75,11 +75,11 @@ export class AddSong extends React.Component {
         event.preventDefault();
         const { songName, artists, songURL, image } = this.state;
         const vcalidUR = this.isValidSpotifySongURL(songURL);
-        console.log(this.state);
-        console.log(vcalidUR);
+        // console.log(this.state);
+        // console.log(vcalidUR);
         // Ensure that both songName and artists have values
         if (!songName || !image || artists.length === 0 || !this.isValidSpotifySongURL(songURL)) {
-            this.setState({ errorMessage: 'Please enter a song name, at least one artist, a spotify url and a song image.' });
+            this.setState({ errorMessage: 'Please enter a song name, at least one artist, a (valid) spotify url and a song image.' });
             return;
         }
 
@@ -102,7 +102,7 @@ export class AddSong extends React.Component {
         }
 
         // Process the new song (integrate your API or backend logic here)
-        console.log('New Song:', { songName, artists, songURL });
+        // console.log('New Song:', { songName, artists, songURL });
         this.props.onClose(); // Close modal after submitting
     };
 
@@ -140,7 +140,7 @@ export class AddSong extends React.Component {
                         </div>
 
                         <div className='form-group'>
-                            <label htmlFor="image">Profile-Picture:</label>
+                            <label htmlFor="image">Song-Picture:</label>
                             <input
                                 type="file"
                                 accept=".jpeg, .png, .jpg"

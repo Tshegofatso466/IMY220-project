@@ -40,23 +40,23 @@ class Users extends React.Component {
             return;
         }
 
-        try {
-            if (!confirm('Are you sure you want to delete this user?')) {
-                return;
-            }
-            const response = await deleteProfile(userId);
-            if (response.error) {
-                this.setState({ error: response.error, loading: false });
-            }
-            else {
-                this.setState((prevState) => ({
-                    users: prevState.users.filter(user => user._id !== userId)
-                }));
-            }
-        }
-        catch (error) {
-            console.log('Error deleting user', error);
-        }
+        // try {
+        //     if (!confirm('Are you sure you want to delete this user?')) {
+        //         return;
+        //     }
+        //     const response = await deleteProfile(userId);
+        //     if (response.error) {
+        //         this.setState({ error: response.error, loading: false });
+        //     }
+        //     else {
+        //         this.setState((prevState) => ({
+        //             users: prevState.users.filter(user => user._id !== userId)
+        //         }));
+        //     }
+        // }
+        // catch (error) {
+        //     console.log('Error deleting user', error);
+        // }
     }
 
     handleEditSong = async (userId, playlistId, songId) => {
@@ -89,7 +89,7 @@ class Users extends React.Component {
     };
 
     handleEditUser = (userId, username, bio) => {
-        console.log('edititing user', userId);
+        // console.log('edititing user', userId);
 
         const prev = sessionStorage.getItem('userId');
         sessionStorage.setItem('userId', userId);
@@ -99,7 +99,7 @@ class Users extends React.Component {
     };
 
     handleEditPlaylist = (userId, playlistId, playlist) => {
-        console.log('edititing playlist', playlistId);
+        // console.log('edititing playlist', playlistId);
 
         const prev = sessionStorage.getItem('userId');
         sessionStorage.setItem('userId', userId);

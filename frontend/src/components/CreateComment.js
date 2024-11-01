@@ -41,7 +41,7 @@ export class CreateComment extends React.Component {
         }
 
         // Add the comment (integrate with your backend or state management here)
-        console.log('New Comment: ', commentText);
+        // console.log('New Comment: ', commentText);
         this.props.onAddComment(commentText, image); // Function to add comment
         this.props.onClose(); // Close the modal after submitting
     };
@@ -66,7 +66,7 @@ export class CreateComment extends React.Component {
                             ></textarea>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="image">Playlist Image</label>
+                            <label htmlFor="image">Comment Image</label>
                             <input
                                 type="file"
                                 id="image"

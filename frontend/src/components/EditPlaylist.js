@@ -24,7 +24,7 @@ export class EditPlaylist extends React.Component {
         const adminGenres = await getGenres();
         const { PlayListName, hashtags, genres, PlayListImage} = this.props.playlist;
         this.setState({playlistName: PlayListName, hashtags: hashtags, genres: genres, genreOptions: adminGenres, image: PlayListImage});
-        console.log('EditPlaylist Mounted');
+        // console.log('EditPlaylist Mounted');
     }
 
     // Method to delete a song from the playlist
@@ -84,7 +84,7 @@ export class EditPlaylist extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Ready to submit data to server...');
+        // console.log('Ready to submit data to server...');
     
         const { genres, playlistName, hashtags, image } = this.state;
     
@@ -101,7 +101,7 @@ export class EditPlaylist extends React.Component {
                 genres: genres,
                 hashtags: hashtags
             });
-            console.log('Playlist updated successfully');
+            // console.log('Playlist updated successfully');
         } catch (err) {
             console.error('Error submitting playlist:', err);
             this.setState({ errorMessage: err.message });

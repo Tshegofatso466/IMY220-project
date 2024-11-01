@@ -35,10 +35,10 @@ class Feed extends React.Component {
 
     handlePlaylistClick = async (playlistId) => {
         // const { navigate } = this.props; // Destructure navigate from props
-        console.log('Navigating to playlist ID:', playlistId);
+        // console.log('Navigating to playlist ID:', playlistId);
         try {
             const playlist = await getPlaylistById(playlistId);
-            console.log(playlist);
+            // console.log(playlist);
             sessionStorage.setItem('playlistId', playlistId);
             sessionStorage.setItem('profileId', playlist.profileId);
             this.props.navigate(`/playlistReview`); // Navigate to PlaylistReview with state
@@ -76,9 +76,9 @@ class Feed extends React.Component {
             );
         }
 
-        console.log(filteredPlaylists[0]);
-        console.log(filteredPlaylists[1]);
-        console.log(filteredPlaylists[2]);
+        // console.log(filteredPlaylists[0]);
+        // console.log(filteredPlaylists[1]);
+        // console.log(filteredPlaylists[2]);
         // Otherwise, render playlists
         return (
             <div className="playlist-feed">

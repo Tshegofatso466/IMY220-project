@@ -48,7 +48,7 @@ export const getGeneralPlaylists = async () => {
 }
 
 export async function getPlaylistById(id) {
-    console.log(id);
+    // console.log(id);
     return fetch(`/imy/playlist/${id}`)
         .then((response) => {
             if (!response.ok) {
@@ -176,7 +176,7 @@ export const deleteSong = async (userId, playlistId, songId) => {
 }
 
 export const editPlaylist = async (userId, playlistId, data) => {
-    console.log("Edit playlist: ", userId, playlistId, data);
+    // console.log("Edit playlist: ", userId, playlistId, data);
     const response = await fetch(`/imy/editPlaylist`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -285,7 +285,7 @@ export async function genreAction(flag, genre) {
         }
 
         const result = await response.json();
-        console.log('Action successful:', result);
+        // console.log('Action successful:', result);
         return result; // Return the response if needed elsewhere
     } catch (error) {
         console.error('Error performing genre action:', error);
@@ -311,7 +311,7 @@ export async function deleteProfile(profileId) {
         }
 
         const data = await response.json();
-        console.log(data.message); // Profile deleted successfully
+        // console.log(data.message); // Profile deleted successfully
         return data.message;
     } catch (error) {
         console.error("Error deleting profile:", error.message);
@@ -320,7 +320,7 @@ export async function deleteProfile(profileId) {
 }
 
 export async function createPlaylist(userId, data) {
-    console.log("Submitting playlist with data:", playlistName, image);
+    // console.log("Submitting playlist with data:", playlistName, image);
 
     if (!userId || !data) {
         throw new Error("User ID and playlist data are required.");
@@ -341,7 +341,7 @@ export async function createPlaylist(userId, data) {
         }
 
         const responseData = await response.json();
-        console.log("Response from server:", responseData.message);
+        // console.log("Response from server:", responseData.message);
         return responseData;
     } catch (error) {
         console.error("Error creating playlist:", error.message);

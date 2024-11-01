@@ -31,11 +31,11 @@ export class Comment extends React.Component {
     handleCommentClick = () => {
         const sameUser = sessionStorage.getItem('userId') === sessionStorage.getItem('profileId');
         if (!sameUser) {
-            console.log('hard luck :|');
+            // console.log('hard luck :|');
             return;
         }
 
-        console.log(`Clicked on comment with ID: ${this.props.commentId}`);
+        // console.log(`Clicked on comment with ID: ${this.props.commentId}`);
         this.setState(prevState => ({ showPinOptions: !prevState.showPinOptions }));
     }
 

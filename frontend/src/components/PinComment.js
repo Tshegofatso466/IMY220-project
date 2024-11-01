@@ -12,12 +12,12 @@ export class PinComment extends React.Component {
     handlePinToggle = async () => {
         // Here, you can handle the pin/unpin action based on the `commentId`
         const action = this.props.pinned ? "unpin" : "pin";
-        console.log(`Attempting to ${action} comment with ID: ${this.props.commentId}`);
+        // console.log(`Attempting to ${action} comment with ID: ${this.props.commentId}`);
         // Additional logic for pinning/unpinning can be added here
 
         try {
             const response = await pinComment(sessionStorage.getItem('userId'), sessionStorage.getItem('playlistId'), this.props.commentId, !this.props.pinned);
-            console.log(`Comment ${action}ned successfully`, response);
+            // console.log(`Comment ${action}ned successfully`, response);
 
             this.props.onClose();
         } catch (error) {

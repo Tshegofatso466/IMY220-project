@@ -14,8 +14,18 @@ export class PlayList extends React.Component {
     savePlaylist = async () => {
         const { profileId, playlistId } = this.props;
         const userId = sessionStorage.getItem('userId');
+        if(userId === profileId){
+            if (!confirm('this playlist already exists in your playlists archive, are you sure you want to save it')) {
+                return;
+            }
+        }
+        
         try {
-            await savePlaylist(userId, profileId, playlistId);
+            const response = await savePlaylist(userId, profileId, playlistId);
+            if(response.error){
+                console.error(response.error);
+                return;
+            }
             alert('Playlist saved successfully.');
         } catch (error) {
             console.error(error);
@@ -43,7 +53,7 @@ export class PlayList extends React.Component {
                         </div>
                     </div>
                     <div className='button_container'>
-                        {!sameUser && <button className='save_button' onClick={this.savePlaylist}>Save</button>}
+                        <button className='save_button' onClick={this.savePlaylist}>Save</button>
                     </div>
                 </div>
             </div>

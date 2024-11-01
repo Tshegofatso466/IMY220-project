@@ -51,7 +51,7 @@ export class CreatePlaylist extends React.Component {
         event.preventDefault();
         if (this.validateInput()) {
             const { image, playlistName } = this.state;
-            console.log()
+            // console.log()
             try{
                 const response = await createPlaylist(sessionStorage.getItem('userId'), {playlistName: playlistName, playlistImage: image});
                 if(response.error) {
@@ -62,7 +62,7 @@ export class CreatePlaylist extends React.Component {
                 console.error('Error creating playlist:', err);
                 this.setState({ errorMessage: err.message });
             }
-            console.log('Creating playlist with data:', this.state.playlistName, this.state.image);
+            // console.log('Creating playlist with data:', this.state.playlistName, this.state.image);
             this.props.onClose(); // Close the modal after submission
         }
     };

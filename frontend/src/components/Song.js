@@ -18,10 +18,10 @@ export class Song extends React.Component {
 
     handleDelete = async () => {
         const { songId } = this.props
-        console.log(`Deleting song with ID: ${songId}`);
+        // console.log(`Deleting song with ID: ${songId}`);
         try {
             const response = await deleteSong(sessionStorage.getItem('userId'), sessionStorage.getItem('playlistId'), songId);
-            console.log(response);
+            // console.log(response);
         } catch (e) {
             console.error('Error deleting song: ' + e);
         }

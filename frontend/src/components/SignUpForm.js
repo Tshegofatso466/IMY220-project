@@ -65,8 +65,8 @@ class SignUpForm extends Component {
             if (response.error) {
                 console.error("An error occurred:", response.error);
             } else {
-                console.log('User created successfully:', response.message);
-                console.log("Response data:", response); // Added logging to inspect response
+                // console.log('User created successfully:', response.message);
+                // console.log("Response data:", response); // Added logging to inspect response
                 sessionStorage.setItem('userId', response.userId);
                 this.props.navigate('/playlist')
             }

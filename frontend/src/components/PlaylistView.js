@@ -34,10 +34,10 @@ class PlaylistView extends React.Component {
     async componentDidMount() {
         //const { id } = this.props.match.params; // Get the playlist ID from URL params
         const id = sessionStorage.getItem('playlistId');
-        console.log(id);
+        // console.log(id);
         try {
             const playlist = await getPlaylistById(id); // Fetch the playlist data
-            console.log(playlist);
+            // console.log(playlist);
             this.setState({
                 playlist: playlist.playlist || {},
                 comments: playlist.playlist?.comments || [],
@@ -92,7 +92,7 @@ class PlaylistView extends React.Component {
     };
 
     handleDelete = async () => {
-        console.log('About to delete a playlist');
+        // console.log('About to delete a playlist');
 
         if (!confirm('Are you sure you want to delete this playlist?')) return;
 
@@ -145,7 +145,7 @@ class PlaylistView extends React.Component {
 
     hadleNavigateToProfile = () => {
         sessionStorage.setItem('profileId', this.state.ownerId);
-        console.log('profileId: ', sessionStorage.getItem('profileId'));
+        // console.log('profileId: ', sessionStorage.getItem('profileId'));
         this.props.navigate('/profile');
     }
     render() {
@@ -167,8 +167,8 @@ class PlaylistView extends React.Component {
         }
 
         const { PlayListName, songs } = playlist;
-        console.log('the songssss...', songs);
-        console.log('the date....', new Date().toISOString());
+        // console.log('the songssss...', songs);
+        // console.log('the date....', new Date().toISOString());
         //const { ownerImage, ownerName, followers } = this.state;
         const sameUser = sessionStorage.getItem('userId') === sessionStorage.getItem('profileId')
 
