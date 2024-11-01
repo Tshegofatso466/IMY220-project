@@ -12,7 +12,8 @@ export class AddSong extends React.Component {
             artists: [],
             songURL: '',
             image: '',
-            errorMessage: ''
+            errorMessage: '',
+            songs: []
         };
     }
 
@@ -74,6 +75,7 @@ export class AddSong extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         const { songName, artists, songURL, image } = this.state;
+        const { songs } = this.props
         const vcalidUR = this.isValidSpotifySongURL(songURL);
         // console.log(this.state);
         // console.log(vcalidUR);
@@ -81,6 +83,18 @@ export class AddSong extends React.Component {
         if (!songName || !image || artists.length === 0 || !this.isValidSpotifySongURL(songURL)) {
             this.setState({ errorMessage: 'Please enter a song name, at least one artist, a (valid) spotify url and a song image.' });
             return;
+        }
+        //console.log(songs);
+
+        const songExists = songs.some(song => 
+            song.title === songName || 
+            JSON.stringify(song.artists) === JSON.stringify(artists)
+        );
+    
+        if (songExists) {
+            if (!confirm('A song with the same name or artists already exists in this playlist. Do you want to continue adding it?')) {
+                return;
+            }
         }
 
         try {
@@ -195,5 +209,6 @@ export class AddSong extends React.Component {
 }
 
 AddSong.propTypes = {
-    onClose: PropTypes.func.isRequired // Function to close the modal
+    onClose: PropTypes.func.isRequired, // Function to close the modal
+    songs: PropTypes.array
 };

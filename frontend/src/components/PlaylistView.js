@@ -227,7 +227,7 @@ class PlaylistView extends React.Component {
                 {showComments && <CommentList comments={comments} onClose={this.handleComment} />}
                 {showEditPlaylist && <EditPlaylist playlist={playlist} onClose={this.handleEditPlaylist} />}
                 {showCreatePlaylist && <CreatePlaylist onClose={this.handleCreatePlaylist} />}
-                {showAddSong && <AddSong onClose={this.handleAddSong} />}
+                {showAddSong && <AddSong songs={songs} onClose={this.handleAddSong} />}
                 {showCreateComment && (
                     <CreateComment onAddComment={this.handleAddComment} onClose={this.handleCreateComment} />
                 )}
