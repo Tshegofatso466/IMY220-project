@@ -57,13 +57,17 @@ class LoginForm extends Component {
             const dataS = await this.props.Login(data);
 
             if (dataS.loggedIn) {
+                console.log('navigating to playlists');
                 if (dataS.isAdmin) {
                     console.log("Navigating to Admin page after login");
+                    console.log('navigating to admin......');
                     this.props.navigate('/Admin');
                 } else {
                     console.log("Navigating to playlist page after login");
+                    console.log('navigating to playlists.......');
                     this.props.navigate('/playlist');
                 }
+                console.log('navigating to playlists');
             } else {
                 // Handle login failure
                 this.setState({ errors: { login: 'Login failed. Please try again.' } });

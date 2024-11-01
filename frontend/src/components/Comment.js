@@ -21,7 +21,7 @@ export class Comment extends React.Component {
     // };
 
     handlemodalClose = () => {
-        this.setState((prevState) => ({showPinOptions: !prevState.showPinOptions,}));
+        this.setState({showPinOptions: false});
     }
 
     componentDidMount(){
@@ -40,7 +40,7 @@ export class Comment extends React.Component {
     }
 
     render() {
-        const { profileImage, userName, followers, commentText, timestamp, pinned, commentId } = this.props;
+        const { profileImage, userName, followers, commentText, timestamp, pinned, commentId, image } = this.props;
         const { showPinOptions } = this.state;
 
         return (
@@ -58,6 +58,9 @@ export class Comment extends React.Component {
                         {pinned && <img src="/assets/icons/thumbtack.png" alt="Pinned Icon" className="pinned-icon" />}
                         {commentText}
                     </p>
+                    {image && <div className='image-container'>
+                        <img className='comment-image' src={image}/>
+                    </div>}
                     <p className="comment-timestamp">{timestamp}</p>
                 </div>
                 {/* Pin Comment Overlay */}

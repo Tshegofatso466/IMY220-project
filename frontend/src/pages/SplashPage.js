@@ -1,6 +1,6 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm';
-import { SignUpForm } from '../components/SignUpForm';
+import SignUpForm from '../components/SignUpForm';
 import { AboutPage } from '../components/About';
 import '../fontDefinition/fonts.css';
 import '../../public/assets/styles/Home.css';

@@ -54,7 +54,7 @@ class Profile extends React.Component {
             const userIsFriendWithProfile = mainUser.friends.some(friend => friend.id === (sessionStorage.getItem('profileId')));
             this.setState({ userIsFriendWithProfile: userIsFriendWithProfile });
 
-            if (!userIsFriendWithProfile) {
+            if (!userIsFriendWithProfile && !this.state.sameUser) {
                 this.setState({ activeTab: "--" });
             }
 

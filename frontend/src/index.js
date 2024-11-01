@@ -6,7 +6,7 @@ import { Home } from './pages/SplashPage';
 import { ProfilePage } from './pages/ProfilePage'; // Import the Profile component
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import { PlaylistReviewPage } from './pages/PlaylistReviewPage'; // Import the PlaylistView component
-import { login, getPlaylists, getUserById, getPlaylistById } from './api';
+import { login, getPlaylists, getUserById, getPlaylistById, getGeneralPlaylists } from './api';
 
 class App extends React.Component {
     constructor() {
@@ -28,7 +28,7 @@ class App extends React.Component {
             this.setState({ id: response.id, isLoggedIn: true, isAdmin: response.isAdmin });
             // console.log(response.id);
             if (!response.isAdmin) {
-                playlists = await getPlaylists(response.id);
+                playlists = await getGeneralPlaylists(); //response.id
             }
             this.setState({ playlists });
             sessionStorage.setItem('userId', this.state.id);

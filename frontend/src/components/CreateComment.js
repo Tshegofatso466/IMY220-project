@@ -7,9 +7,25 @@ export class CreateComment extends React.Component {
         super(props);
         this.state = {
             commentText: '',
+            image: '',
             errorMessage: ''
         };
     }
+
+    convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+
+    handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+        const base64 = await this.convertToBase64(file);
+        this.setState({ image: base64 });
+    };
 
     handleInputChange = (event) => {
         this.setState({ commentText: event.target.value });
@@ -17,7 +33,7 @@ export class CreateComment extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const { commentText } = this.state;
+        const { commentText, image } = this.state;
 
         if (!commentText.trim()) {
             this.setState({ errorMessage: 'Comment cannot be empty.' });
@@ -26,7 +42,7 @@ export class CreateComment extends React.Component {
 
         // Add the comment (integrate with your backend or state management here)
         console.log('New Comment: ', commentText);
-        this.props.onAddComment(commentText); // Function to add comment
+        this.props.onAddComment(commentText, image); // Function to add comment
         this.props.onClose(); // Close the modal after submitting
     };
 
@@ -48,6 +64,17 @@ export class CreateComment extends React.Component {
                                 rows="4"
                                 required
                             ></textarea>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="image">Playlist Image</label>
+                            <input
+                                type="file"
+                                id="image"
+                                name="image"
+                                accept=".jpeg, .png, .jpg"
+                                // value={numberOfSongs}
+                                onChange={this.handleFileUpload}
+                            />
                         </div>
 
                         {/* Error Message */}

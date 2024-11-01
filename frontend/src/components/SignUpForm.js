@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { signUp } from '../api';
 import '../fontDefinition/fonts.css';
+import withNavigation from '../hoc.js';
 import '../../public/assets/styles/SignUpForm.css';
 
-export class SignUpForm extends Component {
+class SignUpForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,6 +24,7 @@ export class SignUpForm extends Component {
         const { email, username, password } = this.state;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d).+$/;
 
         if (!emailRegex.test(email)) {
             this.setState({ errorMessage: 'Invalid email format' });
@@ -34,7 +36,7 @@ export class SignUpForm extends Component {
             return false;
         }
 
-        if (!strongPasswordRegex.test(password)) {
+        if (!strongPasswordRegex.test(password) && !alphanumericRegex.test(password)) {
             this.setState({
                 errorMessage: 'Password must be at least 8 characters, include an uppercase, lowercase, number, and special character'
             });
@@ -52,6 +54,9 @@ export class SignUpForm extends Component {
             alert('Sign-up submitted successful!');
             this.setState({ errorMessage: '', SignedIn: true });
         }
+        else{
+            return;
+        }
 
         try {
             const { email, password, surname, name, username } = this.state;
@@ -62,6 +67,8 @@ export class SignUpForm extends Component {
             } else {
                 console.log('User created successfully:', response.message);
                 console.log("Response data:", response); // Added logging to inspect response
+                sessionStorage.setItem('userId', response.userId);
+                this.props.navigate('/playlist')
             }
         } catch (error) {
             console.error('Error during sign-up:', error.message);
@@ -135,3 +142,5 @@ export class SignUpForm extends Component {
 SignUpForm.propTypes = {
     onClose: PropTypes.func.isRequired
 };
+
+export default withNavigation(SignUpForm);

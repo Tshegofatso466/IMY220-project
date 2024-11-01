@@ -3,7 +3,7 @@
         "$oid": "66fab93da198692f4ebd98a7"
     },
     "profileImage": "data:image/jpeg;base64,...",
-    "bio": "i changed it again ohhe yeah >>>>",
+    "bio": "i changed it again ohh..... only god knows",
     "followers": {
         "$numberInt": "1200"
     },
@@ -23,7 +23,7 @@
                     ],
                     "image": "data:image/jpeg;base64,...",
                     "sportifyURL": "https://open.spotify.com/track/1kKltSWkRUTB7LYVFJXS2w?si=7599f0fe513b4c15",
-                    "deleted": false,
+                    "deleted": true,
                     "dateAdded": "2024-09-30T12:34:56Z",
                     "songId": {
                         "$oid": "671c0cc96c1fcbd5652fbf9e"
@@ -34,12 +34,25 @@
                     "artists": [
                         "Ariana Grande"
                     ],
-                    "deleted": false,
+                    "deleted": true,
                     "image": "data:image/jpeg;base64,...",
                     "sportifyURL": "https://open.spotify.com/track/7xoUc6faLbCqZO6fQEYprd?si=d5cc468a58fc4e88",
                     "dateAdded": "2024-09-30T12::56Z",
                     "songId": {
                         "$oid": "671c0ce06c1fcbd5652fbf9f"
+                    }
+                },
+                {
+                    "title": "Bawo-Wethu",
+                    "artists": [
+                        "Lundi"
+                    ],
+                    "sportifyURL": "https://open.spotify.com/track/3lMdIliLbtd9AQqHzvIgJ7?si=007e8dde80a84cd9",
+                    "dateAdded": "2024-10-28T18:45:39.458Z",
+                    "deleted": false,
+                    "image": "data:image/jpeg;base64,...",
+                    "songId": {
+                        "$oid": "671fdbd3669971b82be6123a"
                     }
                 }
             ],
@@ -52,9 +65,9 @@
                     },
                     "commentText": "Love this playlist!",
                     "timestamp": "2024-09-30T12:34:56Z",
-                    "pinned": false,
-                    "commentId":{
-                        "Soid": "33jnf3fi4f923fjuj320hy999u"
+                    "pinned": true,
+                    "commentId": {
+                        "$oid": "671d457b0b54866da4b8ead7"
                     }
                 },
                 {
@@ -65,7 +78,10 @@
                     },
                     "commentText": "Chill vibes indeed!",
                     "timestamp": "2024-09-30T12:45:23Z",
-                    "pinned": false
+                    "pinned": true,
+                    "commentId": {
+                        "$oid": "671d458c0b54866da4b8ead8"
+                    }
                 },
                 {
                     "profileImage": "data:image/jpeg;base64,...",
@@ -79,7 +95,10 @@
                             "$numberLong": "1729182513069"
                         }
                     },
-                    "pinned": false
+                    "pinned": false,
+                    "commentId": {
+                        "$oid": "671d45a30b54866da4b8ead9"
+                    }
                 },
                 {
                     "profileImage": "data:image/jpeg;base64,...",
@@ -93,7 +112,68 @@
                             "$numberLong": "1729204420373"
                         }
                     },
-                    "pinned": true
+                    "pinned": false,
+                    "commentId": {
+                        "$oid": "671d45de0b54866da4b8eada"
+                    }
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "betssss!",
+                    "timestamp": {
+                        "$date": {
+                            "$numberLong": "1729978279384"
+                        }
+                    },
+                    "commentId": {
+                        "$oid": "671d5fa7cc69918d3080cf6e"
+                    },
+                    "pinned": false
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "this is hot!!!!",
+                    "timestamp": "2024-10-31T23:29:38.363Z",
+                    "commentId": {
+                        "$oid": "672412e2fb4e5b1164e9b403"
+                    },
+                    "pinned": false
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "yay!!",
+                    "timestamp": "2024-10-31T23:49:48.836Z",
+                    "commentId": {
+                        "$oid": "6724179ce150bf274bd6ef0e"
+                    },
+                    "pinned": false,
+                    "image": "data:image/jpeg;base64,..."
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "yoy",
+                    "timestamp": "2024-10-31T23:52:03.073Z",
+                    "commentId": {
+                        "$oid": "672418239edeb3500f7bf7d8"
+                    },
+                    "pinned": false,
+                    "image": null
                 }
             ],
             "id": {
@@ -103,87 +183,17 @@
                 "$oid": "66fab93da198692f4ebd98a7"
             },
             "reference": false,
-            "genre": [
-                "amapiano",
-                "hip-hop"
-            ],
             "hashtags": [
                 "#chill",
                 "#vibey",
                 "#fresh",
                 "#longRoad",
                 "#sick"
-            ]
-        },
-        {
-            "PlayListName": "Workout Hits",
-            "PlayListImage": "data:image/jpeg;base64,...",
-            "songs": [
-                {
-                    "title": "Make it Home",
-                    "artists": [
-                        "August Alsina"
-                    ],
-                    "image": "data:image/jpeg;base64,..",
-                    "sportifyURL": "https://open.spotify.com/track/2XK0gPB8oQImEWZDP7ydSs?si=5e9e7b6edff84a3a",
-                    "dateAdded": "2024-09-30T12::56Z",
-                    "deleted": false,
-                    "songId": {
-                        "$oid": "671c0d2a6c1fcbd5652fbfa0"
-                    }
-                },
-                {
-                    "title": "Me and u",
-                    "artists": [
-                        "tems"
-                    ],
-                    "image": "data:image/jpeg;base64,...",
-                    "sportifyURL": "https://open.spotify.com/track/4nFrcGM7MY1mpoQCC7Kefj?si=885ecb4237cd4ce9",
-                    "dateAdded": "2024-09-30T12::56Z",
-                    "deleted": false,
-                    "songId": {
-                        "$oid": "671c0d3c6c1fcbd5652fbfa1"
-                    }
-                },
-                {
-                    "title": "washumlilo",
-                    "artists": [
-                        "Bucy Radebe"
-                    ],
-                    "sportifyURL": "https://open.spotify.com/track/1cpEKqRRI4O7U5tQyS1DeC?si=c56733e8c2124f68",
-                    "dateAdded": "2024-10-26T00:22:44.430Z",
-                    "deleted": false,
-                    "image": "data:image/jpeg;base64,...",
-                    "songId": {
-                        "$oid": "671c3654d0b74dc09abca338"
-                    }
-                }
             ],
-            "comments": [
-                {
-                    "profileImage": "data:image/jpeg;base64,...",
-                    "userName": "Charlie",
-                    "followers": {
-                        "$numberInt": "300"
-                    },
-                    "commentText": "Perfect for workouts!",
-                    "timestamp": "2024-09-30T13:00:00Z"
-                }
-            ],
-            "id": {
-                "$oid": "66fb36d1086b1a070b8a1c2c"
-            },
-            "reference": false,
-            "genre": [
-                "rnb",
-                "afrobeats"
-            ],
-            "hashtags": [
-                "#gym",
-                "#workout",
-                "#hits",
-                "#african",
-                "#topOfWorld"
+            "genres": [
+                "amapiano",
+                "hip-hop",
+                "Soulful"
             ]
         },
         {
@@ -201,6 +211,24 @@
             },
             "OwnerId": {
                 "$oid": "66fab93da198692f4ebd98a7"
+            },
+            "reference": true
+        },
+        {
+            "id": {
+                "$oid": "671939443bb33cd02b36bf25"
+            },
+            "OwnerId": {
+                "$oid": "671937f5bcddefe55dd942ef"
+            },
+            "reference": true
+        },
+        {
+            "id": {
+                "$oid": "6719397d3bb33cd02b36bf26"
+            },
+            "OwnerId": {
+                "$oid": "671937f5bcddefe55dd942ef"
             },
             "reference": true
         }

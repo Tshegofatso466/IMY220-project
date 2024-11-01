@@ -109,13 +109,25 @@ class PlaylistView extends React.Component {
         }
     }
 
-    handleAddComment = async (newComment) => {
-        const returnedData = await createComment({
-            playlistId: sessionStorage.getItem('playlistId'),
-            profileId: sessionStorage.getItem('profileId'),
-            userId: sessionStorage.getItem('userId'),
-            comment: newComment
-        });
+    handleAddComment = async (newComment, image) => {
+        let returnedData = null;
+        if (!image) {
+            returnedData = await createComment({
+                playlistId: sessionStorage.getItem('playlistId'),
+                profileId: sessionStorage.getItem('profileId'),
+                userId: sessionStorage.getItem('userId'),
+                comment: newComment
+            });
+        }
+        else {
+            returnedData = await createComment({
+                playlistId: sessionStorage.getItem('playlistId'),
+                profileId: sessionStorage.getItem('profileId'),
+                userId: sessionStorage.getItem('userId'),
+                comment: newComment,
+                image: image
+            });
+        }
 
         this.setState((prevState) => ({
             comments: [

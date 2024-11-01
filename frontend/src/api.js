@@ -39,6 +39,14 @@ export const getPlaylists = async (id) => {
     return response.json();
 };
 
+export const getGeneralPlaylists = async () => {
+    const response = await fetch("/imy/generalPlaylists");
+    if (!response.ok) {
+        throw new Error("Failed to fetch general playlists");
+    }
+    return response.json();
+}
+
 export async function getPlaylistById(id) {
     console.log(id);
     return fetch(`/imy/playlist/${id}`)
@@ -68,7 +76,8 @@ export const createComment = async (data) => {
             playlistId: data.playlistId,
             profileId: data.profileId,
             userId: data.userId,
-            comment: data.comment
+            comment: data.comment,
+            image: data.image
         }),
     });
     if (!response.ok) {
@@ -167,6 +176,7 @@ export const deleteSong = async (userId, playlistId, songId) => {
 }
 
 export const editPlaylist = async (userId, playlistId, data) => {
+    console.log("Edit playlist: ", userId, playlistId, data);
     const response = await fetch(`/imy/editPlaylist`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

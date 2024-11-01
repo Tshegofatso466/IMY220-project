@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getUsers, deleteProfile } from '../../api';
+import { getUsers, deleteProfile, deletePlaylist, deleteSong } from '../../api';
+import { EditProfile } from'../EditProfile.js';
+import { EditPlaylist } from '../EditPlaylist.js';
 import '../../../public/assets/styles/AdminStyles/Users.css';
 import '../../fontDefinition/fonts.css';
 import withNavigation from '../../hoc.js';
@@ -12,6 +14,13 @@ class Users extends React.Component {
             users: [],
             loading: true,
             error: null,
+            editPlaylist: false,
+            editProfile: false,
+            editSong: false,
+            username: null,
+            bio: null,
+            playlist: null,
+            superUser: null,
         };
     }
 
@@ -23,6 +32,35 @@ class Users extends React.Component {
         } catch (error) {
             this.setState({ error: error.message, loading: false });
         }
+    }
+
+    handleDeleteSong = async (userId, playlistId, songId) => {
+        if (!userId) {
+            console.log('No user id provided for deletion');
+            return;
+        }
+
+        try {
+            if (!confirm('Are you sure you want to delete this user?')) {
+                return;
+            }
+            const response = await deleteProfile(userId);
+            if (response.error) {
+                this.setState({ error: response.error, loading: false });
+            }
+            else {
+                this.setState((prevState) => ({
+                    users: prevState.users.filter(user => user._id !== userId)
+                }));
+            }
+        }
+        catch (error) {
+            console.log('Error deleting user', error);
+        }
+    }
+
+    handleEditSong = async (userId, playlistId, songId) => {
+        console.log(`editing song .. `);
     }
 
     handleDeleteUser = async (userId) => {
@@ -50,16 +88,58 @@ class Users extends React.Component {
         }
     };
 
-    handleEditUser = (user) => {
-        console.log('edititing user', user);
+    handleEditUser = (userId, username, bio) => {
+        console.log('edititing user', userId);
+
+        const prev = sessionStorage.getItem('userId');
+        sessionStorage.setItem('userId', userId);
+        this.setState({bio: bio, username: username, superUser: prev});
+        this.setState({ editProfile: true });
+        
     };
 
-    handleEditPlaylist = (userId, playlist) => {
-        console.log('edititing playlist', playlist);
+    handleEditPlaylist = (userId, playlistId, playlist) => {
+        console.log('edititing playlist', playlistId);
+
+        const prev = sessionStorage.getItem('userId');
+        sessionStorage.setItem('userId', userId);
+        sessionStorage.setItem('playlistId', playlistId);
+        this.setState({ playlist: playlist});
+        this.setState({ editPlaylist: true });
     };
 
-    handleDeletePlaylist = (userId, playlistId) => {
-        console.log('deleting playlist', playlistId);
+    handleDeletePlaylist = async (userId, playlistId) => {
+        if (!userId || !playlistId) {
+            console.log('User ID or Playlist ID is missing.');
+            return;
+        }
+
+        try {
+            if (!window.confirm('Are you sure you want to delete this playlist?')) {
+                return;
+            }
+
+            // Call the API to mark the playlist as deleted
+            const response = await deletePlaylist(userId, playlistId);
+
+            if (response.error) {
+                this.setState({ error: response.error });
+            } else {
+                // Update the state to reflect the playlist as deleted
+                this.setState((prevState) => ({
+                    users: prevState.users.map(user => 
+                        user._id === userId 
+                        ? { 
+                            ...user, 
+                            playlists: user.playlists.filter(playlist => playlist._id !== playlistId) 
+                        }
+                        : user
+                    )
+                }));
+            }
+        } catch (error) {
+            console.error('Error deleting playlist:', error);
+        }
     };
 
     handleEditComment = (userId, playlistId, comment) => {
@@ -70,8 +150,25 @@ class Users extends React.Component {
         console.log('deleting comment', playlistId, commentId);
     };
 
+    //onClose functions
+
+    toggleEditProfile = () => {
+        sessionStorage.setItem('userId', this.state.superUser);
+        this.setState({editProfile: !this.state.editProfile});
+    }
+
+    toggleEditPlaylist = () => {
+        sessionStorage.setItem('userId', this.state.superUser);
+        this.setState({editPlaylist:!this.state.editPlaylist});
+    }
+
+    toggleEditSong = () => {
+        sessionStorage.setItem('userId', this.state.superUser);
+        this.setState({editSong:!this.state.editSong});
+    }
+
     render() {
-        const { users, loading, error } = this.state; // Ensure you're using 'users' from state
+        const { users, loading, error, editPlaylist, editProfile, editSong, username, bio, playlist } = this.state; // Ensure you're using 'users' from state
         if (loading) return <div>Loading...</div>;
         if (error) return <div>Error: {error}</div>;
 
@@ -87,7 +184,7 @@ class Users extends React.Component {
                                 <span className="spans" >{userIndex + 1}. {user.username} - {user.email}</span>
                                 <div>
                                     <button className="button" onClick={() => this.handleDeleteUser(user._id)}>Delete User</button>
-                                    <button className="button" onClick={() => this.handleEditUser(user._id)}>Edit User</button>
+                                    <button className="button" onClick={() => this.handleEditUser(user._id, user.username, user.bio)}>Edit User</button>
                                 </div>
                                 <img className="profile-imageL" src={user.profileImage} alt={user.username} />
                             </div>
@@ -98,8 +195,8 @@ class Users extends React.Component {
                                     !playlist.reference && (<div key={playlist.id} className='playlist-containerL'>
                                         <span className="spans" >{playlistIndex + 1}. {playlist.PlayListName}</span>
                                         <div>
-                                            <button className="button" onClick={() => this.handleDeletePlaylist(playlist.id)}>Delete Playlist</button>
-                                            <button className="button" onClick={() => this.handleEditPlaylist(playlist)}>Edit Playlist</button>
+                                            <button className="button" onClick={() => this.handleDeletePlaylist(user._id, playlist.id)}>Delete Playlist</button>
+                                            <button className="button" onClick={() => this.handleEditPlaylist(user._id, playlist.id, playlist)}>Edit Playlist</button>
                                         </div>
 
                                         <div className='songs'>
@@ -108,8 +205,8 @@ class Users extends React.Component {
                                                 <div key={song.songId} className='song-container'>
                                                     <span>{songIndex + 1}. {song.title} - (visit <a href={song.sportifyURL} target="_blank" rel="noopener noreferrer">Spotify</a>)</span>
                                                     <div>
-                                                        <button className="button" onClick={() => this.handleDeleteSong(song.songId)}>Delete Song</button>
-                                                        <button className="button" onClick={() => this.handleEditSong(song)}>Edit Song</button>
+                                                        <button className="button" onClick={() => this.handleDeleteSong(user._id, playlist.id, song.songId)}>Delete Song</button>
+                                                        <button className="button" onClick={() => this.handleEditSong(user._id, playlist.id, song.songId)}>Edit Song</button>
                                                     </div>
                                                     <span className="spans" >Date: {song.dateAdded.slice(0, 10)}</span>
                                                     <span className="spans" >Artists:</span>
@@ -146,6 +243,8 @@ class Users extends React.Component {
                         </div>
                     ))}
                 </div>
+                {editProfile && <EditProfile onClose={this.toggleEditProfile} userName={username} bio={bio}/>}
+                {editPlaylist && <EditPlaylist onClose={this.toggleEditPlaylist} playlist={playlist}/>}
             </>
         );
     }

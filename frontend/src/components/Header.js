@@ -1,7 +1,7 @@
 import React from 'react';
 import { SearchBar } from './SearchBar'; // Importing SearchBar
 import LoginForm from './LoginForm'; // Importing LoginForm
-import { SignUpForm } from './SignUpForm'; // Importing SignUpForm
+import SignUpForm from './SignUpForm'; // Importing SignUpForm
 import '../fontDefinition/fonts.css';
 import { Link } from'react-router-dom'; // Importing Link for navigation
 import '../../public/assets/styles/Header.css';
@@ -14,17 +14,19 @@ class Header extends React.Component {
         this.state = {
             just: false,
             userLoggedIn: false, // Eventually, this will be passed in as a prop
-            showLoginForm: false, // Controls the visibility of the login form
+            //showLoginForm: false, // Controls the visibility of the login form
             showSignUpForm: false // Controls the visibility of the sign-up form
         };
     }
 
     // Toggle function for login form visibility
-    toggleLoginForm = () => {
-        this.setState((prevState) => ({
-            showLoginForm: !prevState.showLoginForm,
-            showSignUpForm: false // Ensure only one form is visible at a time
-        }));
+    toggleLogout = () => {
+        // this.setState((prevState) => ({
+        //     showLoginForm: !prevState.showLoginForm,
+        //     showSignUpForm: false // Ensure only one form is visible at a time
+        // }));
+        sessionStorage.clear();
+        this.props.navigate('/');
     };
 
     // Toggle function for sign-up form visibility
@@ -60,7 +62,7 @@ class Header extends React.Component {
                     <SearchBar searchQuery={this.props.searchQuery} onChange={this.props.onChange} />
                 </div>
                 <div className="right-section">
-                    <button className="login-btn" onClick={this.toggleLoginForm}>Login</button>
+                    <button className="login-btn" onClick={this.toggleLogout}>Log-out</button>
                     <button className="signup-btn" onClick={this.toggleSignUpForm}>Sign up</button>
                     <img src="/assets/icons/comment-alt.png" alt="Chat Icon" className="chat-icon" />
                     <div onClick={this.redirectToProfile}>
@@ -69,7 +71,7 @@ class Header extends React.Component {
                 </div>
 
                 {/* Conditionally render the LoginForm */}
-                {showLoginForm && <LoginForm onClose={this.toggleLoginForm} />}
+                {/* {showLoginForm && <LoginForm onClose={this.toggleLoginForm} />} */}
 
                 {/* Conditionally render the SignUpForm */}
                 {showSignUpForm && <SignUpForm onClose={this.toggleSignUpForm} />}

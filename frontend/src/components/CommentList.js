@@ -10,10 +10,7 @@ export class CommentList extends React.Component {
         return (
             <div className="comment-list-overlay">
                 <div className="comment-list-container">
-                    {/* Close button */}
                     <button className="close-btn" onClick={onClose}>X</button>
-
-                    {/* Comment list */}
                     <h2>Comments</h2>
                     <div className="comment-list">
                         {comments.length === 0 ? (
@@ -29,6 +26,7 @@ export class CommentList extends React.Component {
                                     timestamp={comment.timestamp}
                                     pinned={comment.pinned}
                                     commentId={comment.commentId}
+                                    image={comment.image? comment.image: null}
                                 />
                             ))
                         )}

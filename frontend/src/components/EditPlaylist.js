@@ -13,7 +13,7 @@ export class EditPlaylist extends React.Component {
             image: '',
             hashtags: [],
             genres: [],
-            genreOptions: ['Pop', 'Rock', 'Jazz', 'Classical', 'Hip-Hop'],  // Preset genres
+            genreOptions: [],  // Preset genres
             hashtagInput: '',
             selectedGenre: '',
             errorMessage: '' 
@@ -21,9 +21,9 @@ export class EditPlaylist extends React.Component {
     }
 
     async componentDidMount(){
-        const genres = await getGenres();
-        const { PlayListName, hashtags, genre, PlayListImage} = this.props.playlist;
-        this.setState({playlistName: PlayListName, hashtags: hashtags, genres: genre, genreOptions: genres, image: PlayListImage});
+        const adminGenres = await getGenres();
+        const { PlayListName, hashtags, genres, PlayListImage} = this.props.playlist;
+        this.setState({playlistName: PlayListName, hashtags: hashtags, genres: genres, genreOptions: adminGenres, image: PlayListImage});
         console.log('EditPlaylist Mounted');
     }
 
@@ -231,7 +231,7 @@ EditPlaylist.propTypes = {
         OwnerImage: PropTypes.string,
         OwnerName: PropTypes.string,
         reference: PropTypes.bool, // Assuming it’s optional if not always present
-        genre: PropTypes.arrayOf(PropTypes.string).isRequired,
+        genres: PropTypes.arrayOf(PropTypes.string).isRequired,
         hashtags: PropTypes.arrayOf(PropTypes.string).isRequired,
         songs: PropTypes.arrayOf(
             PropTypes.shape({

@@ -67,7 +67,7 @@ app.post("/imy/login", async (req, res) => {
 
 app.post("/imy/signup", async (req, res) => {
     const { username, email, password, profileImage, bio } = req.body;
-    if(!profileImage || !email || !password || !bio || !username) {
+    if (!profileImage || !email || !password || !bio || !username) {
         return res.status(400).json({ error: "All fields are required." });
     }
 
@@ -144,7 +144,7 @@ app.get("/imy/playlists/:id", async (req, res) => {
                             id: refPlayListData.id.toString(),
                             profileId: playlist.OwnerId.toString(),
                             referencedFrom: owner.username, // Add info about where the reference comes from (owner's username)
-                            genre: refPlayListData.genre,
+                            genre: refPlayListData.genres,
                             hashtags: refPlayListData.hashtags
                         });
                     }
@@ -160,7 +160,7 @@ app.get("/imy/playlists/:id", async (req, res) => {
                     numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
                     id: playlist.id.toString(),
                     profileId: userId,
-                    genre: playlist.genre,
+                    genre: playlist.genres,
                     hashtags: playlist.hashtags
                 });
             }
@@ -171,6 +171,43 @@ app.get("/imy/playlists/:id", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+app.get('/imy/generalPlaylists', async (req, res) => {
+    try {
+        const data = await collection.find({
+            playlists: {
+                $elemMatch: { reference: false }
+            }
+        }).toArray();
+
+        let allPlaylists = [];
+
+        data.map(item => {
+            item.playlists.map(playlist => {
+                if (playlist.reference === false) {
+                    allPlaylists.push({
+                        PlayListName: playlist.PlayListName,
+                        PlayListImage: playlist.PlayListImage,
+                        OwnerImage: item.profileImage,
+                        OwnerName: item.username,
+                        songs: playlist.songs,
+                        comments: playlist.comments,
+                        numberOfSongs: Array.isArray(playlist.songs) ? playlist.songs.length : 0,
+                        id: playlist.id.toString(),
+                        profileId: item._id.toString(),
+                        genre: playlist.genres,
+                        hashtags: playlist.hashtags
+                    });
+                }
+            });
+        })
+
+        res.status(200).json(allPlaylists);
+    }catch(e){
+        console.error(e);
+        res.status(500).json({ error: "An error occurred while searching for general playlists." });
+    }
+})
 
 app.get('/imy/search', async (req, res) => {
     const searchTerm = req.query.q; // Get the search term from query params
@@ -221,8 +258,7 @@ app.get("/imy/playlist/:id", async (req, res) => {
 
         newObj.playlist.OwnerImage = data.profileImage;
         newObj.playlist.OwnerName = data.username;
-
-
+        
         res.status(200).json(newObj); // Return the found playlist and owner
     } catch (err) {
         console.error(err);
@@ -242,6 +278,8 @@ app.post("/imy/createPlaylist", async (req, res) => {
         PlayListImage: playlistImage,
         songs: [],
         comments: [],
+        genres: [],
+        hashtags: [],
         id: new ObjectId(),
         reference: false
     };
@@ -301,7 +339,7 @@ app.post("/imy/createSong", async (req, res) => {
 });
 
 app.post("/imy/createComment", async (req, res) => {
-    const { playlistId, profileId, userId, comment } = req.body;
+    const { playlistId, profileId, userId, comment, image } = req.body;
 
     //userId =  the person who commented.
     //profileId = the profile that is being commented on
@@ -330,6 +368,7 @@ app.post("/imy/createComment", async (req, res) => {
             timestamp: new Date().toISOString(), // Current timestamp
             commentId: new ObjectId(),
             pinned: false,
+            image: image ? image : null
         };
 
         // Update the specific playlist by adding the new comment to the comments array
@@ -442,7 +481,7 @@ app.put("/imy/editPlaylist", async (req, res) => {
     try {
         // Update the playlist in the user's playlists array
         const result = await collection.updateOne(
-            { _id: new ObjectId(userId), "playlists._id": new ObjectId(playlistId) }, // Find user and playlist
+            { _id: new ObjectId(userId), "playlists.id": new ObjectId(playlistId) }, // Find user and playlist
             {
                 $set: {
                     "playlists.$.PlayListName": newPlaylistName,       // Update playlist name
@@ -748,7 +787,7 @@ app.post('/imy/admin/genreAction', async (req, res) => {
         );
 
         if (result.modifiedCount === 0) {
-            return res.status(404).json({ message: "Genre not found or already in desired state", error: "not found"});
+            return res.status(404).json({ message: "Genre not found or already in desired state", error: "not found" });
         }
 
         res.status(200).json({
