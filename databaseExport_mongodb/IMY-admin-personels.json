@@ -1,0 +1,11 @@
+{
+    "_id": {
+        "$oid": "671d26d0ef6678022fffbefe"
+    },
+    "firstName": "Tshegofatso",
+    "lastName": "Mahlase",
+    "title": "Mr",
+    "password": "TshegoMahlase",
+    "username": "TshegoOOP",
+    "email": "mahlasetshegofatso466@gmail.com"
+}
