@@ -1,7 +1,10 @@
-node_modules/*
-.env
+node_modules
+tempor.js
+.gitignore
+*Dockerfile*
 33_Mahlase.zip
 drive_to_image.txt
+Checklist_Final.xlsx
 how_to_run_docker.txt
 github link to IMY220 project.txt
 exampleData.txt

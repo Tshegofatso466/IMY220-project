@@ -1,0 +1,139 @@
+/* PlaylistView.css */
+
+/* Absolute background image */
+.playlist-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    /* background-color: aqua; */
+    z-index: -1;
+    filter: blur(5px); /* Optional blur for aesthetic */
+}
+
+/* PlaylistView container */
+.playlist-view-container {
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Playlist header layout */
+.playlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    font-family: 'outfit';
+    padding-bottom: 20px;
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.3); */
+}
+
+.thePreview{
+    padding-right: 200px;
+}
+
+.playlist-name {
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    padding-left: 200px;
+}
+
+.vertical-line {
+    width: 2px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 20px;
+}
+
+.playlist-body {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+/* Scrollable song list */
+.song-list {
+    flex: 1;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 20px;
+}
+
+/* Vertical icon group */
+.icon-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.icon-group img {
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: 36px;
+    transition: transform 0.3s;
+}
+
+.icon-group img:hover {
+    transform: scale(1.1);
+}
+/* Styling for the 'Create Playlist' and 'Edit Playlist' buttons */
+.header-btn {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background to blend with the theme */
+    color: white; /* White text for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Light border for subtle separation */
+    padding: 10px 20px;
+    border-radius: 5px; /* Slight rounding for modern look */
+    font-size: 16px;
+    font-family: 'outfit';
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth hover and click effects */
+    margin: 5px 10px; /* Space between buttons */
+}
+
+/* Hover and active states for buttons */
+.header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4); /* Slightly brighter on hover */
+    transform: scale(1.05); /* Slight scale-up effect on hover */
+}
+
+.header-btn:active {
+    background-color: rgba(255, 255, 255, 0.6); /* Even brighter on click */
+    transform: scale(1); /* Reset scale when clicked */
+}
+
+/* Add button alignment at the top */
+.header-btn-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px; /* Space between buttons and playlist header */
+}
+
+.no-songs-container {
+    text-align: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.no-songs {
+    font-family: 'outfit';
+    color: white;
+    font-weight: bold;
+    font-size: 2em; /* Adjust size for an h1-like appearance */
+    /* margin-left: 50%; */
+}

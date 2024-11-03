@@ -1,0 +1,30 @@
+{
+    "_id": {
+        "$oid": "671d242bef6678022fffbefd"
+    },
+    "genre": [
+        "Rock",
+        "Pop",
+        "RnB",
+        "Hip-Hop",
+        "Amapiano",
+        "Soulful",
+        "Gospel",
+        "Jazz",
+        "Reggae",
+        "House",
+        "Afro-Beats",
+        "lulaby",
+        "wedding-bell"
+    ],
+    "Record_changes": [
+        "Add Zonke on 2024-10-28T01:00:41.361Z",
+        "Delete Zonke on 2024-10-28T01:00:48.631Z",
+        "Add Maskandi on 2024-10-28T01:59:52.731Z",
+        "Delete Maskandi on 2024-10-28T19:26:41.556Z",
+        "Add maskandi on 2024-10-28T19:26:59.859Z",
+        "Delete maskandi on 2024-10-28T19:27:07.002Z",
+        "Add lulaby on 2024-11-01T03:05:46.020Z",
+        "Add wedding-bell on 2024-11-01T21:18:09.403Z"
+    ]
+}

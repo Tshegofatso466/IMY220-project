@@ -1,0 +1,24 @@
+.search-container {
+    text-align: center;
+    font-family: 'outfit';
+    width: 500px;
+}
+
+.search-input {
+    background-color: rgb(32, 31, 69);
+    padding: 10px;
+    padding-left: 40px;  /* Add padding to leave space for the icon */
+    width: 80%;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    /* background: url('../icons/search.png') no-repeat 10px center; */
+    background-size: 20px 20px;  /* Adjust the size of the icon */
+    margin-top: 8px;
+}
+
+.search-input::placeholder {
+    color: #ffffff;
+    font-style: italic;
+}

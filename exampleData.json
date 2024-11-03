@@ -1,0 +1,273 @@
+{
+    "_id": {
+        "$oid": "66fab93da198692f4ebd98a7"
+    },
+    "profileImage": "data:image/jpeg;base64,...",
+    "bio": "i changed it again ohh..... only god knows",
+    "followers": {
+        "$numberInt": "1200"
+    },
+    "following": {
+        "$numberInt": "60"
+    },
+    "playlists": [
+        {
+            "PlayListName": "Chill Vibes",
+            "PlayListImage": "data:image/jpeg;base64,...",
+            "songs": [
+                {
+                    "title": "Esangweni",
+                    "artists": [
+                        "Nkosazana Daughter",
+                        "Murumba Pitch"
+                    ],
+                    "image": "data:image/jpeg;base64,...",
+                    "sportifyURL": "https://open.spotify.com/track/1kKltSWkRUTB7LYVFJXS2w?si=7599f0fe513b4c15",
+                    "deleted": true,
+                    "dateAdded": "2024-09-30T12:34:56Z",
+                    "songId": {
+                        "$oid": "671c0cc96c1fcbd5652fbf9e"
+                    }
+                },
+                {
+                    "title": "One Last Time",
+                    "artists": [
+                        "Ariana Grande"
+                    ],
+                    "deleted": true,
+                    "image": "data:image/jpeg;base64,...",
+                    "sportifyURL": "https://open.spotify.com/track/7xoUc6faLbCqZO6fQEYprd?si=d5cc468a58fc4e88",
+                    "dateAdded": "2024-09-30T12::56Z",
+                    "songId": {
+                        "$oid": "671c0ce06c1fcbd5652fbf9f"
+                    }
+                },
+                {
+                    "title": "Bawo-Wethu",
+                    "artists": [
+                        "Lundi"
+                    ],
+                    "sportifyURL": "https://open.spotify.com/track/3lMdIliLbtd9AQqHzvIgJ7?si=007e8dde80a84cd9",
+                    "dateAdded": "2024-10-28T18:45:39.458Z",
+                    "deleted": false,
+                    "image": "data:image/jpeg;base64,...",
+                    "songId": {
+                        "$oid": "671fdbd3669971b82be6123a"
+                    }
+                }
+            ],
+            "comments": [
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Alice",
+                    "followers": {
+                        "$numberInt": "250"
+                    },
+                    "commentText": "Love this playlist!",
+                    "timestamp": "2024-09-30T12:34:56Z",
+                    "pinned": true,
+                    "commentId": {
+                        "$oid": "671d457b0b54866da4b8ead7"
+                    }
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Bob",
+                    "followers": {
+                        "$numberInt": "150"
+                    },
+                    "commentText": "Chill vibes indeed!",
+                    "timestamp": "2024-09-30T12:45:23Z",
+                    "pinned": true,
+                    "commentId": {
+                        "$oid": "671d458c0b54866da4b8ead8"
+                    }
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Rec",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "this is goood!!!",
+                    "timestamp": {
+                        "$date": {
+                            "$numberLong": "1729182513069"
+                        }
+                    },
+                    "pinned": false,
+                    "commentId": {
+                        "$oid": "671d45a30b54866da4b8ead9"
+                    }
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Rec",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "this is so much enjoyable\n",
+                    "timestamp": {
+                        "$date": {
+                            "$numberLong": "1729204420373"
+                        }
+                    },
+                    "pinned": false,
+                    "commentId": {
+                        "$oid": "671d45de0b54866da4b8eada"
+                    }
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "betssss!",
+                    "timestamp": {
+                        "$date": {
+                            "$numberLong": "1729978279384"
+                        }
+                    },
+                    "commentId": {
+                        "$oid": "671d5fa7cc69918d3080cf6e"
+                    },
+                    "pinned": false
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "this is hot!!!!",
+                    "timestamp": "2024-10-31T23:29:38.363Z",
+                    "commentId": {
+                        "$oid": "672412e2fb4e5b1164e9b403"
+                    },
+                    "pinned": false
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "yay!!",
+                    "timestamp": "2024-10-31T23:49:48.836Z",
+                    "commentId": {
+                        "$oid": "6724179ce150bf274bd6ef0e"
+                    },
+                    "pinned": false,
+                    "image": "data:image/jpeg;base64,..."
+                },
+                {
+                    "profileImage": "data:image/jpeg;base64,...",
+                    "userName": "Kylie Recs",
+                    "followers": {
+                        "$numberInt": "1200"
+                    },
+                    "commentText": "yoy",
+                    "timestamp": "2024-10-31T23:52:03.073Z",
+                    "commentId": {
+                        "$oid": "672418239edeb3500f7bf7d8"
+                    },
+                    "pinned": false,
+                    "image": null
+                }
+            ],
+            "id": {
+                "$oid": "66fb36c2086b1a070b8a1c2b"
+            },
+            "OwnerId": {
+                "$oid": "66fab93da198692f4ebd98a7"
+            },
+            "reference": false,
+            "hashtags": [
+                "#chill",
+                "#vibey",
+                "#fresh",
+                "#longRoad",
+                "#sick"
+            ],
+            "genres": [
+                "amapiano",
+                "hip-hop",
+                "Soulful"
+            ]
+        },
+        {
+            "reference": true,
+            "OwnerId": {
+                "$oid": "671937f5bcddefe55dd942ef"
+            },
+            "id": {
+                "$oid": "6719397d3bb33cd02b36bf26"
+            }
+        },
+        {
+            "id": {
+                "$oid": "66fb36c2086b1a070b8a1c2b"
+            },
+            "OwnerId": {
+                "$oid": "66fab93da198692f4ebd98a7"
+            },
+            "reference": true
+        },
+        {
+            "id": {
+                "$oid": "671939443bb33cd02b36bf25"
+            },
+            "OwnerId": {
+                "$oid": "671937f5bcddefe55dd942ef"
+            },
+            "reference": true
+        },
+        {
+            "id": {
+                "$oid": "6719397d3bb33cd02b36bf26"
+            },
+            "OwnerId": {
+                "$oid": "671937f5bcddefe55dd942ef"
+            },
+            "reference": true
+        }
+    ],
+    "friends": [
+        {
+            "id": {
+                "$oid": "67193e83679293e414fb0772"
+            },
+            "name": "ElectroFan"
+        },
+        {
+            "id": {
+                "$oid": "671937f5bcddefe55dd942ef"
+            },
+            "name": "TunesLover"
+        }
+    ],
+    "pictures": [
+        {
+            "id": {
+                "$oid": "671934293bb33cd02b36bf23"
+            },
+            "url": "data:image/jpeg;base64,..."
+        },
+        {
+            "id": {
+                "$oid": "671934343bb33cd02b36bf24"
+            },
+            "url": "data:image/jpeg;base64,..."
+        }
+    ],
+    "email": "tshegofatsomahlase466@gmail.com",
+    "password": "Tshego@12345",
+    "username": "Kylie Recs",
+    "messages": [
+        {
+            "title": "Update thunder now!",
+            "content": "a newer version of thunder is available, go to software to update. :)"
+        }
+    ]
+}

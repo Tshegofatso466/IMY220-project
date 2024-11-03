@@ -1,0 +1,105 @@
+.general {
+    background-color: rgb(22, 22, 66);
+    color: rgb(255, 255, 255);
+    font-family: 'outfit';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 6fr 1fr;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.general.deleted {
+    border: 2px solid red;
+}
+
+.general:hover {
+    background-color: rgb(32, 32, 76);
+}
+
+.details h3 {
+    margin-bottom: 0px;
+    margin-left: 0px;
+}
+
+.details label {
+    color: rgb(165, 171, 177);
+}
+
+.details .dateAdded {
+    font-size: 14px;
+    color: rgb(145, 145, 145);
+}
+
+img {
+    width: 80px;
+    padding: 8px;
+}
+
+.verticalDots {
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.verticalDots:hover {
+    opacity: 0.7;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.modal-content .sportify {
+    background-color: #1db954;
+    color: #fff;
+    margin-top: 40px;
+}
+
+.modal-content .delete {
+    background-color: #ff3b3b;
+    color: #fff;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* .modal-content button.sportify {
+    margin-top: 40px;
+} */

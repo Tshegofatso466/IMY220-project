@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Sen
+- Font Author: Copyright 2023 The Sen Project Authors (https://github.com/philatype/Sen/)
+- Font Source: https://fonts.gstatic.com/s/sen/v9/6xK0dSxYI9_dkN18-vZKK2EISKq-H47KlD9q78A.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

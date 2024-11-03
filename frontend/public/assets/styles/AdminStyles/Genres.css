@@ -1,0 +1,63 @@
+.genres {
+    background-color: #2b2a4a; /* Lighter purple */
+    color: white; /* White text for readability */
+    padding: 20px;
+    border-radius: 8px;
+    font-family:'outfit';
+}
+
+.genre-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #4e3d6a; /* Slightly lighter purple */
+    border-radius: 5px;
+    font-family:'outfit';
+}
+
+.genre-item button {
+    background-color: #d8c4a1; /* Tan */
+    color: black; /* Black text for contrast */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family:'outfit';
+}
+
+.genre-item button:hover {
+    background-color: #bc9b6e; /* Darker tan on hover */
+}
+
+.input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #d8c4a1; /* Tan border */
+    color: rgb(0, 0, 0); /* White text */
+}
+
+.input[type="text"]:focus {
+    outline: none;
+    border-color: #bc9b6e; /* Darker tan on focus */
+}
+
+.button {
+    background-color: #d64f4f; /* Tan button background */
+    color: black; /* Black text */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add{
+    background-color: rgb(142, 182, 110);
+}
+
+.button:hover {
+    opacity: 0.4;
+}
